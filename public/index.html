@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" ng-app="hirdetekApp">
+<head>
+
+  <meta charset="utf-8">
+
+  <title>Aprohirdetesi oldal</title>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-resource.js"></script>
+  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+  <script src="controllers.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body ng-controller="HirdetesListCtrl">
+
+    <pagination ng-model="currentPage" total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" rotate="false" num-pages="numPages" boundary-links="true" ng-change="pageChanged()"></pagination>    
+    <pre>The selected page no: {{currentPage}}</pre>
+    <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre> 
+
+  <ul>
+    <li ng-repeat="hirdetes in hirdetesek._embedded.hirdetes">
+      <p>{{hirdetes.id}}</p>
+      <p>{{hirdetes.szoveg}}</p>
+      <p>{{hirdetes.kep}}</p>
+    </li>
+  </ul>
+
+</body>
+</html>
