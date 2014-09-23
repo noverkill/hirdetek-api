@@ -1,0 +1,12 @@
+<pagination ng-model="currentPage" total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" rotate="false" num-pages="numPages" boundary-links="true" ng-change="pageChanged()"></pagination>    
+<pre>The selected page no: {{currentPage}}</pre>
+<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre> 
+
+<ul>
+  <li ng-repeat="hirdetes in hirdetesek._embedded.hirdetes">
+    <p>{{hirdetes.id}}</p>
+    <p>{{hirdetes.szoveg}}</p>
+    <p>{{hirdetes.kep}}</p>
+    <p><a class="btn btn-primary" ui-sref="viewHirdetes({id:hirdetes.id})">View</a></p>
+  </li>
+</ul>
