@@ -59,8 +59,6 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', functi
   	HirdetesService.query({page: $scope.currentPage}, function(response) { 	
   		$scope.hirdetesek = response._embedded.hirdetes;
   		$scope.totalItems = response.total_items; 	
-      console.log(response);
-      console.log($scope.hirdetesek);
   	});    
   };
 
