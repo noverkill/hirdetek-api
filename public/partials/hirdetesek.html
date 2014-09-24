@@ -1,12 +1,18 @@
+<p>
+  <a ui-sref="newHirdetes" class="btn-primary btn-lg nodecoration">Uj hirdetes</a>
+</p>
+
 <pagination ng-model="currentPage" total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" rotate="false" num-pages="numPages" boundary-links="true" ng-change="pageChanged()"></pagination>    
-<pre>The selected page no: {{currentPage}}</pre>
-<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre> 
+<pre>Page: {{currentPage}} / {{numPages}}</pre> 
 
 <ul>
-  <li ng-repeat="hirdetes in hirdetesek._embedded.hirdetes">
+  <li ng-repeat="hirdetes in hirdetesek">
     <p>{{hirdetes.id}}</p>
     <p>{{hirdetes.szoveg}}</p>
     <p>{{hirdetes.kep}}</p>
-    <p><a class="btn btn-primary" ui-sref="viewHirdetes({id:hirdetes.id})">View</a></p>
+    <p>
+    	<a class="btn btn-primary" ui-sref="viewHirdetes({id:hirdetes.id})">View</a>
+		  <a class="btn btn-primary" ui-sref="editHirdetes({id:hirdetes.id})">Edit</a>
+	</p>
   </li>
 </ul>

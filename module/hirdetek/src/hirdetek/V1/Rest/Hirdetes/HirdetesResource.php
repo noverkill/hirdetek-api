@@ -33,7 +33,8 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function delete($id)
     {
-        return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
+        return $this->mapper->delete($id);
+        //return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
     }
 
     /**
@@ -103,6 +104,7 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function update($id, $data)
     {
-        return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
+        return $this->mapper->update($data);
+        //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 }

@@ -49,7 +49,26 @@ class HirdetesMapper
         $entity = new HirdetesEntity();
         $entity->exchangeArray((array)$data);
         return $entity;
+    }  
+
+    public function update($data)
+    {
+        //print_r(array_values((array) $data));
+        //exit;
+
+        $sql = 'UPDATE hirdetes SET szoveg = ?, kep = ? WHERE id = ?';
+        $this->adapter->query($sql, array($data->szoveg, $data->kep, $data->id));
+ 
+        $entity = new HirdetesEntity();
+        $entity->exchangeArray((array)$data);
+        return $entity;
     }   
-    
+
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM hirdetes WHERE id = ?';
+        $this->adapter->query($sql, array($id));
+        return true;
+    }    
 
 }
