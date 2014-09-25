@@ -81,4 +81,24 @@ return array(
             ),
         ),
     ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'Users\\V1\\Rest\\Users\\Controller' => array(
+                'entity' => array(
+                    'GET' => true,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => true,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+        ),
+    ),
 );

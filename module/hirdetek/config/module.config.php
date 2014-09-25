@@ -81,4 +81,24 @@ return array(
             ),
         ),
     ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
+                'entity' => array(
+                    'GET' => true,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => true,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+        ),
+    ),
 );
