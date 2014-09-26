@@ -85,18 +85,18 @@ return array(
         'authorization' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
                 'entity' => array(
-                    'GET' => true,
-                    'POST' => false,
+                    'GET' => false,
+                    'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
                 ),
                 'collection' => array(
-                    'GET' => true,
+                    'GET' => false,
                     'POST' => true,
-                    'PATCH' => false,
-                    'PUT' => false,
-                    'DELETE' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
                 ),
             ),
         ),

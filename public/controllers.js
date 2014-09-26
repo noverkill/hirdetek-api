@@ -1,10 +1,12 @@
-var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router']);
+var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies']);
  
- hirdetekApp.service('popupService',function($window){
+hirdetekApp.service('popupService',function($window){
+
     this.showPopup=function(message){
         return $window.confirm(message);
     }
-});
+
+}); 
 
 hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
   return $resource( 'http://localhost:8080/hirdetes/:id', { id: '@id'}, {
@@ -33,11 +35,15 @@ hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.config(function($stateProvider) {
-  
+
   $stateProvider.state('login', {
     url: '/login',
     templateUrl: 'partials/login.html',
     controller: 'LoginController'
+  }).state('logout', { 
+    url: '/logout',
+    templateUrl: 'partials/logout.html',    
+    controller: 'LogoutController'  
   }).state('hirdetesek', { 
     url: '/',
     templateUrl: 'partials/hirdetesek.html',
@@ -54,19 +60,19 @@ hirdetekApp.config(function($stateProvider) {
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
     controller: 'HirdetesCreateController'
-  }).state('users', { // state for showing all movies
+  }).state('users', {
     url: '/',
     templateUrl: 'partials/users.html',
     controller: 'UserListCtrl'
-  }).state('viewUser', { //state for showing single movie
+  }).state('viewUser', {
     url: '/user/:id/view',
     templateUrl: 'partials/user-view.html',
     controller: 'UserViewController'    
-  }).state('editUser', { //state for updating a movie
+  }).state('editUser', { 
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
     controller: 'UserEditController'
-  }).state('newUser', { //state for adding a new movie
+  }).state('newUser', {
     url: '/user/new',
     templateUrl: 'partials/user-add.html',
     controller: 'UserCreateController'
@@ -74,11 +80,54 @@ hirdetekApp.config(function($stateProvider) {
 
 });
 
-hirdetekApp.run(['$http', '$state', '$rootScope', '$injector', function($http, $state, $rootScope, $injector) {
+hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', function($http, $state, $injector, $rootScope, $cookieStore) {
+
+  $rootScope.user = {
+
+        credentials: {
+          username: '',
+          password: '',
+          grant_type: 'password',
+          client_id: 'testclient2'
+        },
+        login: function (credentials) {
+
+          this.credentials.username = credentials.username;
+          this.credentials.password = credentials.password;
+
+          $http.post('/oauth', this.credentials)
+            .then(function (res) {
+            
+              $cookieStore.put('tk', res.data.access_token);          
+          });
+        },       
+        logout: function () {
+            $cookieStore.remove('tk');
+        },
+        getTk: function() {
+            return $cookieStore.get('tk'); 
+        },
+        isLogged: function() {   
+            return angular.isDefined($cookieStore.get('tk'));
+        },
+        remember: function (credentials) {
+          $cookieStore.put('credentials', credentials); 
+        },
+        forget: function () {
+          $cookieStore.remove('credentials'); 
+        },
+        getCredentials: function() {
+          return $cookieStore.get('credentials');  
+        },
+        hasCredentials: function() {
+          return angular.isDefined($cookieStore.get('credentials'));  
+        }
+    }
 
   $injector.get("$http").defaults.transformRequest = function(data, headersGetter) {
-      if ($rootScope.access_token) {
-        headersGetter()['Authorization'] = "Bearer " + $rootScope.access_token;
+
+      if($rootScope.user.isLogged()) {
+        headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
       }
 
       if (data) {
@@ -92,22 +141,30 @@ hirdetekApp.run(['$http', '$state', '$rootScope', '$injector', function($http, $
 
 hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, $http) {
   
-  $scope.credentials = {
-    username: '',
-    password: '',
-    grant_type: 'password',
-    client_id: 'testclient2'
-  };
-  
+  if($rootScope.user.hasCredentials()) {
+    $scope.credentials = $rootScope.user.getCredentials();
+  }
+
   $scope.login = function (credentials) {
-    return $http
-      .post('/oauth', credentials)
-      .then(function (res) {
-        $rootScope.access_token = res.data.access_token;
-        $state.go('hirdetesek');
-      });    
-      
+
+    if(credentials.remember) {
+      $rootScope.user.remember(credentials);
+    } else {
+      $rootScope.user.forget(credentials); 
     }
+
+    $rootScope.user.login(credentials);
+
+    $state.go('hirdetesek');
+  }
+});
+
+hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
+
+  $rootScope.user.logout();
+
+  //$state.go('hirdetesek');
+
 });
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', function ($scope, HirdetesService) {

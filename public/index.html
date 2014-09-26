@@ -11,6 +11,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-resource.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-cookies.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
     <script src="controllers.js"></script>
 
@@ -25,9 +26,11 @@
     <br />
 
     <p>
-      <a ui-sref="login" class="btn-primary btn-lg nodecoration">Login</a>
-      <a ui-sref="hirdetesek" class="btn-primary btn-lg nodecoration">Hirdetesek</a>
-      <a ui-sref="users" class="btn-primary btn-lg nodecoration">Users</a>
+      <a ui-sref="hirdetesek" class="btn-primary btn-lg nodecoration">Hirdetesek</a> |
+      <a ui-sref="users" class="btn-primary btn-lg nodecoration">Users</a> |
+
+      <a ui-sref="login" ng-show="! user.isLogged()" class="btn-primary btn-lg nodecoration">Login</a>
+      <a ui-sref="logout" ng-show="user.isLogged()" class="btn-primary btn-lg nodecoration">Logout</a>
     </p>
 
     <br />
