@@ -39,7 +39,7 @@ return array(
                 0 => 'GET',
                 1 => 'POST',
             ),
-            'collection_query_whitelist' => array(),
+            'collection_query_whitelist' => array('search'),
             'page_size' => 25,
             'page_size_param' => null,
             'entity_class' => 'hirdetek\\V1\\Rest\\Hirdetes\\HirdetesEntity',

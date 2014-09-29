@@ -135,7 +135,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
       }
   };
 
-  $state.go('login');   
+  //$state.go('login');   
 
 }]);
 
@@ -172,19 +172,26 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', functi
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
 	$scope.currentPage = 1;
-	
+
+  $scope.search = '';
+
   $scope.setPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
   $scope.pageChanged = function() {
-  	HirdetesService.query({page: $scope.currentPage}, function(response) { 	
-  		$scope.hirdetesek = response._embedded.hirdetes;
-  		$scope.totalItems = response.total_items; 	
-  	});    
+    HirdetesService.query({page: $scope.currentPage, search: $scope.search}, function(response) {   
+      $scope.hirdetesek = response._embedded.hirdetes;
+      $scope.totalItems = response.total_items;   
+    });      
+  };  
+
+  $scope.doSearch = function() {
+     $scope.setPage(1);
+     $scope.pageChanged();    
   };
 
-  $scope.pageChanged();
+   $scope.pageChanged();
 
 }]);
 

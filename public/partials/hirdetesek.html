@@ -2,6 +2,16 @@
   <a ui-sref="newHirdetes" class="btn-primary btn-lg nodecoration">Uj hirdetes</a>
 </p>
 
+<br />
+
+<p>
+  <form class="form-horizontal" role="form">
+    <input type='text' class="form-control" name='search' id='search' ng-model='search' />
+    <button class="btn btn-primary" ng-click="search='';doSearch()">Reset</button>
+    <button class="btn btn-primary" ng-click="doSearch()">Search</button>
+  </form>
+</p>
+
 <pagination ng-model="currentPage" total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" rotate="false" num-pages="numPages" boundary-links="true" ng-change="pageChanged()"></pagination>    
 <pre>Page: {{currentPage}} / {{numPages}}</pre> 
 

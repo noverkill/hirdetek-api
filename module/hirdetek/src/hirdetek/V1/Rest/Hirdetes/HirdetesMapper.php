@@ -4,6 +4,7 @@ namespace hirdetek\V1\Rest\Hirdetes;
 use Zend\Db\Sql\Select;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
+use Zend\Db\Sql\Where;
 
 class HirdetesMapper
 {
@@ -14,11 +15,25 @@ class HirdetesMapper
         $this->adapter = $adapter;
     }
  
-    public function fetchAll()
+    public function fetchAll($params)
     {
-        $select = new Select('hirdetes');
+        $select = (new Select())->from(array('h' => 'hirdetes'));
+
+        if ($params->get('search')) {
+
+            $spec = function (Where $where) use ($params) {
+
+                $where->like('h.szoveg', "%" . $params['search'] . "%");
+
+            };
+
+            $select = $select->where($spec);
+        }
+        
         $paginatorAdapter = new DbSelect($select, $this->adapter);
+        
         $collection = new HirdetesCollection($paginatorAdapter);
+        
         return $collection;
     }
  
