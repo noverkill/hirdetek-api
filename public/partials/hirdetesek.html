@@ -18,8 +18,20 @@
 <ul>
   <li ng-repeat="hirdetes in hirdetesek">
     <p>{{hirdetes.id}}</p>
+    <p>Azonosito: {{hirdetes.azonosito}}</p>
+    <p>Felado: {{hirdetes.nev}}</p>
+    <p>{{hirdetes.targy}}</p>
     <p>{{hirdetes.szoveg}}</p>
     <p>{{hirdetes.kep}}</p>
+    <p>Feladva: {{hirdetes.feladas}}</p>
+    <p>Lejar: {{hirdetes.lejarat}}</p>
+    <p>Ar: {{hirdetes.ar}}</p>
+    <p>Telefon: {{hirdetes.telefon}}</p>
+    <p>Email: {{hirdetes.email}}</p>
+    <p>Weblap: {{hirdetes.weblap}}</p>
+    <p>Forovat: {{hirdetes.p_rovat_nev}}</p>
+    <p>Alrovat: {{hirdetes.r_rovat_nev}}</p>
+    <p>Regio: {{hirdetes.g_regio_nev}}</p>
     <p>
     	<a class="btn btn-primary" ui-sref="viewHirdetes({id:hirdetes.id})">View</a>
 		  <a class="btn btn-primary" ui-sref="editHirdetes({id:hirdetes.id})">Edit</a>

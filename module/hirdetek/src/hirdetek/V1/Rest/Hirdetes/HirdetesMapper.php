@@ -1,10 +1,11 @@
 <?php
 namespace hirdetek\V1\Rest\Hirdetes;
 
+use Zend\Db\Sql;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
-use Zend\Db\Sql\Where;
 
 class HirdetesMapper
 {
@@ -14,10 +15,14 @@ class HirdetesMapper
     {
         $this->adapter = $adapter;
     }
- 
+
     public function fetchAll($params)
     {
-        $select = (new Select())->from(array('h' => 'hirdetes'));
+        $select = (new Select())
+                    ->from(array('h' => 'hirdetes'))
+                    ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'))
+                    ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'))
+                    ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'));
 
         if ($params->get('search')) {
 
@@ -29,14 +34,17 @@ class HirdetesMapper
 
             $select = $select->where($spec);
         }
-        
+
+        //print $select->getSqlString();
+        //exit;
+
         $paginatorAdapter = new DbSelect($select, $this->adapter);
-        
+
         $collection = new HirdetesCollection($paginatorAdapter);
-        
+
         return $collection;
     }
- 
+
     public function fetchOne($id)
     {
         $sql = 'SELECT * FROM hirdetes WHERE id = ?';
@@ -45,7 +53,7 @@ class HirdetesMapper
         if (!$data) {
             return false;
         }
- 
+
         $entity = new HirdetesEntity();
         $entity->exchangeArray($data[0]);
         return $entity;
@@ -60,11 +68,11 @@ class HirdetesMapper
         $resultset = $this->adapter->query($sql, array($data->szoveg, $data->kep));
 
         $data->id = $resultset->getGeneratedValue();
- 
+
         $entity = new HirdetesEntity();
         $entity->exchangeArray((array)$data);
         return $entity;
-    }  
+    }
 
     public function update($data)
     {
@@ -73,17 +81,17 @@ class HirdetesMapper
 
         $sql = 'UPDATE hirdetes SET szoveg = ?, kep = ? WHERE id = ?';
         $this->adapter->query($sql, array($data->szoveg, $data->kep, $data->id));
- 
+
         $entity = new HirdetesEntity();
         $entity->exchangeArray((array)$data);
         return $entity;
-    }   
+    }
 
     public function delete($id)
     {
         $sql = 'DELETE FROM hirdetes WHERE id = ?';
         $this->adapter->query($sql, array($id));
         return true;
-    }    
+    }
 
 }
