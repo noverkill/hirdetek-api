@@ -6,6 +6,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
+use Zend\Db\Sql\Predicate\PredicateSet;
 
 class HirdetesMapper
 {
@@ -33,6 +34,11 @@ class HirdetesMapper
             };
 
             $select = $select->where($spec);
+        }
+
+        if ($params->get('rovat')) {
+
+            $select = $select->where(array('pr.id' => $params['rovat'], 'r.id' => $params['rovat']), PredicateSet::OP_OR);
         }
 
         //print $select->getSqlString();

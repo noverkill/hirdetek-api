@@ -6,7 +6,7 @@ class HirdetesEntity
 	public $id;
     public $kep;
     public $szoveg;
- 
+
     public function getArrayCopy()
     {
         return array(
@@ -15,7 +15,7 @@ class HirdetesEntity
             'szoveg' => $this->szoveg,
         );
     }
- 
+
     public function exchangeArray(array $array)
     {
         $this->id     = $array['id'];

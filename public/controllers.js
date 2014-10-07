@@ -1,19 +1,32 @@
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies']);
- 
+
 hirdetekApp.service('popupService',function($window){
 
     this.showPopup=function(message){
         return $window.confirm(message);
     }
 
-}); 
+});
 
 hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
   return $resource( 'http://localhost:8080/hirdetes/:id', { id: '@id'}, {
-      'query': { 
-        method: 'GET', 
-        isArray: false 
-      },    
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
+      'update': {
+        method: 'PUT'
+      }
+    }
+  );
+}]);
+
+hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
+  return $resource( 'http://localhost:8080/rovatok/:id', { id: '@id'}, {
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
       'update': {
         method: 'PUT'
       }
@@ -23,10 +36,10 @@ hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
 
 hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
   return $resource( 'http://localhost:8080/user/:id', { id: '@id'}, {
-      'query': { 
-        method: 'GET', 
-        isArray: false 
-      },    
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
       'update': {
         method: 'PUT'
       }
@@ -40,23 +53,23 @@ hirdetekApp.config(function($stateProvider) {
     url: '/login',
     templateUrl: 'partials/login.html',
     controller: 'LoginController'
-  }).state('logout', { 
+  }).state('logout', {
     url: '/logout',
-    templateUrl: 'partials/logout.html',    
-    controller: 'LogoutController'  
-  }).state('hirdetesek', { 
+    templateUrl: 'partials/logout.html',
+    controller: 'LogoutController'
+  }).state('hirdetesek', {
     url: '/',
     templateUrl: 'partials/hirdetesek.html',
     controller: 'HirdetesListCtrl'
-  }).state('viewHirdetes', { 
+  }).state('viewHirdetes', {
     url: '/hirdetes/:id/view',
     templateUrl: 'partials/hirdetes-view.html',
-    controller: 'HirdetesViewController'    
+    controller: 'HirdetesViewController'
   }).state('editHirdetes', {
     url: '/hirdetes/:id/edit',
     templateUrl: 'partials/hirdetes-edit.html',
     controller: 'HirdetesEditController'
-  }).state('newHirdetes', { 
+  }).state('newHirdetes', {
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
     controller: 'HirdetesCreateController'
@@ -67,8 +80,8 @@ hirdetekApp.config(function($stateProvider) {
   }).state('viewUser', {
     url: '/user/:id/view',
     templateUrl: 'partials/user-view.html',
-    controller: 'UserViewController'    
-  }).state('editUser', { 
+    controller: 'UserViewController'
+  }).state('editUser', {
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
     controller: 'UserEditController'
@@ -76,7 +89,7 @@ hirdetekApp.config(function($stateProvider) {
     url: '/user/new',
     templateUrl: 'partials/user-add.html',
     controller: 'UserCreateController'
-  });  
+  });
 
 });
 
@@ -97,30 +110,30 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
 
           $http.post('/oauth', this.credentials)
             .then(function (res) {
-            
-              $cookieStore.put('tk', res.data.access_token);          
+
+              $cookieStore.put('tk', res.data.access_token);
           });
-        },       
+        },
         logout: function () {
             $cookieStore.remove('tk');
         },
         getTk: function() {
-            return $cookieStore.get('tk'); 
+            return $cookieStore.get('tk');
         },
-        isLogged: function() {   
+        isLogged: function() {
             return angular.isDefined($cookieStore.get('tk'));
         },
         remember: function (credentials) {
-          $cookieStore.put('credentials', credentials); 
+          $cookieStore.put('credentials', credentials);
         },
         forget: function () {
-          $cookieStore.remove('credentials'); 
+          $cookieStore.remove('credentials');
         },
         getCredentials: function() {
-          return $cookieStore.get('credentials');  
+          return $cookieStore.get('credentials');
         },
         hasCredentials: function() {
-          return angular.isDefined($cookieStore.get('credentials'));  
+          return angular.isDefined($cookieStore.get('credentials'));
         }
     }
 
@@ -135,12 +148,12 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
       }
   };
 
-  //$state.go('login');   
+  //$state.go('login');
 
 }]);
 
 hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, $http) {
-  
+
   if($rootScope.user.hasCredentials()) {
     $scope.credentials = $rootScope.user.getCredentials();
   }
@@ -150,7 +163,7 @@ hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, 
     if(credentials.remember) {
       $rootScope.user.remember(credentials);
     } else {
-      $rootScope.user.forget(credentials); 
+      $rootScope.user.forget(credentials);
     }
 
     $rootScope.user.login(credentials);
@@ -167,7 +180,46 @@ hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state)
 
 });
 
-hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', function ($scope, HirdetesService) {
+hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'RovatService', 'HirdetesService', function ($scope, RovatService, HirdetesService) {
+
+  $scope.rovat = 0;
+
+  RovatService.query({ps: 1000}, function(response) {
+
+    $scope.rovatok = response._embedded.rovatok;
+
+    $scope.forovatok = [];
+    $scope.alrovatok = [];
+
+    for(var i = 0; i < $scope.rovatok.length; i++) {
+      if($scope.rovatok[i].parent == 0) {
+        $scope.forovatok[$scope.rovatok[i].id] = $scope.rovatok[i];
+        $scope.alrovatok[$scope.rovatok[i].id] = [];
+      }
+    }
+
+    for(var i = 0; i < $scope.rovatok.length; i++) {
+      if($scope.rovatok[i].parent > 0) {
+        $scope.alrovatok[$scope.rovatok[i].parent].push($scope.rovatok[i]);
+      }
+    }
+
+    $scope.rovatok = [];
+
+    for(var i = 0; i < $scope.forovatok.length; i++) {
+
+      if(angular.isDefined($scope.forovatok[i])) {
+        $scope.rovatok.push($scope.forovatok[i]);
+
+        for(var j = 0; j < $scope.alrovatok[$scope.forovatok[i].id].length; j++) {
+          $scope.rovatok.push($scope.alrovatok[$scope.forovatok[i].id][j]);
+        }
+      }
+    }
+
+    $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'})
+
+  });
 
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
@@ -180,15 +232,15 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', functi
   };
 
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $scope.search}, function(response) {   
+    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
-      $scope.totalItems = response.total_items;   
-    });      
-  };  
+      $scope.totalItems = response.total_items;
+    });
+  };
 
   $scope.doSearch = function() {
      $scope.setPage(1);
-     $scope.pageChanged();    
+     $scope.pageChanged();
   };
 
    $scope.pageChanged();
@@ -197,12 +249,12 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', functi
 
 hirdetekApp.controller('HirdetesViewController', function($scope, $stateParams, HirdetesService) {
 
-	$scope.hirdetes = HirdetesService.get({ id: $stateParams.id }); 
+	$scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
 
 });
 
 hirdetekApp.controller('HirdetesEditController', function($scope, $state, $stateParams, HirdetesService, popupService) {
-  
+
   $scope.updateHirdetes = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
     $scope.hirdetes.$update(function() {
       $state.go('hirdetesek'); // on success go back to home i.e. movies state.
@@ -220,15 +272,15 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
   $scope.loadHirdetes = function() { //Issues a GET request to /api/movies/:id to get a movie to update
     $scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
   };
- 
+
   $scope.loadHirdetes(); // Load a movie which can be edited on UI
 });
 
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
-  
+
   $scope.hirdetes = new HirdetesService();  //create new movie instance. Properties will be set via ng-model on UI
- 
+
   $scope.addHirdetes = function() { //create a new movie. Issues a POST to /api/movies
     $scope.hirdetes.$save(function() {
       $state.go('hirdetesek'); // on success go back to home i.e. movies state.
@@ -242,16 +294,16 @@ hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($sco
   $scope.maxSize = 5;
   $scope.itemsPerPage = 25;
   $scope.currentPage = 1;
-  
+
   $scope.setPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
   $scope.pageChanged = function() {
-    UserService.query({page: $scope.currentPage}, function(response) {  
+    UserService.query({page: $scope.currentPage}, function(response) {
       $scope.users = response._embedded.users;
-      $scope.totalItems = response.total_items;   
-    });    
+      $scope.totalItems = response.total_items;
+    });
   };
 
   $scope.pageChanged();
@@ -260,12 +312,12 @@ hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($sco
 
 hirdetekApp.controller('UserViewController', function($scope, $stateParams, UserService) {
 
-  $scope.user = UserService.get({ id: $stateParams.id }); 
+  $scope.user = UserService.get({ id: $stateParams.id });
 
 });
 
 hirdetekApp.controller('UserEditController', function($scope, $state, $stateParams, UserService, popupService) {
-  
+
   $scope.updateUser = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
     $scope.user.$update(function() {
       $state.go('users'); // on success go back to home i.e. movies state.
@@ -283,15 +335,15 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
   $scope.loadUser = function() { //Issues a GET request to /api/movies/:id to get a movie to update
     $scope.user = UserService.get({ id: $stateParams.id });
   };
- 
+
   $scope.loadUser(); // Load a movie which can be edited on UI
 });
 
 
 hirdetekApp.controller('UserCreateController', function($scope, $state, $stateParams, UserService) {
-  
+
   $scope.user = new UserService();  //create new movie instance. Properties will be set via ng-model on UI
- 
+
   $scope.addUser = function() { //create a new movie. Issues a POST to /api/movies
     $scope.user.$save(function() {
       $state.go('users'); // on success go back to home i.e. movies state.

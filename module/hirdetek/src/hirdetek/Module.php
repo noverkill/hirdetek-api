@@ -29,6 +29,10 @@ class Module implements ApigilityProviderInterface
             $adapter = $sm->get('Zend\Db\Adapter\Adapter');
             return new \hirdetek\V1\Rest\Hirdetes\HirdetesMapper($adapter);
           },
+          'hirdetek\V1\Rest\Rovatok\RovatokMapper' =>  function ($sm) {
+            $adapter = $sm->get('Zend\Db\Adapter\Adapter');
+            return new \hirdetek\V1\Rest\Rovatok\RovatokMapper($adapter);
+          },
         ),
       );
     }

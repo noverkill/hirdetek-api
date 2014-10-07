@@ -1,10 +1,10 @@
 <?php
-namespace hirdetek\V1\Rest\Hirdetes;
+namespace hirdetek\V1\Rest\Rovatok;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 
-class HirdetesResource extends AbstractResourceListener
+class RovatokResource extends AbstractResourceListener
 {
     protected $mapper;
 
@@ -21,8 +21,7 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        return $this->mapper->create($data);
-        //return new ApiProblem(405, 'The POST method has not been defined');
+        return new ApiProblem(405, 'The POST method has not been defined');
     }
 
     /**
@@ -33,8 +32,7 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function delete($id)
     {
-        return $this->mapper->delete($id);
-        //return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
+        return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
     }
 
     /**
@@ -56,8 +54,7 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function fetch($id)
     {
-        return $this->mapper->fetchOne($id);
-        //return new ApiProblem(405, 'The GET method has not been defined for individual resources');
+        return new ApiProblem(405, 'The GET method has not been defined for individual resources');
     }
 
     /**
@@ -104,7 +101,6 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function update($id, $data)
     {
-        return $this->mapper->update($data);
-        //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
+        return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 }
