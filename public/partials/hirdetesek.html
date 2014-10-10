@@ -28,7 +28,18 @@
             </select>
         </div>
     </div>
-
+    <div class="form-group">
+        <label for="minar" class="col-sm-2 control-label">Min ar.</label>
+        <div class="col-sm-10">
+            <input type='text' class="form-control" name='minar' id='minar' ng-model='minar' placeholder="Min ar." />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="maxar" class="col-sm-2 control-label">Max ar.</label>
+        <div class="col-sm-10">
+            <input type='text' class="form-control" name='maxar' id='maxar' ng-model='maxar' placeholder="Max ar." />
+        </div>
+    </div>
 
     <button class="btn btn-primary" ng-click="search='';doSearch()">Reset</button>
     <button class="btn btn-primary" ng-click="doSearch()">Search</button>

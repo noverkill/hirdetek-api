@@ -65,6 +65,8 @@ return array(
                 0 => 'search',
                 1 => 'rovat',
                 2 => 'regio',
+                3 => 'minar',
+                4 => 'maxar',
             ),
             'page_size' => 25,
             'page_size_param' => 'ps',

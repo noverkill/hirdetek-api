@@ -283,7 +283,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
   };
 
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat, regio: $scope.regio}, function(response) {
+    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat, regio: $scope.regio, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
     });

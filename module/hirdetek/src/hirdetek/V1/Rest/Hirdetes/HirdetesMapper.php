@@ -26,26 +26,29 @@ class HirdetesMapper
                     ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'))
                     ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'));
 
+        $where = (new Where());
+
         if ($params->get('search')) {
-
-            $spec = function (Where $where) use ($params) {
-
-                $where->like('h.szoveg', "%" . $params['search'] . "%");
-
-            };
-
-            $select = $select->where($spec);
+            $where->nest->like('h.szoveg', "%" . $params['search'] . "%");
         }
 
         if ($params->get('rovat')) {
-
-            $select = $select->where(array('pr.id' => $params['rovat'], 'r.id' => $params['rovat']), PredicateSet::OP_OR);
+            $where->nest->equalTo('pr.id', $params['rovat'])->OR->equalTo('r.id', $params['rovat']);
         }
 
         if ($params->get('regio')) {
-
-            $select = $select->where(array('pg.id' => $params['regio'], 'g.id' => $params['regio']), PredicateSet::OP_OR);
+            $where->nest->equalTo('pg.id', $params['regio'])->OR->equalTo('g.id', $params['regio']);
         }
+
+        if ($params->get('minar')) {
+            $where->nest->greaterThanOrEqualTo(new Zend_Db_Expr('h.ar'), $params['minar']);
+        }
+
+        if ($params->get('maxar')) {
+            $where->nest->lessThanOrEqualTo('h.ar', $params['maxar']);
+        }
+
+        $select = $select->where($where);
 
         //print $select->getSqlString();
         //exit;
