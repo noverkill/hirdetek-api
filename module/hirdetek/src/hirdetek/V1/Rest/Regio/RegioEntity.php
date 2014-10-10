@@ -1,7 +1,7 @@
 <?php
-namespace hirdetek\V1\Rest\Rovatok;
+namespace hirdetek\V1\Rest\Regio;
 
-class RovatokEntity
+class RegioEntity
 {
 	public $id;
     public $nev;

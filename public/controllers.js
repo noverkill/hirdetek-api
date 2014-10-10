@@ -34,6 +34,19 @@ hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
   );
 }]);
 
+hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
+  return $resource( 'http://localhost:8080/regio/:id', { id: '@id'}, {
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
+      'update': {
+        method: 'PUT'
+      }
+    }
+  );
+}]);
+
 hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
   return $resource( 'http://localhost:8080/user/:id', { id: '@id'}, {
       'query': {
@@ -180,9 +193,10 @@ hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state)
 
 });
 
-hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'RovatService', 'HirdetesService', function ($scope, RovatService, HirdetesService) {
+hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'RovatService', 'RegioService', function ($scope, HirdetesService, RovatService, RegioService) {
 
   $scope.rovat = 0;
+  $scope.regio = 0;
 
   RovatService.query({ps: 1000}, function(response) {
 
@@ -221,6 +235,43 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'RovatService', 'Hirdetes
 
   });
 
+  RegioService.query({ps: 1000}, function(response) {
+
+    $scope.regiok = response._embedded.regio;
+
+    $scope.foregiok = [];
+    $scope.alregiok = [];
+
+    for(var i = 0; i < $scope.regiok.length; i++) {
+      if($scope.regiok[i].parent == 0) {
+        $scope.foregiok[$scope.regiok[i].id] = $scope.regiok[i];
+        $scope.alregiok[$scope.regiok[i].id] = [];
+      }
+    }
+
+    for(var i = 0; i < $scope.regiok.length; i++) {
+      if($scope.regiok[i].parent > 0) {
+        $scope.alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
+      }
+    }
+
+    $scope.regiok = [];
+
+    for(var i = 0; i < $scope.foregiok.length; i++) {
+
+      if(angular.isDefined($scope.foregiok[i])) {
+        $scope.regiok.push($scope.foregiok[i]);
+
+        for(var j = 0; j < $scope.alregiok[$scope.foregiok[i].id].length; j++) {
+          $scope.regiok.push($scope.alregiok[$scope.foregiok[i].id][j]);
+        }
+      }
+    }
+
+    $scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'})
+
+  });
+
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
 	$scope.currentPage = 1;
@@ -232,7 +283,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'RovatService', 'Hirdetes
   };
 
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat}, function(response) {
+    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat, regio: $scope.regio}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
     });

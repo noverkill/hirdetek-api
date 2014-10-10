@@ -23,7 +23,8 @@ class HirdetesMapper
                     ->from(array('h' => 'hirdetes'))
                     ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'))
                     ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'))
-                    ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'));
+                    ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'))
+                    ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'));
 
         if ($params->get('search')) {
 
@@ -39,6 +40,11 @@ class HirdetesMapper
         if ($params->get('rovat')) {
 
             $select = $select->where(array('pr.id' => $params['rovat'], 'r.id' => $params['rovat']), PredicateSet::OP_OR);
+        }
+
+        if ($params->get('regio')) {
+
+            $select = $select->where(array('pg.id' => $params['regio'], 'g.id' => $params['regio']), PredicateSet::OP_OR);
         }
 
         //print $select->getSqlString();

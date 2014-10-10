@@ -16,7 +16,15 @@
         <label for="rovat" class="col-sm-2 control-label">Rovat</label>
         <div class="col-sm-10">
             <select class="form-control" name='rovat' id='rovat' ng-model='rovat'>
-                <option ng-repeat="lo in rovatok" value="{{lo.id}}">{{ lo.parent > 0 ? ' &nbsp; &nbsp; ' : '' }}{{lo.nev}}</option>
+                <option ng-repeat="rov in rovatok" value="{{rov.id}}">{{ rov.parent > 0 ? ' &nbsp; &nbsp; ' : '' }}{{rov.nev}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="regio" class="col-sm-2 control-label">Regio</label>
+        <div class="col-sm-10">
+            <select class="form-control" name='regio' id='regio' ng-model='regio'>
+                <option ng-repeat="reg in regiok" value="{{reg.id}}">{{ reg.parent > 0 ? ' &nbsp; &nbsp; ' : '' }}{{reg.nev}}</option>
             </select>
         </div>
     </div>
