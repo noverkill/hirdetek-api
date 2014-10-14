@@ -161,7 +161,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
       }
   };
 
-  //$state.go('login');
+  $state.go('hirdetesek');
 
 }]);
 
@@ -198,6 +198,8 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
   $scope.rovat = 0;
   $scope.regio = 0;
 
+  $scope.rovatNev = "Rovat";
+
   RovatService.query({ps: 1000}, function(response) {
 
     $scope.rovatok = response._embedded.rovatok;
@@ -220,10 +222,13 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
 
     $scope.rovatok = [];
 
+    var forovatok = [];
+
     for(var i = 0; i < $scope.forovatok.length; i++) {
 
       if(angular.isDefined($scope.forovatok[i])) {
         $scope.rovatok.push($scope.forovatok[i]);
+        forovatok.push($scope.forovatok[i]);
 
         for(var j = 0; j < $scope.alrovatok[$scope.forovatok[i].id].length; j++) {
           $scope.rovatok.push($scope.alrovatok[$scope.forovatok[i].id][j]);
@@ -231,9 +236,16 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
       }
     }
 
-    $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'})
+    $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+
+    $scope.forovatok = forovatok;
 
   });
+
+  $scope.setRovat  = function (rovat) {
+    $scope.rovat = rovat.id;
+    $scope.rovatNev = rovat.nev;
+  };
 
   RegioService.query({ps: 1000}, function(response) {
 
