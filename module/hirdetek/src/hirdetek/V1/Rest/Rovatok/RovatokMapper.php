@@ -18,7 +18,7 @@ class RovatokMapper
 
     public function fetchAll($params)
     {
-        $select = (new Select())->from('rovat');
+        $select = (new Select())->from('rovat')->order('order');
 
         $paginatorAdapter = new DbSelect($select, $this->adapter);
 

@@ -238,6 +238,12 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
 
     $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
+    forovatok.sort(function sortFunction(a, b) {
+      return parseInt(a.order) > parseInt(b.order);
+    });
+
+    console.log(forovatok);
+
     $scope.forovatok = forovatok;
 
   });
