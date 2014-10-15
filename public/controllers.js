@@ -233,27 +233,9 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
 
     for(var i = 0; i < $scope.regiok.length; i++) {
       if($scope.regiok[i].parent == 0) {
-        $scope.foregiok[$scope.regiok[i].id] = $scope.regiok[i];
-        $scope.alregiok[$scope.regiok[i].id] = [];
-      }
-    }
-
-    for(var i = 0; i < $scope.regiok.length; i++) {
-      if($scope.regiok[i].parent > 0) {
-        $scope.alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
-      }
-    }
-
-    $scope.regiok = [];
-
-    for(var i = 0; i < $scope.foregiok.length; i++) {
-
-      if(angular.isDefined($scope.foregiok[i])) {
-        $scope.regiok.push($scope.foregiok[i]);
-
-        for(var j = 0; j < $scope.alregiok[$scope.foregiok[i].id].length; j++) {
-          $scope.regiok.push($scope.alregiok[$scope.foregiok[i].id][j]);
-        }
+        $scope.foregiok.push($scope.regiok[i]);
+      } else {
+        $scope.alregiok.push($scope.regiok[i]);
       }
     }
 
