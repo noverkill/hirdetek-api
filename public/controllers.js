@@ -209,42 +209,13 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
 
     for(var i = 0; i < $scope.rovatok.length; i++) {
       if($scope.rovatok[i].parent == 0) {
-        $scope.forovatok[$scope.rovatok[i].id] = $scope.rovatok[i];
-        $scope.alrovatok[$scope.rovatok[i].id] = [];
-      }
-    }
-
-    for(var i = 0; i < $scope.rovatok.length; i++) {
-      if($scope.rovatok[i].parent > 0) {
-        $scope.alrovatok[$scope.rovatok[i].parent].push($scope.rovatok[i]);
-      }
-    }
-
-    $scope.rovatok = [];
-
-    var forovatok = [];
-
-    for(var i = 0; i < $scope.forovatok.length; i++) {
-
-      if(angular.isDefined($scope.forovatok[i])) {
-        $scope.rovatok.push($scope.forovatok[i]);
-        forovatok.push($scope.forovatok[i]);
-
-        for(var j = 0; j < $scope.alrovatok[$scope.forovatok[i].id].length; j++) {
-          $scope.rovatok.push($scope.alrovatok[$scope.forovatok[i].id][j]);
-        }
+        $scope.forovatok.push($scope.rovatok[i]);
+      } else {
+        $scope.alrovatok.push($scope.rovatok[i]);
       }
     }
 
     $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-
-    forovatok.sort(function sortFunction(a, b) {
-      return parseInt(a.order) > parseInt(b.order);
-    });
-
-    console.log(forovatok);
-
-    $scope.forovatok = forovatok;
 
   });
 
