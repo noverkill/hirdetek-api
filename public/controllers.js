@@ -60,46 +60,71 @@ hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
 
 hirdetekApp.config(function($stateProvider) {
 
-  $stateProvider.state('login', {
-    url: '/login',
-    templateUrl: 'partials/login.html',
-    controller: 'LoginController'
-  }).state('logout', {
-    url: '/logout',
-    templateUrl: 'partials/logout.html',
-    controller: 'LogoutController'
-  }).state('hirdetesek', {
+  $stateProvider.state('mainpage', {
+
     url: '/',
+    templateUrl: 'partials/mainpage.html',
+    controller: 'MainpageCtrl'
+
+  }).state('hirdetesek', {
+
+    url: '/hirdetesek',
     templateUrl: 'partials/hirdetesek.html',
     controller: 'HirdetesListCtrl'
+
   }).state('viewHirdetes', {
+
     url: '/hirdetes/:id/view',
     templateUrl: 'partials/hirdetes-view.html',
     controller: 'HirdetesViewController'
+
   }).state('editHirdetes', {
+
     url: '/hirdetes/:id/edit',
     templateUrl: 'partials/hirdetes-edit.html',
     controller: 'HirdetesEditController'
+
   }).state('newHirdetes', {
+
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
     controller: 'HirdetesCreateController'
+
+  }).state('login', {
+
+    url: '/login',
+    templateUrl: 'partials/login.html',
+    controller: 'LoginController'
+
+  }).state('logout', {
+
+    url: '/logout',
+    templateUrl: 'partials/logout.html',
+    controller: 'LogoutController'
+
   }).state('users', {
+
     url: '/',
     templateUrl: 'partials/users.html',
     controller: 'UserListCtrl'
+
   }).state('viewUser', {
     url: '/user/:id/view',
     templateUrl: 'partials/user-view.html',
     controller: 'UserViewController'
+
   }).state('editUser', {
+
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
     controller: 'UserEditController'
+
   }).state('newUser', {
+
     url: '/user/new',
     templateUrl: 'partials/user-add.html',
     controller: 'UserCreateController'
+
   });
 
 });
@@ -159,37 +184,68 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
       }
   };
 
-  $state.go('hirdetesek');
+  $state.go('mainpage');
 
 }]);
 
-hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, $http) {
+hirdetekApp.controller('MainpageCtrl', [ '$scope', 'RovatService', 'RegioService', function ($scope, RovatService, RegioService) {
 
-  if($rootScope.user.hasCredentials()) {
-    $scope.credentials = $rootScope.user.getCredentials();
-  }
+  $scope.rovat = 0;
+  $scope.regio = 0;
 
-  $scope.login = function (credentials) {
+  $scope.rovatNev = "Rovat";
 
-    if(credentials.remember) {
-      $rootScope.user.remember(credentials);
-    } else {
-      $rootScope.user.forget(credentials);
+  RovatService.query({ps: 1000}, function(response) {
+
+    $scope.rovatok = response._embedded.rovatok;
+
+    $scope.forovatok = [];
+    $scope.alrovatok = [];
+
+    for(var i = 0; i < $scope.rovatok.length; i++) {
+      if($scope.rovatok[i].parent == 0) {
+        $scope.forovatok.push($scope.rovatok[i]);
+      } else {
+        $scope.alrovatok.push($scope.rovatok[i]);
+      }
     }
 
-    $rootScope.user.login(credentials);
+    //$scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
-    $state.go('hirdetesek');
-  }
-});
+  });
 
-hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
+  $scope.setRovat  = function (rovat) {
+    $scope.rovat = rovat.id;
+    $scope.rovatNev = rovat.nev;
+  };
 
-  $rootScope.user.logout();
+  RegioService.query({ps: 1000}, function(response) {
 
-  //$state.go('hirdetesek');
+    $scope.regiok = response._embedded.regio;
 
-});
+    $scope.foregiok = [];
+    $scope.alregiok = [];
+    $scope._alregiok = [];
+
+    for(var i = 0; i < $scope.regiok.length; i++) {
+      if($scope.regiok[i].parent == 0) {
+        $scope.foregiok.push($scope.regiok[i]);
+      } else {
+        $scope.alregiok.push($scope.regiok[i]);
+
+        if(angular.isUndefined($scope._alregiok[$scope.regiok[i].parent])) {
+            $scope._alregiok[$scope.regiok[i].parent] = [];
+        }
+
+        $scope._alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
+      }
+    }
+
+    //$scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+
+  });
+
+}]);
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'RovatService', 'RegioService', function ($scope, HirdetesService, RovatService, RegioService) {
 
@@ -313,6 +369,34 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
       $state.go('hirdetesek'); // on success go back to home i.e. movies state.
     });
   };
+
+});
+
+hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, $http) {
+
+  if($rootScope.user.hasCredentials()) {
+    $scope.credentials = $rootScope.user.getCredentials();
+  }
+
+  $scope.login = function (credentials) {
+
+    if(credentials.remember) {
+      $rootScope.user.remember(credentials);
+    } else {
+      $rootScope.user.forget(credentials);
+    }
+
+    $rootScope.user.login(credentials);
+
+    $state.go('hirdetesek');
+  }
+});
+
+hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
+
+  $rootScope.user.logout();
+
+  //$state.go('hirdetesek');
 
 });
 
