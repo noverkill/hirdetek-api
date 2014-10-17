@@ -1,11 +1,9 @@
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies']);
 
 hirdetekApp.service('popupService',function($window){
-
     this.showPopup=function(message){
         return $window.confirm(message);
     }
-
 });
 
 hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
@@ -215,7 +213,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
       }
     }
 
-    $scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+    //$scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
   });
 
@@ -230,16 +228,23 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
 
     $scope.foregiok = [];
     $scope.alregiok = [];
+    $scope._alregiok = [];
 
     for(var i = 0; i < $scope.regiok.length; i++) {
       if($scope.regiok[i].parent == 0) {
         $scope.foregiok.push($scope.regiok[i]);
       } else {
         $scope.alregiok.push($scope.regiok[i]);
+
+        if(angular.isUndefined($scope._alregiok[$scope.regiok[i].parent])) {
+            $scope._alregiok[$scope.regiok[i].parent] = [];
+        }
+
+        $scope._alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
       }
     }
 
-    $scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'})
+    //$scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
   });
 

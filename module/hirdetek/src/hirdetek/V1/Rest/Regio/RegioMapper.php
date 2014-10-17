@@ -18,7 +18,7 @@ class RegioMapper
 
     public function fetchAll($params)
     {
-        $select = (new Select())->from('regio');
+        $select = (new Select())->from('regio')->order('order');
 
         $paginatorAdapter = new DbSelect($select, $this->adapter);
 
