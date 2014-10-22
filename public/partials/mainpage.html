@@ -108,7 +108,7 @@
 
                     <ul class="nav nav-tabs" id="myTab">
 
-                        <li class="" ng-repeat="foregio in foregiok"><a data-toggle="tab"  href="#regio{{foregio.id}}">{{foregio.nev}}</a></li>
+                        <li ng-repeat="foregio in foregiok" ng-class="{active : $first}"><a data-toggle="tab"  href="#regio{{foregio.id}}">{{foregio.nev}}</a></li>
 
                         <!--li class=""><a data-toggle="tab"  href="#popular">Popular cities</a></li>
                         <li class=""><a data-toggle="tab"  href="#EN">England</a></li>
@@ -132,7 +132,7 @@
 
                     <div class="tab-content " id="myTabContent">
 
-                        <div id="regio{{foregio.id}}" class="tab-pane fade counties-pane active" ng-repeat="foregio in foregiok">
+                        <div id="regio{{foregio.id}}" class="tab-pane fade counties-pane" ng-class="{'active': $first, 'in': $first}" ng-repeat="foregio in foregiok">
 
                             <div class="col-sm-3">
 
