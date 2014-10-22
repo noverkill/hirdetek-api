@@ -188,7 +188,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
 
 }]);
 
-hirdetekApp.controller('MainpageCtrl', [ '$scope', 'RovatService', 'RegioService', function ($scope, RovatService, RegioService) {
+hirdetekApp.controller('MainpageCtrl', [ '$scope', '$state', 'RovatService', 'RegioService', function ($scope, $state, RovatService, RegioService) {
 
   $scope.rovat = 0;
   $scope.regio = 0;
@@ -242,6 +242,10 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', 'RovatService', 'RegioService
     }
 
     //$scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+
+  $scope.doSearch = function() {
+     $state.go('hirdetesek');
+  };
 
   });
 
@@ -318,6 +322,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
     HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat, regio: $scope.regio, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
+      console.log($scope.hirdetesek);
     });
   };
 
