@@ -20,10 +20,10 @@
                                     <div class="input-group-addon hidden-xs">
                                         <div class="btn-group" >
                                             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
-                                            >{{rovatNev}} <span class="caret"></span>
+                                            >{{forovat.nev}} <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li ng-repeat="rov in forovatok"><a href="#" ng-click="setRovat(rov)">{{rov.nev}}</a></li>
+                                                <li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov)">{{forov.nev}}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -90,9 +90,9 @@
                                 <!--i class="fa fa-shopping-cart"></i-->
                             </div>
                             <div class="col-sm-9">
-                                <h4><a href="listings.html?rovat={{forov.id}}">{{forov.nev}}</a></h4>
+                                <h4><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></h4>
                                 <p>
-                                    <a style="display:block" href="listings.html?rovat={{alrov.id}}" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forov.id">{{alrov.nev}}</a>
+                                    <a style="display:block" href="#" ng-click="setRovat(forov,alrov);doSearch()" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forov.id">{{alrov.nev}}</a>
                                 </p>
                             </div>
                         </div>

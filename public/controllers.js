@@ -129,7 +129,7 @@ hirdetekApp.config(function($stateProvider) {
 
 });
 
-hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', function($http, $state, $injector, $rootScope, $cookieStore) {
+hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', 'RovatService', 'RegioService', function($http, $state, $injector, $rootScope, $cookieStore, RovatService, RegioService) {
 
   $rootScope.user = {
 
@@ -184,129 +184,77 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', f
       }
   };
 
+  RovatService.query({ps: 1000}, function(response) {
+
+    $rootScope.rovatok = response._embedded.rovatok;
+
+    $rootScope.forovatok = [];
+    $rootScope.alrovatok = [];
+
+    for(var i = 0; i < $rootScope.rovatok.length; i++) {
+      if($rootScope.rovatok[i].parent == 0) {
+        $rootScope.forovatok.push($rootScope.rovatok[i]);
+      } else {
+        $rootScope.alrovatok.push($rootScope.rovatok[i]);
+      }
+    }
+
+    //$rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+
+  });
+
+  RegioService.query({ps: 1000}, function(response) {
+
+    $rootScope.regiok = response._embedded.regio;
+
+    $rootScope.foregiok = [];
+    $rootScope.alregiok = [];
+    $rootScope._alregiok = [];
+
+    for(var i = 0; i < $rootScope.regiok.length; i++) {
+      if($rootScope.regiok[i].parent == 0) {
+        $rootScope.foregiok.push($rootScope.regiok[i]);
+      } else {
+        $rootScope.alregiok.push($rootScope.regiok[i]);
+
+        if(angular.isUndefined($rootScope._alregiok[$rootScope.regiok[i].parent])) {
+            $rootScope._alregiok[$rootScope.regiok[i].parent] = [];
+        }
+
+        $rootScope._alregiok[$rootScope.regiok[i].parent].push($rootScope.regiok[i]);
+      }
+    }
+
+    //$rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+  });
+
+  $rootScope.regio = 0;
+
+  $rootScope.resetRovat = function() {
+    $rootScope.rovat = {id: 0, nev: 'Rovat'}
+    $rootScope.forovat = {id: 0, nev: 'Rovat'};
+  };
+
+  $rootScope.setRovat  = function (forovat, rovat) {
+    $rootScope.forovat = forovat;
+    $rootScope.rovat = rovat || {id: 0, nev: 'Rovat'};
+  };
+
+  $rootScope.resetRovat();
+
   $state.go('mainpage');
 
 }]);
 
-hirdetekApp.controller('MainpageCtrl', [ '$scope', '$state', 'RovatService', 'RegioService', function ($scope, $state, RovatService, RegioService) {
-
-  $scope.rovat = 0;
-  $scope.regio = 0;
-
-  $scope.rovatNev = "Rovat";
-
-  RovatService.query({ps: 1000}, function(response) {
-
-    $scope.rovatok = response._embedded.rovatok;
-
-    $scope.forovatok = [];
-    $scope.alrovatok = [];
-
-    for(var i = 0; i < $scope.rovatok.length; i++) {
-      if($scope.rovatok[i].parent == 0) {
-        $scope.forovatok.push($scope.rovatok[i]);
-      } else {
-        $scope.alrovatok.push($scope.rovatok[i]);
-      }
-    }
-
-    //$scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-
-  });
-
-  $scope.setRovat  = function (rovat) {
-    $scope.rovat = rovat.id;
-    $scope.rovatNev = rovat.nev;
-  };
-
-  RegioService.query({ps: 1000}, function(response) {
-
-    $scope.regiok = response._embedded.regio;
-
-    $scope.foregiok = [];
-    $scope.alregiok = [];
-    $scope._alregiok = [];
-
-    for(var i = 0; i < $scope.regiok.length; i++) {
-      if($scope.regiok[i].parent == 0) {
-        $scope.foregiok.push($scope.regiok[i]);
-      } else {
-        $scope.alregiok.push($scope.regiok[i]);
-
-        if(angular.isUndefined($scope._alregiok[$scope.regiok[i].parent])) {
-            $scope._alregiok[$scope.regiok[i].parent] = [];
-        }
-
-        $scope._alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
-      }
-    }
-
-    //$scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', function ($scope, $rootScope, $state) {
 
   $scope.doSearch = function() {
      $state.go('hirdetesek');
   };
 
-  });
-
 }]);
 
-hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'RovatService', 'RegioService', function ($scope, HirdetesService, RovatService, RegioService) {
-
-  $scope.rovat = 0;
-  $scope.regio = 0;
-
-  $scope.rovatNev = "Rovat";
-
-  RovatService.query({ps: 1000}, function(response) {
-
-    $scope.rovatok = response._embedded.rovatok;
-
-    $scope.forovatok = [];
-    $scope.alrovatok = [];
-
-    for(var i = 0; i < $scope.rovatok.length; i++) {
-      if($scope.rovatok[i].parent == 0) {
-        $scope.forovatok.push($scope.rovatok[i]);
-      } else {
-        $scope.alrovatok.push($scope.rovatok[i]);
-      }
-    }
-
-    //$scope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-
-  });
-
-  $scope.setRovat  = function (rovat) {
-    $scope.rovat = rovat.id;
-    $scope.rovatNev = rovat.nev;
-  };
-
-  RegioService.query({ps: 1000}, function(response) {
-
-    $scope.regiok = response._embedded.regio;
-
-    $scope.foregiok = [];
-    $scope.alregiok = [];
-    $scope._alregiok = [];
-
-    for(var i = 0; i < $scope.regiok.length; i++) {
-      if($scope.regiok[i].parent == 0) {
-        $scope.foregiok.push($scope.regiok[i]);
-      } else {
-        $scope.alregiok.push($scope.regiok[i]);
-
-        if(angular.isUndefined($scope._alregiok[$scope.regiok[i].parent])) {
-            $scope._alregiok[$scope.regiok[i].parent] = [];
-        }
-
-        $scope._alregiok[$scope.regiok[i].parent].push($scope.regiok[i]);
-      }
-    }
-
-    //$scope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-
-  });
+hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesService', function ($scope, $rootScope, HirdetesService) {
 
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
@@ -319,10 +267,9 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', 'HirdetesService', 'Rovat
   };
 
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $scope.rovat, regio: $scope.regio, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
+    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $rootScope.rovat.id, regio: $rootScope.regio, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
-      console.log($scope.hirdetesek);
     });
   };
 
