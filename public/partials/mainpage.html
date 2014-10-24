@@ -15,7 +15,7 @@
                                 <div class="input-group">
                                     <span class="input-group-addon input-group-addon-text">Find me a</span>
 
-                                    <input type="text" class="form-control col-sm-3"  ng-model='search' placeholder="e.g. BMW, 2 bed flat, sofa ">
+                                    <input type="text" class="form-control col-sm-3"  ng-model='search.text' placeholder="pl. BMW, 2 szobas lakas, ulogarnitura ">
 
                                     <div class="input-group-addon hidden-xs">
                                         <div class="btn-group" >
@@ -108,7 +108,7 @@
 
                     <ul class="nav nav-tabs" id="myTab">
 
-                        <li ng-repeat="foregio in foregiok" ng-class="{active : $first}"><a data-toggle="tab"  href="#regio{{foregio.id}}">{{foregio.nev}}</a></li>
+                        <li ng-repeat="foregio in foregiok" ng-class="{active : $first}"><a data-toggle="tab"  href="#regio{{foregio.id}}" ng-click="setRegio(foregio)">{{foregio.nev}}</a></li>
 
                         <!--li class=""><a data-toggle="tab"  href="#popular">Popular cities</a></li>
                         <li class=""><a data-toggle="tab"  href="#EN">England</a></li>
@@ -140,7 +140,7 @@
 
                                     <div class="col-sm-12">
 
-                                        <a href="listings.html" ng-repeat="alregio in _alregiok[foregio.id]" style="display:block">{{alregio.nev}}</a><br />
+                                        <a href="#" ng-repeat="alregio in _alregiok[foregio.id]" ng-click="setRegio(foregio,alregio);doSearch()" style="display:block">{{alregio.nev}}</a><br />
 
                                     </div>
                                 </div>

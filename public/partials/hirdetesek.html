@@ -14,7 +14,7 @@
                                                 <div class="input-group">
                                                     <span class="input-group-addon input-group-addon-text hidden-xs">Find me a</span>
 
-                                                    <input type="text" class="form-control col-sm-3" placeholder="e.g. BMW, 2 bed flat, sofa ">
+                                                    <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='search.text'>
 
                                                     <div class="input-group-addon hidden-xs">
                                                         <div class="btn-group" >
@@ -60,14 +60,16 @@
     <div class="row">
         <div class="col-sm-12">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Vehicles</a></li>
-                <li class="active">Cars</li>
-                <li class="active">4,699 results for <strong>"Cars"</strong> in London</li>
+                <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li>
+                <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat)">{{forovat.nev}}</a></li>
+                <li ng-if="forovat.id > 0 && rovat.id > 0" class="active">{{rovat.nev}}</li>
+                <li ng-if="foregio.id > 0">{{foregio.nev}}</li>
+                <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
+                <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
+                <li class="active">4,699 results</li>
             </ol>
         </div>
     </div>
-
 
 
 <div class="row">
@@ -90,9 +92,9 @@
                                     <label>Rovat</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select class=" form-control ">
-                                        <option ng-repeat="rov in forovatok" value="{rov.id}}" ng-selected="rov.id == rovat.id">{{rov.nev}}</option>
-                                    </select>
+                                <select class=" form-control ">
+                                    <option ng-repeat="rov in forovatok" value="{{rov.id}}" ng-selected="rov.id == forovat.id" >{{rov.nev}}</option>
+                                </select>
                                 </div>
                             </div>
 
@@ -102,7 +104,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <select class=" form-control ">
-                                        <option ng-repeat="reg in regiok" value="{reg.id}}">{{reg.nev}}</option>
+                                        <option ng-repeat="reg in foregiok" value="{{reg.id}}" ng-selected="reg.id == foregio.id">{{reg.nev}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -160,12 +162,10 @@
                                 </div>
                             </div>
 
-
                         </fieldset>
                     </form>
                 </div>
             </div>
-
 
         </div>
     </div>
@@ -202,7 +202,8 @@
                 <div class="panel-heading">Alkategoriak</div>
                 <div class="panel-body">
                     <div class="property" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id">
-                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
+                        <a ng-if="alrov.id != rovat.id" href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
+                        <strong ng-if="alrov.id == rovat.id">{{alrov.nev}}</strong>
                     </div>
                 </div>
             </div>
@@ -274,7 +275,7 @@
 
                 <div class="col-sm-10">
                     <h3><a class="" href="details.html">{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar}} Ft</strong></span></a></h3>
-                    <p class="muted">Located in <strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><strong>{{hirdetes.g_regio_nev}}</strong></p>
+                    <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><strong>{{hirdetes.g_regio_nev}}</strong></p>
                     <p class="muted">Posted {{hirdetes.feladas}} to <a href="#" class="underline">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg}}</p>
                     <p class="ad-description">

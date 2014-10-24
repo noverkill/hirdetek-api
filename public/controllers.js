@@ -228,7 +228,17 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     //$rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
   });
 
-  $rootScope.regio = 0;
+  $rootScope.resetRegio = function() {
+    $rootScope.regio = {id: 0, nev: 'Regio'}
+    $rootScope.foregio = {id: 0, nev: 'Regio'};
+  };
+
+  $rootScope.setRegio  = function (foregio, regio) {
+    $rootScope.foregio = foregio;
+    $rootScope.regio = regio || {id: 0, nev: 'Regio'};
+  };
+
+  $rootScope.resetRegio();
 
   $rootScope.resetRovat = function() {
     $rootScope.rovat = {id: 0, nev: 'Rovat'}
@@ -241,6 +251,10 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   };
 
   $rootScope.resetRovat();
+
+  $rootScope.search = {
+    text: ''
+  };
 
   $state.go('mainpage');
 
@@ -260,14 +274,12 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesSe
 	$scope.itemsPerPage = 25;
 	$scope.currentPage = 1;
 
-  $scope.search = '';
-
   $scope.setPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $scope.search, rovat: $rootScope.rovat.id, regio: $rootScope.regio, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
+    HirdetesService.query({page: $scope.currentPage, search: $rootScope.search.text, rovat: $rootScope.rovat.id, regio: $rootScope.regio.id, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
     });
