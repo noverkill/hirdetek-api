@@ -66,188 +66,105 @@
                 <li ng-if="foregio.id > 0">{{foregio.nev}}</li>
                 <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
                 <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
-                <li class="active">4,699 results</li>
+                <li class="active">{{totalItems}} hirdetes</li>
             </ol>
         </div>
     </div>
 
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-sm-4  hidden-xs">
-        <div class="sidebar ">
+        <div class="col-sm-4  hidden-xs">
 
-    <div class="row ">
+            <div class="sidebar ">
 
-        <div class="col-sm-11">
+                <div class="row ">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Filters</div>
-                <div class="panel-body">
-                    <form class="form-inline mini" style="margin-bottom: 0px;">
-                        <fieldset>
+                    <div class="col-sm-11">
 
-                            <div class="row filter-row">
-                                <div class="col-sm-6">
-                                    <label>Rovat</label>
-                                </div>
-                                <div class="col-sm-6">
-                                <select class=" form-control ">
-                                    <option ng-repeat="rov in forovatok" value="{{rov.id}}" ng-selected="rov.id == forovat.id" >{{rov.nev}}</option>
-                                </select>
-                                </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Filter</div>
+                            <div class="panel-body">
+                                <form class="form-inline mini" style="margin-bottom: 0px;" name="filterForm">
+                                    <fieldset>
+
+                                        <div class="row filter-row">
+                                            <div class="col-sm-12">
+                                                <label>Ar</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control price-input" placeholder="min" ng-model="minar" />
+                                                    <span class="input-group-addon">Ft</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control price-input" placeholder="max" ng-model="maxar" />
+                                                    <span class="input-group-addon">Ft</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row filter-row">
+
+                                            <div class="col-sm-2 pull-right" style="margin-top: 10px;">
+                                                <button class="btn btn-primary pull-right" data-ng-click="setPage(1);pageChanged()">Update results</button>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </form>
                             </div>
+                        </div>
 
-                            <div class="row filter-row">
-                                <div class="col-sm-6">
-                                    <label>Regio</label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class=" form-control ">
-                                        <option ng-repeat="reg in foregiok" value="{{reg.id}}" ng-selected="reg.id == foregio.id">{{reg.nev}}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row filter-row">
-                                <div class="col-sm-12">
-                                    <label>Ar</label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control price-input" placeholder="min" />
-                                        <span class="input-group-addon">Ft</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control price-input" placeholder="max" />
-                                        <span class="input-group-addon">Ft</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row filter-row">
-                                <div class="col-sm-12">
-                                    <label>Search only:</label>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" value="option1" checked>
-                                            Urgent ads
-                                        </label>
-                                    </div><br />
-
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" value="option2">
-                                            Featured ads
-                                        </label>
-                                    </div><br />
-
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" value="option2">
-                                            Only ads with pictures
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row filter-row">
-
-                                <div class="col-sm-2 pull-right" style="margin-top: 10px;">
-                                    <button class="btn btn-primary pull-right" type="submit">Update results</button>
-
-                                </div>
-                            </div>
-
-                        </fieldset>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <div class="row ">
-        <div class="col-sm-11">
-            <div class="panel panel-default">
-                <div class="panel-heading">Refine category</div>
-                <div class="panel-body">
-                    <ul class="nav nav-category">
-                        <li>
-                            <a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a>
-                            <ul ng-if="forovat.id > 0">
-                                <li><a class="active" href="#" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
-                                    <ul ng-if="rovat.id > 0">
-                                        <li>
-                                            <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a> (66)<a href="#" class="remove-category"><i class="fa fa-times"></i></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row ">
-        <div class="col-sm-11">
-            <div class="panel panel-default">
-                <div class="panel-heading">Alkategoriak</div>
-                <div class="panel-body">
-                    <div class="property" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id">
-                        <a ng-if="alrov.id != rovat.id" href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
-                        <strong ng-if="alrov.id == rovat.id">{{alrov.nev}}</strong>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!--div class="row ">
-        <div class="col-sm-11">
-            <div class="panel panel-default">
-                <div class="panel-heading">Location</div>
-                <div class="panel-body">
-                    <ul class="nav">
-                        <li>
-                            <a class="active" href="category.html">Greater London (12)</a>
-                            <ul>
-                                <li><a href="listings.html"> - Central London (11)</a></li>
-                                <li><a class="active" href="listings.html"> - East London (1)</a></li>
-                                <li><a class="active" href="listings.html"> - North London (1)</a></li>
-                                <li><a class="active" href="listings.html"> - North London (1)</a></li>
-                                <li><a class="active" href="listings.html"> - North West London  (1)</a></li>
-                                <li><a class="active" href="listings.html"> - South East London  (1)</a></li>
-                                <li><a class="active" href="listings.html"> - South West London  (1)</a></li>
-                                <li><a class="active" href="listings.html"> - West London  (1)</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="category.html">Brighton (5)</a></li>
-                        <li><a href="category.html">Cambridge (2)</a></li>
-                        <li><a href="category.html">Essex (2)</a></li>
-                        <li><a href="category.html">Guildford (2)</a></li>
-                        <li><a href="category.html">Kent (2)</a></li>
-                        <li><a href="category.html">Luton (2)</a></li>
-                        <li><a href="category.html">Milton Keynes (2)</a></li>
-                        <li><a href="category.html">Oxford (2)</a></li>
-                        <li><a href="category.html">Reading (2)</a></li>
-                    </ul>
 
+                <div class="row ">
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Refine category</div>
+                            <div class="panel-body">
+                                <ul class="nav nav-category">
+                                    <li>
+                                        <a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a>
+                                        <ul ng-if="forovat.id > 0">
+                                            <li><a class="active" href="#" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
+                                                <ul ng-if="rovat.id > 0">
+                                                    <li>
+                                                        <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a> (66)<a href="#" class="remove-category"><i class="fa fa-times"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="row ">
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Alkategoriak</div>
+                            <div class="panel-body">
+                                <div class="property" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id">
+                                    <a ng-if="alrov.id != rovat.id" href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
+                                    <strong ng-if="alrov.id == rovat.id">{{alrov.nev}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
         </div>
-    </div-->
 
     </div>
-
-</div>
 
         <div class="col-sm-8 pull-right listings">
 
@@ -258,10 +175,10 @@
                 <div class="pull-left">
                     <strong>Today, Saturday 14th September</strong>
                 </div>
-                <div class="pull-right">
+                <div class="pull-right" ng-click="setOrd('feladas');doSearch()">
                     <span style="">Sort by:&nbsp;&nbsp;&nbsp;</span>
-                    <a href="#"  data-toggle="tooltip" data-placement="top" title="Sort from newest to oldest"> Date <i class="fa fa-chevron-up"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Sort from lowest price to highest price"> Price <i class="fa fa-chevron-down"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum <i class="fa fa-chevron-up"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa fa-chevron-down"></i></a>
                 </div>
             </div>
 
@@ -274,9 +191,9 @@
                 </div>
 
                 <div class="col-sm-10">
-                    <h3><a class="" href="details.html">{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar}} Ft</strong></span></a></h3>
+                    <h3><a class="" href="details.html">{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
                     <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><strong>{{hirdetes.g_regio_nev}}</strong></p>
-                    <p class="muted">Posted {{hirdetes.feladas}} to <a href="#" class="underline">{{hirdetes.r_rovat_nev}}</a></p>
+                    <p class="muted">Feladas {{hirdetes.feladas}} to <a href="#" class="underline">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg}}</p>
                     <p class="ad-description">
                         <strong>2006</strong> |

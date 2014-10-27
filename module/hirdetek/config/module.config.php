@@ -67,6 +67,8 @@ return array(
                 2 => 'regio',
                 3 => 'minar',
                 4 => 'maxar',
+                5 => 'ord',
+                6 => 'ordir',
             ),
             'page_size' => 25,
             'page_size_param' => 'ps',

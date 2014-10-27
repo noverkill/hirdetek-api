@@ -184,6 +184,10 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
       }
   };
 
+  $rootScope.goHome = function() {
+    $state.go('mainpage');
+  }
+
   RovatService.query({ps: 1000}, function(response) {
 
     $rootScope.rovatok = response._embedded.rovatok;
@@ -272,14 +276,31 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesSe
 
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
-	$scope.currentPage = 1;
+  $scope.currentPage = 1;
+
+  $scope.ord = 'feladas';
+	$scope.ordir = 'DESC';
 
   $scope.setPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
+  $scope.setOrd = function (ord) {
+    $scope.ord = ord;
+    $scope.ordir = $scope.ordir == 'DESC' ? 'ASC' : 'DESC';
+  };
+
   $scope.pageChanged = function() {
-    HirdetesService.query({page: $scope.currentPage, search: $rootScope.search.text, rovat: $rootScope.rovat.id, regio: $rootScope.regio.id, minar: $scope.minar, maxar: $scope.maxar}, function(response) {
+    HirdetesService.query({
+          page: $scope.currentPage,
+          search: $rootScope.search.text,
+          rovat: $rootScope.rovat.id || $rootScope.forovat.id,
+          regio: $rootScope.regio.id || $rootScope.foregio.id,
+          minar: $scope.minar,
+          maxar: $scope.maxar,
+          ord: $scope.ord,
+          ordir: $scope.ordir
+      }, function(response) {
       $scope.hirdetesek = response._embedded.hirdetes;
       $scope.totalItems = response.total_items;
     });

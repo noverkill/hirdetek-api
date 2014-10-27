@@ -40,15 +40,34 @@ class HirdetesMapper
             $where->nest->equalTo('pg.id', $params['regio'])->OR->equalTo('g.id', $params['regio']);
         }
 
-        if ($params->get('minar')) {
-            $where->nest->greaterThanOrEqualTo(new Zend_Db_Expr('h.ar'), $params['minar']);
-        }
-
-        if ($params->get('maxar')) {
-            $where->nest->lessThanOrEqualTo('h.ar', $params['maxar']);
-        }
-
         $select = $select->where($where);
+
+        if($minar = $params->get('minar')) {
+            $minar = (int) $minar;
+
+            if ($minar >=0 && $minar < 999999999) {
+                $select->where("h.ar IS NOT NULL")->where("h.ar >= " . $minar);
+            }
+        }
+
+        if($maxar = $params->get('maxar')) {
+            $maxar = (int) $maxar;
+
+            if ($maxar >=0 && $maxar < 999999999) {
+                $select->where("h.ar IS NOT NULL")->where("h.ar <= " . $maxar);
+            }
+        }
+
+        $ords = array( 'feladas', 'ar');
+        $ordirs = array ('DESC', 'ASC');
+
+        //print "ord: " . $params->get('ord');
+        //print "ordir: " . $params->get('ordir');
+
+        $ord = in_array($params->get('ord'), $ords) ? $params->get('ord') : 'feladas';
+        $ordir = in_array($params->get('ordir'), $ordirs) ? $params->get('ordir') : 'DESC';
+
+        $select->order("$ord $ordir");
 
         //print $select->getSqlString();
         //exit;
