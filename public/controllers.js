@@ -260,6 +260,8 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     text: ''
   };
 
+  $rootScope.date = new Date();
+
   $state.go('mainpage');
 
 }]);

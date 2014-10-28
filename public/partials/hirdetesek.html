@@ -168,21 +168,16 @@
 
         <div class="col-sm-8 pull-right listings">
 
-
-
-
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
-                    <strong>Today, Saturday 14th September</strong>
+                    <strong>Ma, {{date | date:'longDate'}} van</strong>
                 </div>
-                <div class="pull-right" ng-click="setOrd('feladas');doSearch()">
-                    <span style="">Sort by:&nbsp;&nbsp;&nbsp;</span>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum <i class="fa fa-chevron-up"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa fa-chevron-down"></i></a>
+                <div class="pull-right">
+                    <!--span style="">Rendezes:&nbsp;&nbsp;&nbsp;</span-->
+                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum<i class="fa" ng-class="(ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="ord=='feladas'"></i></a>
+                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa" ng-class="(ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="ord=='ar'"></i></a>
                 </div>
             </div>
-
-
 
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
 
