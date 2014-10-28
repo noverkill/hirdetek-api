@@ -1,29 +1,135 @@
-            <div class="jumbotron home-tron-search well ">
-                <div class="container">
+<div class="jumbotron home-tron-search well ">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="home-tron-search-inner">
+
                     <div class="row">
 
-                        <div class="col-sm-12">
-                            <div class="home-tron-search-inner">
+                        <div class="col-sm-8 col-xs-9" style="text-align: center">
 
-                                <div class="row">
+                            <div class="row">
 
-                                    <div class="col-sm-8 col-xs-9" style="text-align: center">
-                                        <div class="row">
+                                <div class="col-sm-12 col-sm-offset-1">
 
-                                            <div class="col-sm-12 col-sm-offset-1">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon input-group-addon-text hidden-xs">Find me a</span>
+                                    <div class="input-group">
 
-                                                    <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='search.text'>
+                                        <span class="input-group-addon input-group-addon-text hidden-xs">Find me a</span>
 
-                                                    <div class="input-group-addon hidden-xs">
-                                                        <div class="btn-group" >
-                                                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
-                                                            >{{forovat.nev}} <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu" role="menu">
-                                                                <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
-                                                            </ul>
+                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='search.text'>
+
+                                        <div class="input-group-addon hidden-xs">
+                                            <div class="btn-group" >
+                                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
+                                                >{{forovat.nev}} <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xs-3" style="text-align: center">
+
+                            <div class="row">
+
+                                <div class="col-sm-11 pull-right">
+
+                                    <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;Search</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container">
+
+    <br />
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <ol class="breadcrumb">
+                <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();">Mind</a></li>
+                <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat);doSearch();">{{forovat.nev}}</a></li>
+                <li ng-if="forovat.id > 0 && rovat.id > 0" class="active">{{rovat.nev}}</li>
+                <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();">{{foregio.nev}}</a></li>
+                <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
+                <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
+                <li class="active">{{totalItems}} hirdetes</li>
+            </ol>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-4 hidden-xs">
+
+            <div class="sidebar ">
+
+                <div class="row ">
+
+                    <div class="col-sm-11 hidden-xs">
+                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%">Regiok  <span class="caret"></span></a>
+                    </div>
+
+                    <div data-backdrop="" id="regionsModal" class="bs-countries-modal-sm  hidden-xs" tabindex="-1" role="dialog" aria-labelledby="regionsModal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="directory-counties">
+                                    <div class="col-sm-12">
+
+                                        <ul class="nav nav-tabs" id="myTab">
+                                            <li class="" ng-repeat="foreg in foregiok">
+                                                <a data-toggle="tab" href="#regio{{foreg.id}}" ng-click="setRegio(foreg);doSearch()">
+                                                    {{foreg.nev}}
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content " id="myTabContent">
+
+                                            <div id="regio{{foreg.id}}" class="tab-pane fade counties-pane" ng-class="(foreg.id==foregio.id) ? 'active in' : ''" ng-repeat="foreg in foregiok">
+
+                                                <div class="col-sm-3">
+
+                                                    <div class="row directory-block">
+
+                                                        <div class="col-sm-12">
+
+                                                            <a href="#" ng-repeat="alreg in _alregiok[foreg.id]" ng-click="setRegio(foreg,alreg);doSearch()" style="display:block">
+                                                                {{alreg.nev}}
+                                                            </a>
+
+                                                            <br />
+
                                                         </div>
                                                     </div>
 
@@ -31,52 +137,17 @@
 
                                             </div>
 
-
                                         </div>
+
                                     </div>
-
-
-
-                                    <div class="col-sm-4 col-xs-3" style="text-align: center">
-                                        <div class="row">
-                                            <div class="col-sm-11 pull-right">
-                                                <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;Search</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
-            </div>
 
-
-            <div class="container">
-
-    <br />
-    <div class="row">
-        <div class="col-sm-12">
-            <ol class="breadcrumb">
-                <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li>
-                <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat)">{{forovat.nev}}</a></li>
-                <li ng-if="forovat.id > 0 && rovat.id > 0" class="active">{{rovat.nev}}</li>
-                <li ng-if="foregio.id > 0">{{foregio.nev}}</li>
-                <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
-                <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
-                <li class="active">{{totalItems}} hirdetes</li>
-            </ol>
-        </div>
-    </div>
-
-
-    <div class="row">
-
-        <div class="col-sm-4  hidden-xs">
-
-            <div class="sidebar ">
+                <br />
 
                 <div class="row ">
 
@@ -151,22 +222,25 @@
                     </div>
                 </div>
 
-                <!--div class="row " ng-show="forovat.id>0">
+                <div class="row ">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Alkategoriak</div>
+                            <div class="panel-heading">Kategoriak</div>
                             <div class="panel-body">
-                                <div class="property" ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id">
-                                    <a ng-if="alrov.id != rovat.id" href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
-                                    <strong ng-if="alrov.id == rovat.id">{{alrov.nev}}</strong>
+                                <div class="property" ng-repeat="forov in forovatok">
+                                    <a href="#" ng-click="setRovat(forov);doSearch()">
+                                        <span ng-if="forov.id!=forovat.id">{{forov.nev}}</span>
+                                        <strong ng-if="forov.id==forovat.id">{{forov.nev}}</strong>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div-->
-        </div>
+                </div>
 
-    </div>
+            </div>
+
+        </div>
 
         <div class="col-sm-8 pull-right listings">
 
@@ -233,4 +307,5 @@
         </div>
 
     </div>
+
 </div>

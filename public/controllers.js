@@ -276,6 +276,14 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesService', function ($scope, $rootScope, HirdetesService) {
 
+  $( "#regionsBtn" ).bind( "click", function() {
+      $('#myTab a:eq(0)').tab('show');
+      $('#regionsModal').modal({
+          keyboard: false
+      });
+      return false;
+  });
+
 	$scope.maxSize = 5;
 	$scope.itemsPerPage = 25;
   $scope.currentPage = 1;
