@@ -245,13 +245,13 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   $rootScope.resetRegio();
 
   $rootScope.resetRovat = function() {
-    $rootScope.rovat = {id: 0, nev: 'Rovat'}
-    $rootScope.forovat = {id: 0, nev: 'Rovat'};
+    $rootScope.rovat = {id: 0, nev: 'Mindem rovat'}
+    $rootScope.forovat = {id: 0, nev: 'Minden rovat'};
   };
 
   $rootScope.setRovat  = function (forovat, rovat) {
     $rootScope.forovat = forovat;
-    $rootScope.rovat = rovat || {id: 0, nev: 'Rovat'};
+    $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
   };
 
   $rootScope.resetRovat();

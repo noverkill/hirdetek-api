@@ -22,7 +22,7 @@
                                                             >{{forovat.nev}} <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu" role="menu">
-                                                                <li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov)">{{forov.nev}}</a></li>
+                                                                <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -121,20 +121,24 @@
                     </div>
                 </div>
 
-
-                <div class="row ">
+                <div class="row " ng-show="forovat.id>0">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Refine category</div>
+                            <div class="panel-heading">Alkategoriak</div>
                             <div class="panel-body">
                                 <ul class="nav nav-category">
                                     <li>
-                                        <a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a>
-                                        <ul ng-if="forovat.id > 0">
-                                            <li><a class="active" href="#" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
-                                                <ul ng-if="rovat.id > 0">
-                                                    <li>
+                                        <!--a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a-->
+                                        <ul>
+                                            <li>
+                                                <a class="active" href="#" ng-if="rovat.id==0" ng-click="setRovat(forovat);doSearch()"><strong>{{forovat.nev}}</strong></a>
+                                                <a class="active" href="#" ng-if="rovat.id>0" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
+                                                <ul>
+                                                    <li ng-show="rovat.id>0">
                                                         <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a> (66)<a href="#" class="remove-category"><i class="fa fa-times"></i></a>
+                                                    </li>
+                                                    <li ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id && alrov.id != rovat.id">
+                                                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -147,7 +151,7 @@
                     </div>
                 </div>
 
-                <div class="row ">
+                <!--div class="row " ng-show="forovat.id>0">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
                             <div class="panel-heading">Alkategoriak</div>
@@ -159,9 +163,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-
+                </div-->
         </div>
 
     </div>
