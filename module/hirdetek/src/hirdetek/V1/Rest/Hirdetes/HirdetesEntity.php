@@ -12,7 +12,9 @@ class HirdetesEntity
         return array(
             'id'     => $this->id,
             'kep'    => $this->kep,
+            'targy'  => $this->targy,
             'szoveg' => $this->szoveg,
+            'ar'     => $this->ar,
         );
     }
 
@@ -20,6 +22,8 @@ class HirdetesEntity
     {
         $this->id     = $array['id'];
         $this->kep    = $array['kep'];
+        $this->targy  = $array['targy'];
         $this->szoveg = $array['szoveg'];
+        $this->ar     = $array['ar'];
     }
 }

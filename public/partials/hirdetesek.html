@@ -18,9 +18,9 @@
 
                                     <div class="input-group">
 
-                                        <span class="input-group-addon input-group-addon-text hidden-xs">Find me a</span>
+                                        <span class="input-group-addon input-group-addon-text hidden-xs">Keresett kifejezes</span>
 
-                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='search.text'>
+                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='filter.text'>
 
                                         <div class="input-group-addon hidden-xs">
                                             <div class="btn-group" >
@@ -28,7 +28,7 @@
                                                 >{{forovat.nev}} <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="#" ng-click="resetRovat()">Minden rovat</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
+                                                    <li><a href="#" ng-click="resetRovat()">Minden rovatban</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -165,13 +165,13 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control price-input" placeholder="min" ng-model="minar" />
+                                                    <input type="text" class="form-control price-input" placeholder="min" ng-model="filter.minar" />
                                                     <span class="input-group-addon">Ft</span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control price-input" placeholder="max" ng-model="maxar" />
+                                                    <input type="text" class="form-control price-input" placeholder="max" ng-model="filter.maxar" />
                                                     <span class="input-group-addon">Ft</span>
                                                 </div>
                                             </div>
@@ -250,8 +250,8 @@
                 </div>
                 <div class="pull-right">
                     <!--span style="">Rendezes:&nbsp;&nbsp;&nbsp;</span-->
-                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum<i class="fa" ng-class="(ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="ord=='feladas'"></i></a>
-                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa" ng-class="(ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="ord=='ar'"></i></a>
+                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="(listing.ord=='feladas'"></i></a>
+                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa" ng-class="((listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="(listing.ord=='ar'"></i></a>
                 </div>
             </div>
 
@@ -262,25 +262,16 @@
                 </div>
 
                 <div class="col-sm-10">
-                    <h3><a class="" href="details.html">{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
+                    <h3><a class="" href="#" ui-sref='viewHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
                     <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><strong>{{hirdetes.g_regio_nev}}</strong></p>
                     <p class="muted">Feladas {{hirdetes.feladas}} to <a href="#" class="underline">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg}}</p>
-                    <p class="ad-description">
-                        <strong>2006</strong> |
-
-                        <strong>98,000 miles</strong> |
-
-                        <strong>2,696 cc</strong> |
-
-                        <strong>Diesel</strong>
-                    </p>
                     <p>
                         <span class="classified_links pull-right">
-                            <a class="link-info underline" href="#">Share</a>&nbsp;
-                            <a class="link-info underline" href="#">Add to favorites</a>
-                            &nbsp;<a class="link-info underline" href="details.html">Details</a>&nbsp;
-                            &nbsp;<a class="link-info underline" href="#">Contact</a></span>
+                            <a class="link-info underline" href="#">Megosztas</a>&nbsp;
+                            <a class="link-info underline" href="#">Kedvencekhez</a>
+                            &nbsp;<a class="link-info underline" href="details.html">Reszletek</a>&nbsp;
+                            &nbsp;<a class="link-info underline" href="#">Kapcsolat</a></span>
                     </p>
                 </div>
             </div>

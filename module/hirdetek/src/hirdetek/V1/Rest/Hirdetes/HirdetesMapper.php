@@ -81,15 +81,31 @@ class HirdetesMapper
 
     public function fetchOne($id)
     {
-        $sql = 'SELECT * FROM hirdetes WHERE id = ?';
+        $sql = 'SELECT h.*,
+               DATEDIFF(CURDATE(),h.feladas) as days_active,
+               r.id as r_rovat_id, r.nev as r_rovat_nev, r.slug as r_rovat_slug,
+               pr.id as p_rovat_id, pr.nev as p_rovat_nev, pr.slug as p_rovat_slug,
+               g.id as g_regio_id, g.nev as g_regio_nev, g.slug as g_regio_slug,
+               pg.id as p_regio_id, pg.nev as p_regio_nev, pg.slug as p_regio_slug
+                FROM hirdetes h
+                JOIN rovat r ON r.id = h.rovat
+                JOIN rovat pr ON pr.id = r.parent
+                JOIN rovat g ON g.id = h.regio
+                JOIN rovat pg ON pg.id = g.parent
+                WHERE h.id = ?';
+
         $resultset = $this->adapter->query($sql, array($id));
+
         $data = $resultset->toArray();
+
         if (!$data) {
             return false;
         }
 
         $entity = new HirdetesEntity();
+
         $entity->exchangeArray($data[0]);
+
         return $entity;
     }
 

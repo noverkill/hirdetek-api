@@ -75,7 +75,7 @@ hirdetekApp.config(function($stateProvider) {
   }).state('viewHirdetes', {
 
     url: '/hirdetes/:id/view',
-    templateUrl: 'partials/hirdetes-view.html',
+    templateUrl: 'partials/reszletek.html',
     controller: 'HirdetesViewController'
 
   }).state('editHirdetes', {
@@ -146,7 +146,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
           $http.post('/oauth', this.credentials)
             .then(function (res) {
-
               $cookieStore.put('tk', res.data.access_token);
           });
         },
@@ -245,8 +244,8 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   $rootScope.resetRegio();
 
   $rootScope.resetRovat = function() {
-    $rootScope.rovat = {id: 0, nev: 'Mindem rovat'}
-    $rootScope.forovat = {id: 0, nev: 'Minden rovat'};
+    $rootScope.rovat = {id: 0, nev: 'Mindem rovatban'}
+    $rootScope.forovat = {id: 0, nev: 'Minden rovatban'};
   };
 
   $rootScope.setRovat  = function (forovat, rovat) {
@@ -256,8 +255,27 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $rootScope.resetRovat();
 
-  $rootScope.search = {
-    text: ''
+  $rootScope.filter = {
+    text: '',
+    minar: null,
+    maxar: null
+  };
+
+  $rootScope.listing = {
+    currentPage: 1,
+    itemsPerPage: 25,
+    maxSize: 5,
+    ord: 'feladas',
+    ordir: 'DESC'
+  }
+
+  $rootScope.setPage = function (pageNo) {
+    $rootScope.listing.currentPage = pageNo;
+  };
+
+  $rootScope.setOrd = function (ord) {
+    $rootScope.listing.ord = ord;
+    $rootScope.listing.ordir = $rootScope.listing.ordir == 'DESC' ? 'ASC' : 'DESC';
   };
 
   $rootScope.date = new Date();
@@ -274,7 +292,7 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
 
 }]);
 
-hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesService', function ($scope, $rootScope, HirdetesService) {
+hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', 'HirdetesService', function ($scope, $rootScope, $state, HirdetesService) {
 
   $( "#regionsBtn" ).bind( "click", function() {
       $('#myTab a:eq(0)').tab('show');
@@ -284,40 +302,24 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesSe
       return false;
   });
 
-	$scope.maxSize = 5;
-	$scope.itemsPerPage = 25;
-  $scope.currentPage = 1;
-
-  $scope.ord = 'feladas';
-	$scope.ordir = 'DESC';
-
-  $scope.setPage = function (pageNo) {
-    $scope.currentPage = pageNo;
-  };
-
-  $scope.setOrd = function (ord) {
-    $scope.ord = ord;
-    $scope.ordir = $scope.ordir == 'DESC' ? 'ASC' : 'DESC';
-  };
-
   $scope.pageChanged = function() {
     HirdetesService.query({
-          page: $scope.currentPage,
-          search: $rootScope.search.text,
-          rovat: $rootScope.rovat.id || $rootScope.forovat.id,
-          regio: $rootScope.regio.id || $rootScope.foregio.id,
-          minar: $scope.minar,
-          maxar: $scope.maxar,
-          ord: $scope.ord,
-          ordir: $scope.ordir
+          page:   $rootScope.listing.currentPage,
+          rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
+          regio:  $rootScope.regio.id || $rootScope.foregio.id,
+          search: $rootScope.filter.text,
+          minar:  $rootScope.filter.minar,
+          maxar:  $rootScope.filter.maxar,
+          ord:    $rootScope.listing.ord,
+          ordir:  $rootScope.listing.ordir
       }, function(response) {
-      $scope.hirdetesek = response._embedded.hirdetes;
-      $scope.totalItems = response.total_items;
+        $scope.hirdetesek = response._embedded.hirdetes;
+        $scope.totalItems = response.total_items;
     });
   };
 
   $scope.doSearch = function() {
-     $scope.setPage(1);
+     $rootScope.setPage(1);
      $scope.pageChanged();
   };
 
@@ -325,7 +327,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', 'HirdetesSe
 
 }]);
 
-hirdetekApp.controller('HirdetesViewController', function($scope, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdetesViewController', function($scope, $state, $stateParams, HirdetesService) {
 
 	$scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
 
