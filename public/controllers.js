@@ -7,7 +7,7 @@ hirdetekApp.service('popupService',function($window){
 });
 
 hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8080/hirdetes/:id', { id: '@id'}, {
+  return $resource( 'http://localhost:8888/hirdetes/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -20,7 +20,7 @@ hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8080/rovatok/:id', { id: '@id'}, {
+  return $resource( 'http://localhost:8888/rovatok/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -33,7 +33,7 @@ hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8080/regio/:id', { id: '@id'}, {
+  return $resource( 'http://localhost:8888/regio/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -46,7 +46,7 @@ hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8080/user/:id', { id: '@id'}, {
+  return $resource( 'http://localhost:8888/user/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false

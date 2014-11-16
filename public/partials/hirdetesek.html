@@ -18,7 +18,7 @@
 
                                     <div class="input-group">
 
-                                        <span class="input-group-addon input-group-addon-text hidden-xs">Keresett kifejezes</span>
+                                        <span class="input-group-addon input-group-addon-text hidden-xs">Keresett kifejezés</span>
 
                                         <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='filter.text'>
 
@@ -46,7 +46,7 @@
 
                                 <div class="col-sm-11 pull-right">
 
-                                    <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;Search</button>
+                                    <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>Keresés</button>
 
                                 </div>
 
@@ -81,7 +81,7 @@
                 <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();">{{foregio.nev}}</a></li>
                 <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
                 <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
-                <li class="active">{{totalItems}} hirdetes</li>
+                <li class="active">{{totalItems}} hirdetés</li>
             </ol>
 
         </div>
@@ -97,7 +97,7 @@
                 <div class="row ">
 
                     <div class="col-sm-11 hidden-xs">
-                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%">Regiok  <span class="caret"></span></a>
+                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%" ng-click="resetRegio();doSearch()">Minden régió  <span class="caret"></span></a>
                     </div>
 
                     <div data-backdrop="" id="regionsModal" class="bs-countries-modal-sm  hidden-xs" tabindex="-1" role="dialog" aria-labelledby="regionsModal" aria-hidden="true">
@@ -154,14 +154,14 @@
                     <div class="col-sm-11">
 
                         <div class="panel panel-default">
-                            <div class="panel-heading">Filter</div>
+                            <div class="panel-heading">Szűrő</div>
                             <div class="panel-body">
                                 <form class="form-inline mini" style="margin-bottom: 0px;" name="filterForm">
                                     <fieldset>
 
                                         <div class="row filter-row">
                                             <div class="col-sm-12">
-                                                <label>Ar</label>
+                                                <label>Ár</label>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
@@ -180,7 +180,7 @@
                                         <div class="row filter-row">
 
                                             <div class="col-sm-2 pull-right" style="margin-top: 10px;">
-                                                <button class="btn btn-primary pull-right" data-ng-click="setPage(1);pageChanged()">Update results</button>
+                                                <button class="btn btn-primary pull-right" data-ng-click="setPage(1);pageChanged()">Frissítés</button>
                                             </div>
                                         </div>
 
@@ -195,7 +195,7 @@
                 <div class="row " ng-show="forovat.id>0">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Alkategoriak</div>
+                            <div class="panel-heading">Alkategoriák</div>
                             <div class="panel-body">
                                 <ul class="nav nav-category">
                                     <li>
@@ -225,7 +225,7 @@
                 <div class="row ">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Kategoriak</div>
+                            <div class="panel-heading">Kategóriák</div>
                             <div class="panel-body">
                                 <div class="property" ng-repeat="forov in forovatok">
                                     <a href="#" ng-click="setRovat(forov);doSearch()">
@@ -250,8 +250,8 @@
                 </div>
                 <div class="pull-right">
                     <!--span style="">Rendezes:&nbsp;&nbsp;&nbsp;</span-->
-                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="(listing.ord=='feladas'"></i></a>
-                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa" ng-class="((listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="(listing.ord=='ar'"></i></a>
+                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Datum<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='feladas'"></i></a>
+                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Price <i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='ar'"></i></a>
                 </div>
             </div>
 
@@ -263,14 +263,14 @@
 
                 <div class="col-sm-10">
                     <h3><a class="" href="#" ui-sref='viewHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
-                    <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><strong>{{hirdetes.g_regio_nev}}</strong></p>
-                    <p class="muted">Feladas {{hirdetes.feladas}} to <a href="#" class="underline">{{hirdetes.r_rovat_nev}}</a></p>
+                    <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</strong></p>
+                    <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg}}</p>
                     <p>
                         <span class="classified_links pull-right">
-                            <a class="link-info underline" href="#">Megosztas</a>&nbsp;
+                            <a class="link-info underline" href="#">Megosztás</a>&nbsp;
                             <a class="link-info underline" href="#">Kedvencekhez</a>
-                            &nbsp;<a class="link-info underline" href="details.html">Reszletek</a>&nbsp;
+                            &nbsp;<a class="link-info underline" href="details.html">Részletek</a>&nbsp;
                             &nbsp;<a class="link-info underline" href="#">Kapcsolat</a></span>
                     </p>
                 </div>
