@@ -1,4 +1,8 @@
-var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies']);
+var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
+
+hirdetekApp.value('cgBusyDefaults',{
+    message:'Betoltes'
+});
 
 hirdetekApp.service('popupService',function($window){
     this.showPopup=function(message){
@@ -63,8 +67,10 @@ hirdetekApp.config(function($stateProvider) {
   $stateProvider.state('mainpage', {
 
     url: '/',
-    templateUrl: 'partials/mainpage.html',
-    controller: 'MainpageCtrl'
+    templateUrl: 'partials/hirdetesek.html',
+    controller: 'HirdetesListCtrl'
+    // templateUrl: 'partials/mainpage.html',
+    // controller: 'MainpageCtrl'
 
   }).state('hirdetesek', {
 
@@ -303,7 +309,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   });
 
   $scope.pageChanged = function() {
-    HirdetesService.query({
+      $scope.hirdetesService = HirdetesService.query({
           page:   $rootScope.listing.currentPage,
           rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
           regio:  $rootScope.regio.id || $rootScope.foregio.id,
@@ -315,7 +321,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       }, function(response) {
         $scope.hirdetesek = response._embedded.hirdetes;
         $scope.totalItems = response.total_items;
-    });
+    }).$promise;
   };
 
   $scope.doSearch = function() {
