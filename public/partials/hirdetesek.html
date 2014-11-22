@@ -261,7 +261,7 @@
                 </div>
 
                 <div class="col-sm-10">
-                    <h3><a class="" href="#" ui-sref='viewHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
+                    <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
                     <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
                     <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg}}</p>
@@ -269,7 +269,7 @@
                         <span class="classified_links pull-right">
                             <a class="link-info underline" href="#">Megosztás</a>&nbsp;
                             <a class="link-info underline" href="#">Kedvencekhez</a>
-                            &nbsp;<a class="link-info underline" href="details.html">Részletek</a>&nbsp;
+                            &nbsp;<a class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Részletek</a>&nbsp;
                             &nbsp;<a class="link-info underline" href="#">Kapcsolat</a></span>
                     </p>
                 </div>

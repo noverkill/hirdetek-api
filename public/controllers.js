@@ -78,11 +78,11 @@ hirdetekApp.config(function($stateProvider) {
     templateUrl: 'partials/hirdetesek.html',
     controller: 'HirdetesListCtrl'
 
-  }).state('viewHirdetes', {
+  }).state('detailHirdetes', {
 
-    url: '/hirdetes/:id/view',
-    templateUrl: 'partials/reszletek.html',
-    controller: 'HirdetesViewController'
+    url: '/hirdetes/:id/detail',
+    templateUrl: 'partials/hirdetes-detail.html',
+    controller: 'HirdetesDetailController'
 
   }).state('editHirdetes', {
 
@@ -333,9 +333,13 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
 }]);
 
-hirdetekApp.controller('HirdetesViewController', function($scope, $state, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
 
 	$scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
+
+  $scope.doSearch = function() {
+     $state.go('hirdetesek');
+  };
 
 });
 
