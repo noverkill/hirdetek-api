@@ -329,13 +329,22 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
      $scope.pageChanged();
   };
 
-   $scope.pageChanged();
+  $scope.pageChanged();
+
+  $scope.setHirdetes = function() {
+    console.log("setHirdetes");
+    $scope.hirdetes = 10;
+  };
 
 }]);
 
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
 
-	$scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
+	$scope.hirdetesService = HirdetesService.get({ 
+    id: $stateParams.id 
+  }, function(response) {
+    $scope.hirdetes = response;  
+  }).$promise;
 
   $scope.doSearch = function() {
      $state.go('hirdetesek');
