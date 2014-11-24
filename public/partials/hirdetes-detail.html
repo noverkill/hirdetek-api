@@ -51,10 +51,11 @@
 
                     <p>
                         <span class="classified_links ">
-                            <a class="link-info" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
-                            <a class="link-info " href="#"><i class="fa fa-star"></i> Kedvencekhez</a>
-                            &nbsp;<a class="link-info " href="#"><i class="fa fa-envelope-o"></i> Kapcsolat</a>
-                            &nbsp;<a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a></span>
+                            <a class="link-info" ng-click="shareHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
+                            <a class="link-info" ng-click="saveHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#"><i class="fa fa-star"></i> Kedvencekhez</a>&nbsp;
+                            <a class="link-info" href="#"><i class="fa fa-envelope-o"></i> Kapcsolat</a>&nbsp;
+                            <a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a>
+                        </span>
                     </p>
 
                 </div>

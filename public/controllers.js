@@ -288,6 +288,22 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $state.go('mainpage');
 
+  //modal window's setup functions
+
+  $rootScope.login = function() {
+      console.log("login");
+     $rootScope.mustLoginMessage = 0;
+  };
+
+  $rootScope.shareHirdetes = function(id) {
+     $rootScope.hirdetesId = id;
+  };
+
+  $rootScope.saveHirdetes = function(id) {
+     $rootScope.hirdetesId = id;
+     $rootScope.mustLoginMessage = 1;
+  };  
+
 }]);
 
 hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', function ($scope, $rootScope, $state) {
@@ -331,11 +347,6 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
   $scope.pageChanged();
 
-  $scope.setHirdetes = function() {
-    console.log("setHirdetes");
-    $scope.hirdetes = 10;
-  };
-
 }]);
 
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
@@ -348,7 +359,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
 
   $scope.doSearch = function() {
      $state.go('hirdetesek');
-  };
+  };  
 
 });
 
