@@ -180,6 +180,9 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $injector.get("$http").defaults.transformRequest = function(data, headersGetter) {
 
+      //curl -i "http://localhost:8888/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
+      //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
+
       if($rootScope.user.isLogged()) {
         headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
       }

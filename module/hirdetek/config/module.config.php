@@ -203,18 +203,50 @@ return array(
         'authorization' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
                 'entity' => array(
-                    'GET' => false,
+                    'GET' => true,
                     'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
                 ),
                 'collection' => array(
-                    'GET' => false,
+                    'GET' => true,
                     'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
+                ),
+            ),
+            'hirdetek\\V1\\Rest\\Rovatok\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'hirdetek\\V1\\Rest\\Regio\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
                 ),
             ),
         ),
