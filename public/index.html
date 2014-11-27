@@ -62,8 +62,17 @@
 
                             <div class="pull-right">
 
-                                <a data-toggle="modal" data-target="#modalLogin" ng-click="login()" href="#">Login</a> |
-                                <a href="register.html">Register</a> |
+                                <!--a data-toggle="modal" data-target="#modalLogin" ng-click="login()" href="#">Login</a> | -->
+
+                                <span ng-show="user.logged == 0">
+                                    <a href="#" ui-sref="login">Login</a> |                                    
+                                    <a href="register.html">Register</a> |
+                                </span>                                
+
+                                <span ng-show="user.logged">
+                                    <a href="#" ng-click="user.logout()">Logout</a> |                                    
+                                </span>
+
                                 <a href="account_dashboard.html">My account</a>
                                 <a href="account_ad_create.html" class="btn btn-warning post-ad-btn">Post an ad</a>
 
@@ -141,10 +150,11 @@
                         
                         <p>Amenyiben már regisztrált kérjük adja meg az adatait</p>
 
-                        <form method="POST" action="account_dashboard.html" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p">
+                        <!--form method="POST" action="account_dashboard.html" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p"-->
+                        <form method="POST" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p">
 
                             <div class="form-group">
-                                <input placeholder="Felhasználó név / email" class="form-control" name="email" type="text">                
+                                <input placeholder="Felhasználó név / email" class="form-control" name="username" type="text">                
                             </div>
 
                             <div class="form-group">

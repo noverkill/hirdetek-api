@@ -142,21 +142,38 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         credentials: {
           username: '',
           password: '',
+          remember: 1,
           grant_type: 'password',
-          client_id: 'testclient2'
+          client_id: 'testclient'
         },
+        logged: 0,
         login: function (credentials) {
 
           this.credentials.username = credentials.username;
           this.credentials.password = credentials.password;
+          this.credentials.remember = credentials.remember;
 
-          $http.post('/oauth', this.credentials)
-            .then(function (res) {
-              $cookieStore.put('tk', res.data.access_token);
-          });
+          if(this.credentials.remember) {
+            $rootScope.user.remember(credentials);
+          } else {
+            $rootScope.user.forget(credentials);
+          }
+
+          $http.post('/oauth', this.credentials).
+            success(function(data, status, headers, config) {
+              $rootScope.user.logged = 1;
+              $cookieStore.put('tk', data.access_token);
+              $state.go('hirdetesek');
+            }).
+            error(function(data, status, headers, config) {
+              console.log('login error');
+              console.log(data, status, headers, config);
+            });
+
         },
         logout: function () {
             $cookieStore.remove('tk');
+            $rootScope.user.logged = 0;
         },
         getTk: function() {
             return $cookieStore.get('tk');
@@ -183,7 +200,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
       //curl -i "http://localhost:8888/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
       //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
 
-      if($rootScope.user.isLogged()) {
+      if($rootScope.user.logged) {
         headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
       }
 
@@ -338,8 +355,13 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
           ord:    $rootScope.listing.ord,
           ordir:  $rootScope.listing.ordir
       }, function(response) {
+        console.log(response);
         $scope.hirdetesek = response._embedded.hirdetes;
         $scope.totalItems = response.total_items;
+    }, function(error) {
+        console.log(error);
+        $scope.hirdetesek = [];
+        $scope.totalItems = 0;
     }).$promise;
   };
 
@@ -408,18 +430,6 @@ hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, 
     $scope.credentials = $rootScope.user.getCredentials();
   }
 
-  $scope.login = function (credentials) {
-
-    if(credentials.remember) {
-      $rootScope.user.remember(credentials);
-    } else {
-      $rootScope.user.forget(credentials);
-    }
-
-    $rootScope.user.login(credentials);
-
-    $state.go('hirdetesek');
-  }
 });
 
 hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
