@@ -96,28 +96,30 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Hirdetés küldése emailben</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" cg-busy="megosztasWait">
 
-                        <form method="POST" action="account_dashboard.html" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p">
+                        <b ng-show="share.success">A hirdetést sikeresen elküldtük!</b>
+
+                        <form id="share-form" ng-submit="shareHirdetes(this)" class="form ajax" accept-charset="UTF-8" data-replace=".error-message p">
 
                             <p>Feladó</p>
 
                             <div class="form-group">
-                                <input placeholder="Ön neve" class="form-control" name="email" type="text">                
+                                <input placeholder="Ön neve" class="form-control" ng-model="share.sender.name" type="text">                
                             </div>
 
                             <div class="form-group">
-                                <input placeholder="Ön email címe" class="form-control" name="password" type="text" value="">                
+                                <input placeholder="Ön email címe" class="form-control" ng-model="share.sender.email" type="text">                
                             </div>                            
 
                             <p>Címzett</p>
 
                             <div class="form-group">
-                                <input placeholder="Címzett neve" class="form-control" name="email" type="text">                
+                                <input placeholder="Címzett neve" class="form-control" ng-model="share.recipient.name" type="text">                
                             </div>
 
                             <div class="form-group">
-                                <input placeholder="Címzett email címe" class="form-control" name="password" type="text" value="">                
+                                <input placeholder="Címzett email címe" class="form-control" ng-model="share.recipient.email" type="text">                
                             </div>
 
                             <div class="row">
@@ -125,7 +127,7 @@
 
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary pull-right">elküldés</button>
+                                    <button type="submit" class="btn btn-primary pull-right">Elküldés</button>
                                 </div>
                             </div>
 

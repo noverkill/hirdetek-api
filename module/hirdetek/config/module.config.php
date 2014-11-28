@@ -29,6 +29,15 @@ return array(
                     ),
                 ),
             ),
+            'hirdetek.rest.megosztas' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/megosztas[/:megosztas_id]',
+                    'defaults' => array(
+                        'controller' => 'hirdetek\\V1\\Rest\\Megosztas\\Controller',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -36,6 +45,7 @@ return array(
             0 => 'hirdetek.rest.hirdetes',
             1 => 'hirdetek.rest.rovatok',
             2 => 'hirdetek.rest.regio',
+            3 => 'hirdetek.rest.megosztas',
         ),
     ),
     'service_manager' => array(
@@ -43,6 +53,7 @@ return array(
             'hirdetek\\V1\\Rest\\Hirdetes\\HirdetesResource' => 'hirdetek\\V1\\Rest\\Hirdetes\\HirdetesResourceFactory',
             'hirdetek\\V1\\Rest\\Rovatok\\RovatokResource' => 'hirdetek\\V1\\Rest\\Rovatok\\RovatokResourceFactory',
             'hirdetek\\V1\\Rest\\Regio\\RegioResource' => 'hirdetek\\V1\\Rest\\Regio\\RegioResourceFactory',
+            'hirdetek\\V1\\Rest\\Megosztas\\MegosztasResource' => 'hirdetek\\V1\\Rest\\Megosztas\\MegosztasResourceFactory',
         ),
     ),
     'zf-rest' => array(
@@ -120,12 +131,35 @@ return array(
             'collection_class' => 'hirdetek\\V1\\Rest\\Regio\\RegioCollection',
             'service_name' => 'regio',
         ),
+        'hirdetek\\V1\\Rest\\Megosztas\\Controller' => array(
+            'listener' => 'hirdetek\\V1\\Rest\\Megosztas\\MegosztasResource',
+            'route_name' => 'hirdetek.rest.megosztas',
+            'route_identifier_name' => 'megosztas_id',
+            'collection_name' => 'megosztas',
+            'entity_http_methods' => array(
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+                1 => 'POST',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'hirdetek\\V1\\Rest\\Megosztas\\MegosztasEntity',
+            'collection_class' => 'hirdetek\\V1\\Rest\\Megosztas\\MegosztasCollection',
+            'service_name' => 'megosztas',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => 'HalJson',
             'hirdetek\\V1\\Rest\\Rovatok\\Controller' => 'HalJson',
             'hirdetek\\V1\\Rest\\Regio\\Controller' => 'HalJson',
+            'hirdetek\\V1\\Rest\\Megosztas\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
@@ -143,6 +177,11 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
+            'hirdetek\\V1\\Rest\\Megosztas\\Controller' => array(
+                0 => 'application/vnd.hirdetek.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
         ),
         'content_type_whitelist' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
@@ -154,6 +193,10 @@ return array(
                 1 => 'application/json',
             ),
             'hirdetek\\V1\\Rest\\Regio\\Controller' => array(
+                0 => 'application/vnd.hirdetek.v1+json',
+                1 => 'application/json',
+            ),
+            'hirdetek\\V1\\Rest\\Megosztas\\Controller' => array(
                 0 => 'application/vnd.hirdetek.v1+json',
                 1 => 'application/json',
             ),
@@ -197,20 +240,32 @@ return array(
                 'route_identifier_name' => 'regio_id',
                 'is_collection' => true,
             ),
+            'hirdetek\\V1\\Rest\\Megosztas\\MegosztasEntity' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'hirdetek.rest.megosztas',
+                'route_identifier_name' => 'megosztas_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ),
+            'hirdetek\\V1\\Rest\\Megosztas\\MegosztasCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'hirdetek.rest.megosztas',
+                'route_identifier_name' => 'megosztas_id',
+                'is_collection' => true,
+            ),
         ),
     ),
     'zf-mvc-auth' => array(
         'authorization' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
                 'entity' => array(
-                    'GET' => true,
+                    'GET' => false,
                     'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
                 ),
                 'collection' => array(
-                    'GET' => true,
+                    'GET' => false,
                     'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
@@ -234,6 +289,22 @@ return array(
                 ),
             ),
             'hirdetek\\V1\\Rest\\Regio\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'hirdetek\\V1\\Rest\\Megosztas\\Controller' => array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,

@@ -37,7 +37,11 @@ class Module implements ApigilityProviderInterface
             $adapter = $sm->get('Zend\Db\Adapter\Adapter');
             return new \hirdetek\V1\Rest\Regio\RegioMapper($adapter);
           },
-        ),
+          'hirdetek\V1\Rest\Megosztas\MegosztasMapper' =>  function ($sm) {
+            $adapter = $sm->get('Zend\Db\Adapter\Adapter');
+            return new \hirdetek\V1\Rest\Megosztas\MegosztasMapper($adapter);
+          }
+        )
       );
     }
 }

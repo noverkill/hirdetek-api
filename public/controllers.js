@@ -1,7 +1,7 @@
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
 
 hirdetekApp.value('cgBusyDefaults',{
-    message:'Betoltes'
+    message:'Kis türelmet...'
 });
 
 hirdetekApp.service('popupService',function($window){
@@ -315,11 +315,44 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
      $rootScope.mustLoginMessage = 0;
   };
 
-  $rootScope.shareHirdetes = function(id) {
-     $rootScope.hirdetesId = id;
+  $rootScope.shareReset = function(id) {
+    $rootScope.share = {
+      id: 0,
+      sender: {
+        name: '',
+        email: ''
+      },
+      recipient: {
+        name: '',
+        email: ''
+      }
+    }
   };
 
-  $rootScope.saveHirdetes = function(id) {
+  $rootScope.shareHirdetesClick = function(id) {
+     $rootScope.share.id = id;
+     $rootScope.share.success = 0;
+  };  
+
+  $rootScope.shareHirdetes = function() {
+
+    $rootScope.share.success = 0;
+
+    $rootScope.megosztasWait = $http({
+        url: 'http://localhost:8888/megosztas',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        data: $rootScope.share
+    }).success(function (data, status, headers, config) {
+        $rootScope.shareReset();
+        $rootScope.share.success = 1;
+    });
+
+  };
+
+  $rootScope.shareReset();
+
+  $rootScope.saveHirdetesClick = function(id) {
      $rootScope.hirdetesId = id;
      $rootScope.mustLoginMessage = 1;
   };  

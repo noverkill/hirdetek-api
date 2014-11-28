@@ -3,9 +3,28 @@ namespace hirdetek\V1\Rest\Hirdetes;
 
 class HirdetesEntity
 {
-	public $id;
+
+    public $id;
+    public $azonosito;
+    public $telepules;
     public $kep;
+    public $targy;
     public $szoveg;
+    public $ar;
+    public $feladas;
+    public $days_active;
+    public $r_rovat_id;
+    public $r_rovat_nev;
+    public $r_rovat_slug;
+    public $p_rovat_id;
+    public $p_rovat_nev;
+    public $p_rovat_slug;
+    public $g_regio_id; 
+    public $g_regio_nev; 
+    public $g_regio_slug;
+    public $p_regio_id;
+    public $p_regio_nev; 
+    public $p_regio_slug;
 
     public function getArrayCopy()
     {
