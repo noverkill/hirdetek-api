@@ -242,7 +242,7 @@
 
         </div>
 
-        <div class="col-sm-8 pull-right listings" cg-busy="hirdetesService">
+        <div class="col-sm-8 pull-right listings" cg-busy="hirdetesBusy">
 
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
@@ -268,7 +268,10 @@
                     <p>
                         <span class="classified_links pull-right">
                             <a class="link-info underline" ng-click="shareHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#">Megosztás</a>&nbsp;
-                            <a class="link-info underline" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#">Kedvencekhez</a>&nbsp;
+                            
+                            <a class="link-info underline" ng-show="! user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#">Kedvencekhez</a>
+                            <a class="link-info underline" ng-show="user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalSave" href="#">Kedvencekhez</a>&nbsp;
+
                             <a class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Részletek</a>&nbsp;
                             <!--a class="link-info underline" href="#">Kapcsolat</a-->
                         </span>

@@ -179,7 +179,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
             return $cookieStore.get('tk');
         },
         isLogged: function() {
-            return angular.isDefined($cookieStore.get('tk'));
+            return ($rootScope.user.logged = angular.isDefined($cookieStore.get('tk')));
         },
         remember: function (credentials) {
           $cookieStore.put('credentials', credentials);
@@ -200,7 +200,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
       //curl -i "http://localhost:8888/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
       //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
 
-      if($rootScope.user.logged) {
+      if($rootScope.user.isLogged()) {
         headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
       }
 
@@ -213,7 +213,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $state.go('mainpage');
   }
 
-  RovatService.query({ps: 1000}, function(response) {
+  $rootScope.viewBusy = RovatService.query({ps: 1000}, function(response) {
 
     $rootScope.rovatok = response._embedded.rovatok;
 
@@ -230,9 +230,9 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
     //$rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
-  });
+  }).$promise;
 
-  RegioService.query({ps: 1000}, function(response) {
+  $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
 
     $rootScope.regiok = response._embedded.regio;
 
@@ -255,7 +255,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     }
 
     //$rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-  });
+  }).$promise;
 
   $rootScope.resetRegio = function() {
     $rootScope.regio = {id: 0, nev: 'Regio'}
@@ -311,7 +311,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   //modal window's setup functions
 
   $rootScope.login = function() {
-      console.log("login");
      $rootScope.mustLoginMessage = 0;
   };
 
@@ -348,14 +347,27 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         $rootScope.share.success = 1;
     });
 
-  };
+  };  
 
   $rootScope.shareReset();
 
   $rootScope.saveHirdetesClick = function(id) {
-     $rootScope.hirdetesId = id;
-     $rootScope.mustLoginMessage = 1;
-  };  
+
+    $rootScope.saveSuccess = 0;
+    $rootScope.mustLoginMessage = 1;
+
+    $rootScope.saveWait = $http({
+      url: 'http://localhost:8888/megosztas',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: id
+    }).success(function (data, status, headers, config) {
+      $rootScope.saveSuccess = 1;
+    }).error(function (data, status, headers, config) {
+      $rootScope.saveSuccess = 2;
+    });
+
+  };
 
 }]);
 
@@ -378,7 +390,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   });
 
   $scope.pageChanged = function() {
-      $scope.hirdetesService = HirdetesService.query({
+      $scope.hirdetesBusy = HirdetesService.query({
           page:   $rootScope.listing.currentPage,
           rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
           regio:  $rootScope.regio.id || $rootScope.foregio.id,
@@ -388,11 +400,9 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
           ord:    $rootScope.listing.ord,
           ordir:  $rootScope.listing.ordir
       }, function(response) {
-        console.log(response);
         $scope.hirdetesek = response._embedded.hirdetes;
         $scope.totalItems = response.total_items;
     }, function(error) {
-        console.log(error);
         $scope.hirdetesek = [];
         $scope.totalItems = 0;
     }).$promise;
