@@ -357,10 +357,10 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $rootScope.mustLoginMessage = 1;
 
     $rootScope.saveWait = $http({
-      url: 'http://localhost:8888/megosztas',
+      url: 'http://localhost:8888/kedvencek',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      data: id
+      data: {'id': id}
     }).success(function (data, status, headers, config) {
       $rootScope.saveSuccess = 1;
     }).error(function (data, status, headers, config) {

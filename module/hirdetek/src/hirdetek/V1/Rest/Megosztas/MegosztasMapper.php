@@ -53,7 +53,6 @@ class MegosztasMapper
         $transport = new Mail\Transport\Sendmail();
         $transport->send($mail);
 */
-
         $result->success = true;
 
         return $result;
