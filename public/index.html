@@ -50,19 +50,19 @@
 
                     <ul class="nav navbar-nav navbar-right visible-xs">
                         
-                        <li class="active" ng-click="goHome()"><a href="#">Home</a></li>
+                        <li class="active" ng-click="goHome()"><a href="#">Főoldal</a></li>
 
                         <span ng-show="user.logged == 0">
-                            <li><a href="my_account.html">Login</a></li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="my_account.html">Bejelentkezés</a></li>
+                            <li><a href="register.html">Regisztráció</a></li>
                         </span>
 
                         <span ng-show="user.logged">
-                            <li><a href="account_dashboard.html">My account</a></li>
-                            <li><a href="#" ng-click="user.logout()">Logout</a></li>
+                            <li><a href="#" ui-sref="profile({id: 100})">Profilom</a></li>
+                            <li><a href="#" ng-click="user.logout()">Kilépés</a></li>
                         </span>
 
-                        <li><a href="account_ad_create.html">Post an ad</a></li>
+                        <li><a href="account_ad_create.html">Hirdetés feladás</a></li>
                     </ul>
 
                     <div class="nav navbar-nav navbar-right hidden-xs">
@@ -71,21 +71,21 @@
 
                             <div class="pull-right">
 
-                                <a href="#" ng-click="goHome()">Home</a> |
+                                <a href="#" ng-click="goHome()">Főoldal</a> |
 
                                 <!--a data-toggle="modal" data-target="#modalLogin" ng-click="login()" href="#">Login</a> | -->
 
                                 <span ng-show="user.logged == 0">
-                                    <a href="#" ui-sref="login">Login</a> |                                    
-                                    <a href="register.html">Register</a> |
+                                    <a href="#" ui-sref="login">Bejelentkezés</a> |                                    
+                                    <a href="register.html">Regisztráció</a> |
                                 </span>                                
 
                                 <span ng-show="user.logged">
-                                    <a href="account_dashboard.html">My account</a> |  
-                                    <a href="#" ng-click="user.logout()">Logout</a> |                                  
+                                    <a href="#" ui-sref="profile({id: 100})">Profilom</a> |  
+                                    <a href="#" ng-click="user.logout()">Kilépés</a> |                                  
                                 </span>
 
-                                <a href="account_ad_create.html" class="btn btn-warning post-ad-btn">Post an ad</a>
+                                <a href="account_ad_create.html" class="btn btn-warning post-ad-btn">Hirdetés feladás</a>
 
                             </div>
                         </div>

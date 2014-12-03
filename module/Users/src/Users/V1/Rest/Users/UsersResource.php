@@ -14,6 +14,38 @@ class UsersResource extends AbstractResourceListener
     }
 
     /**
+     * Fetch a resource
+     *
+     * @param  mixed $id
+     * @return ApiProblem|mixed
+     */
+    public function fetch($id)
+    {
+
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
+        return $this->mapper->fetchOne($id, $user['user_id']);
+        //return new ApiProblem(405, 'The GET method has not been defined for individual resources');
+    }
+
+    /**
+     * Update a resource
+     *
+     * @param  mixed $id
+     * @param  mixed $data
+     * @return ApiProblem|mixed
+     */
+    public function update($id, $data)
+    {
+
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
+        return $this->mapper->update($data, $user['user_id']);
+        
+        //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
+    }
+
+    /**
      * Create a resource
      *
      * @param  mixed $data
@@ -21,8 +53,8 @@ class UsersResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        return $this->mapper->create($data);
-        //return new ApiProblem(405, 'The POST method has not been defined');
+        //return $this->mapper->create($data);
+        return new ApiProblem(405, 'The POST method has not been defined');
     }
 
     /**
@@ -33,8 +65,8 @@ class UsersResource extends AbstractResourceListener
      */
     public function delete($id)
     {
-        return $this->mapper->delete($id);
-        //return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
+        //return $this->mapper->delete($id);
+        return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
     }
 
     /**
@@ -49,18 +81,6 @@ class UsersResource extends AbstractResourceListener
     }
 
     /**
-     * Fetch a resource
-     *
-     * @param  mixed $id
-     * @return ApiProblem|mixed
-     */
-    public function fetch($id)
-    {
-        return $this->mapper->fetchOne($id);
-        //return new ApiProblem(405, 'The GET method has not been defined for individual resources');
-    }
-
-    /**
      * Fetch all or a subset of resources
      *
      * @param  array $params
@@ -68,8 +88,8 @@ class UsersResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        return $this->mapper->fetchAll();
-        //return new ApiProblem(405, 'The GET method has not been defined for collections');
+        //return $this->mapper->fetchAll();
+        return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 
     /**
@@ -93,18 +113,5 @@ class UsersResource extends AbstractResourceListener
     public function replaceList($data)
     {
         return new ApiProblem(405, 'The PUT method has not been defined for collections');
-    }
-
-    /**
-     * Update a resource
-     *
-     * @param  mixed $id
-     * @param  mixed $data
-     * @return ApiProblem|mixed
-     */
-    public function update($id, $data)
-    {
-        return $this->mapper->update($data);
-        //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 }

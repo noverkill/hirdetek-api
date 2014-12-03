@@ -22,10 +22,10 @@ class UsersMapper
         return $collection;
     }
  
-    public function fetchOne($id)
+    public function fetchOne($id, $email)
     {
-        $sql = 'SELECT * FROM users WHERE id = ?';
-        $resultset = $this->adapter->query($sql, array($id));
+        $sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
+        $resultset = $this->adapter->query($sql, array($email));
         $data = $resultset->toArray();
         if (!$data) {
             return false;
@@ -48,11 +48,12 @@ class UsersMapper
         return $entity;
     }  
 
-    public function update($data)
+    public function update($data, $email)
     {
-        $sql = 'UPDATE users SET bejnev = ?, email = ? WHERE id = ?';
-        $this->adapter->query($sql, array($data->bejnev, $data->email, $data->id));
- 
+        $sql = 'UPDATE users SET nev = ?, weblap = ?, telefon = ?, varos = ?, regio = ?, altkategoria = ? WHERE id = ? AND email = ?';
+        
+        $this->adapter->query($sql, array($data->nev, $data->weblap, $data->telefon, $data->varos, $data->regio, $data->altkategoria, $data->id, $email));
+
         $entity = new UsersEntity();
         $entity->exchangeArray((array)$data);
         return $entity;

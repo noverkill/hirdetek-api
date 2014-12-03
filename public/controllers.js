@@ -123,6 +123,12 @@ hirdetekApp.config(function($stateProvider) {
 
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
+    controller: 'UserEditController'  
+
+  }).state('profile', {
+
+    url: '/profile/:id',
+    templateUrl: 'partials/profile.html',
     controller: 'UserEditController'
 
   }).state('newUser', {
@@ -513,8 +519,8 @@ hirdetekApp.controller('UserViewController', function($scope, $stateParams, User
 hirdetekApp.controller('UserEditController', function($scope, $state, $stateParams, UserService, popupService) {
 
   $scope.updateUser = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
-    $scope.user.$update(function() {
-      $state.go('users'); // on success go back to home i.e. movies state.
+    $scope.userBusy = $scope.user.$update(function() {
+      //$state.go('users'); // on success go back to home i.e. movies state.
     });
   };
 
@@ -526,11 +532,13 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
     }
   };
 
-  $scope.loadUser = function() { //Issues a GET request to /api/movies/:id to get a movie to update
-    $scope.user = UserService.get({ id: $stateParams.id });
+  $scope.loadUser = function() { 
+    $scope.userBusy = UserService.get({ id: $stateParams.id }, function(response) {
+        $scope.user = response;
+    }).$promise;
   };
 
-  $scope.loadUser(); // Load a movie which can be edited on UI
+  $scope.loadUser();
 });
 
 
