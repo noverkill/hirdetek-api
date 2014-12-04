@@ -26,7 +26,9 @@ class UsersMapper
     {
         $sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
         $resultset = $this->adapter->query($sql, array($email));
+        
         $data = $resultset->toArray();
+        
         if (!$data) {
             return false;
         }
@@ -38,14 +40,16 @@ class UsersMapper
 
     public function create($data)
     {
-        $sql = 'INSERT INTO users (bejnev, email) values(?, ?)';
-        $resultset = $this->adapter->query($sql, array($data->bejnev, $data->email));
+        $sql = 'INSERT INTO users (nev, email, jelszo, felvetel, aktivkod, aktiv) values(?, ?, ?, NOW(), ?, 0)';
+        $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->jelszo, 'abcd123456'));
 
         $data->id = $resultset->getGeneratedValue();
- 
+        
+        /*
         $entity = new UsersEntity();
         $entity->exchangeArray((array)$data);
         return $entity;
+        */
     }  
 
     public function update($data, $email)

@@ -93,7 +93,7 @@ return array(
                 ),
                 'collection' => array(
                     'GET' => true,
-                    'POST' => true,
+                    'POST' => false,
                     'PATCH' => false,
                     'PUT' => false,
                     'DELETE' => false,

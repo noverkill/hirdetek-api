@@ -131,10 +131,16 @@ hirdetekApp.config(function($stateProvider) {
     templateUrl: 'partials/profile.html',
     controller: 'UserEditController'
 
-  }).state('newUser', {
+  })/*.state('newUser', {
 
     url: '/user/new',
     templateUrl: 'partials/user-add.html',
+    controller: 'UserCreateController'
+
+  })*/.state('register', {
+
+    url: '/register',
+    templateUrl: 'partials/register.html',
     controller: 'UserCreateController'
 
   });
@@ -146,8 +152,9 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   $rootScope.user = {
 
         credentials: {
-          username: '',
-          password: '',
+          nev: '',
+          email: '',
+          jelszo: '',
           remember: 1,
           grant_type: 'password',
           client_id: 'testclient'
@@ -544,11 +551,15 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
 
 hirdetekApp.controller('UserCreateController', function($scope, $state, $stateParams, UserService) {
 
-  $scope.user = new UserService();  //create new movie instance. Properties will be set via ng-model on UI
+  $scope.registered = 0;
+  
+  $scope.user = new UserService(); 
 
-  $scope.addUser = function() { //create a new movie. Issues a POST to /api/movies
-    $scope.user.$save(function() {
-      $state.go('users'); // on success go back to home i.e. movies state.
+  $scope.addUser = function() { 
+     $scope.userBusy = $scope.user.$save(function() {
+      $scope.user = {};
+      $scope.registered = 1;
+      //$state.go('users'); 
     });
   };
 

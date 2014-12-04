@@ -1,0 +1,146 @@
+
+<hr class="topbar"/>
+
+<div class="container">
+    <br />
+    <div class="row">
+
+        <div class="col-sm-12">
+            <h1>Create an account</h1>
+
+            <hr />
+
+            <div class="row" cg-busy="userBusy">
+
+                <div class="col-sm-12 col-md-6">
+
+                    <div class="alert alert-info" role="alert" ng-show="registered">
+                        <p>A regisztrációját rögzítettük!</p>
+                        <p>A regisztráció aktiváláshoz szükséges tudnivalókat elküldtük Önnek a megadott email címre.</p>
+                    </div>
+
+                    <form class="form-vertical" ng-submit="addUser()" ng-show="! registered">
+
+                        <fieldset>
+
+                            <div class="row">  
+                                <div class="col-sm-12" >
+
+                                    <div class="well">
+
+                                        <!--div class="form-group">
+                                            <label for="exampleInputEmail1">Név</label>
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <select class="form-control">
+                                                        <option value="1">Mr</option>
+                                                        <option value="2">Mrs</option>
+                                                        <option value="3">Miss</option>
+                                                        <option value="4">Ms</option>
+                                                        <option value="5">Dr</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" ng-model="user.nev" class="form-control " id="vezeteknev" placeholder="Vezetéknév">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control " id="keresztnev" placeholder="Keresztnév">
+                                                </div>
+                                            </div>
+                                        </div-->
+
+
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Név</label>
+                                            <input type="text" class="form-control " id="nev" ng-model="user.nev" placeholder="">
+                                        </div>     
+
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Email</label>
+                                            <input type="email" class="form-control " id="email" ng-model="user.email" placeholder="">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Jelszó</label>
+                                            <input type="password" class="form-control" id="password" ng-model="user.jelszo" placeholder="Minimum 6 karakter">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Jelszó mégegyszer</label>
+                                            <input type="password" class="form-control" id="confirm-password" placeholder="">
+                                        </div>							  
+
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" checked="true"> Hírlevél
+                                            </label>
+                                        </div>
+
+
+                                        <br />
+
+                                        <!--a href="#" class="btn btn-primary">Elküldés</a-->
+
+                                        <button type="submit" class="btn btn-primary">Elküldés</button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 col-sm-12 account-sidebar hidden-sm">
+
+                            <div class="row">
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <img src="css/images/icons/Crest.png" width="50"/>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h3>Miért regisztráljon?</h3>
+                                    <p>Miután regisztrált sokkal kényelmesebben és gyorsabban adhatja fel hirdetését.<p>y
+                                    </div>
+                            </div>
+                            <br />
+
+                            <div class="row">
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <img src="css/images/icons/Pie-Chart.png" width="40"/>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h3>Miért hirdessen nálunk?</h3>
+                                    <p>Oldalunkat naponta több ezren látogatják és mi teszünk róla, hogy hirdetését a lehető legtöbben lássák.</p>
+                                </div>
+                            </div>
+                            <br />
+
+                            <div class="row">
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <img src="css/images/icons/Search.png" width="40"/>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h3>Fejlett kereső algoritmus</h3>
+                                    <p>Garantáljuk, hogy keresőnk segítségével a potenciális érdeklődők mindig rátaláljanak az Ön hirdetésére.</p>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <img src="css/images/icons/Telephone.png" width="40"/>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h3>Mobil támogatás</h3>
+                                    <p>Az oldal tartalma elérhető bármilyen internetre csatlakozó eszközről, legyen az mobil telefon, tablet vagy bármi más.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <br />
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
