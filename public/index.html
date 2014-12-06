@@ -24,7 +24,7 @@
         <link rel="stylesheet" type="text/css" href="css/angular-busy.css" media="screen" />
     </head>
 
-    <body ng-cloak>
+    <body ng-cloak autoscroll="true">
 
         <nav class="navbar navbar-default" role="navigation">
 
@@ -62,7 +62,7 @@
                             <li><a href="#" ng-click="user.logout()">Kilépés</a></li>
                         </span>
 
-                        <li><a href="account_ad_create.html">Hirdetés feladás</a></li>
+                        <li><a href="#" ui-sref="hirdetes-feladas">Új hirdetés</a></li>
                     </ul>
 
                     <div class="nav navbar-nav navbar-right hidden-xs">
@@ -85,7 +85,7 @@
                                     <a href="#" ng-click="user.logout()">Kilépés</a> |                                  
                                 </span>
 
-                                <a href="account_ad_create.html" class="btn btn-warning post-ad-btn">Hirdetés feladás</a>
+                                <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Új hirdetés</a>
 
                             </div>
                         </div>
@@ -98,7 +98,7 @@
 
         </nav>
 
-        <div ui-view autoscroll="true" cg-busy="viewBusy"></div>
+        <div ui-view cg-busy="viewBusy"></div>
 
         <div class="modal fade" id="modalShare" tabindex="-1" role="dialog" aria-labelledby="modalShare" aria-hidden="true">
             <div class="modal-dialog modal-md">

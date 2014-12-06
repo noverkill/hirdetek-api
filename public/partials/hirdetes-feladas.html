@@ -1,0 +1,206 @@
+
+<hr class="topbar"/>
+
+<div class="container">
+	
+	<div class="row">
+
+		<div class="col-sm-3">
+			<div class="sidebar-account">       
+				<div class="row ">
+					<div class="col-lg-12">
+
+						<div class="panel panel-default">
+							<div class="panel-heading">Felhasználói fiók</div>
+							<div class="panel-body">
+								<ul class="nav">
+									<li>
+										<a class="active" href="#" ui-sref="profile({id: 100})">Profilom</a>
+									</li>                       
+									<li>    
+										<a class="active" href="#" ui-sref="hirdeteseim">Hirdetéseim</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row hidden-xs">
+					<div class="col-lg-12">
+						<div class="well">
+
+							<div class="row ">
+								<div class="col-lg-3">
+									<img src="css/images/icons/Crest.png" width="45"/>
+								</div>
+								<div class="col-lg-9">
+									<h4 style="margin-top: 0">Hirdetés kiemelés</h4>
+									<p>Emelje ki hirdetését</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="col-sm-9">
+
+			<form class="form-vertical" action="">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Új hirdetés létrehozása</div>
+					<div class="panel-body">
+
+						<div class="form-group">
+							<div class="row">
+
+								<div class="col-sm-12">
+									<label>Tárgy </label>
+									<input type="text" class="form-control " >
+								</div>
+
+								<div class="col-sm-12">
+									<br />
+									<label>Szöveg </label>
+									<textarea class="form-control col-sm-8 expand" rows="6" style="width: 99%"></textarea>
+								</div>
+
+								<!--div class="col-sm-12"><br />
+									<label>Kulcs szavak</label>
+									<input type="text" class="form-control " >
+								</div-->    
+
+								<div class="col-sm-12">
+									<br />
+									<label>Kategória </label>
+									<select id="category" class="form-control " name="category">
+										<option value="">Válasszon kategóriát</option>
+									</select>
+								</div>  								
+
+								<div class="col-sm-12">
+									<br />
+									<label>Ár </label>
+									<input type="text" class="form-control " >
+								</div> 
+
+								<div class="col-sm-6">
+									<br />
+									<label>Település</label>
+									<input type="text" class="form-control "  >
+								</div>
+
+								<div class="col-sm-6">
+									<br />
+									<label>Régió</label>
+									<input type="text" class="form-control "  >
+								</div>
+
+								<div class="col-sm-6">
+									<br />
+									<label>Telefonszám</label>
+									<input type="text" class="form-control "  >
+								</div> 								
+
+								<div class="col-sm-6">
+									<br />
+									<label>Mobil</label>
+									<input type="text" class="form-control "  >
+								</div> 
+
+							</div>
+
+						</div>
+
+					</div>          
+				</div>          
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Fényképek</div>
+					<div class="panel-body">
+						<div id="my-dropzone" action="upload.php" class="dropzone"></div>
+						<br />
+						<p><small>* a feltöltött képek átméretezésre kerülhetnek!</small></p>
+					</div>
+
+				</div>				
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Felhasználó adatai</div>
+					<div class="panel-body">
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-12" >
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Név</label>
+                                        <input type="text" class="form-control " id="nev" ng-model="user.nev" placeholder="Név">
+                                    </div>     
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Email</label>
+                                        <input type="email" class="form-control " id="email" ng-model="user.email" placeholder="Email cím">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Jelszó</label>
+                                        <input type="password" class="form-control" id="password" ng-model="user.jelszo" placeholder="Jelszó, minimum 6 karakter">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Jelszó mégegyszer</label>
+                                        <input type="password" class="form-control" id="confirm-password" placeholder="Jelszó mégegyszer">
+                                    </div>							  
+
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" checked="true"> Hírlevél
+                                        </label>
+                                    </div>							
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Hirdetés feladása</div>
+					<div class="panel-body">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox"> A hirdetési szabályzatot elfogadom
+							</label>
+						</div>
+
+						<br />
+
+						<a href="account_credits.html" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</a>
+
+					</div>
+
+				</div>	
+
+
+
+			</form>
+
+		</div>
+	
+	</div>
+
+</div>
+
+
+
