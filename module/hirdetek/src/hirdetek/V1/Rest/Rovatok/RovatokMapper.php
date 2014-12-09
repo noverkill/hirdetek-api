@@ -4,6 +4,7 @@ namespace hirdetek\V1\Rest\Rovatok;
 use Zend\Db\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
 
@@ -19,6 +20,17 @@ class RovatokMapper
     public function fetchAll($params)
     {
         $select = (new Select())->from('rovat')->order('order');
+
+        // forovatok with sub-categorie's count
+        /* 
+        $select = (new Select())
+                    ->columns( array('id', 'nev', 'slug', 'order', 'parent', 'p_count' => new Expression("COUNT(p.id)")))
+                    ->from(array('r' => 'rovat'))
+                    ->join( array ('p' => 'rovat'), 'p.parent = r.id', array('p_id' => 'id', 'p_nev' => 'nev', 'p_slug' => 'slug', 'p_rorder' => 'order', 'p_parent' => 'parent'))
+                    ->group('p_parent')
+                    ->order('order');
+        */
+        //print $select->getSqlString();
 
         $paginatorAdapter = new DbSelect($select, $this->adapter);
 

@@ -8,6 +8,11 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
 use Zend\Db\Sql\Predicate\PredicateSet;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\Input;
+use Zend\Validator;
+
 class HirdetesMapper
 {
     protected $adapter;
@@ -109,10 +114,239 @@ class HirdetesMapper
         return $entity;
     }
 
-    public function create($data)
+    public function create($data, $user)
     {
-        //print_r(array_values((array) $data));
+        //print_r($data);
+        //print_r($user);
         //exit;
+
+        /*
+        if(! (isset($data->szabalyzat) && $data->szabalyzat == 1)) {
+            return array("success" => false, "error" => "Szabályzat!!");
+        }
+
+        $fields = array (
+            "targy" => array("name" => "Tárgy", "value" => "", "required" => 1), 
+            "szoveg" => array("name" => "Szöveg", "value" => "", "required" => 1),
+            "rovat" => array("name" => "Kategória", "value" => "", "required" => 1),
+            "ar" => array("name" => "Ár", "value" => "", "required" => 0),
+            "telepules" => array("name" => "Telelpülés", "value" => "", "required" => 0),
+            "regio" => array("name" => "Régió", "value" => "", "required" => 1),
+            "telefon" => array("name" => "Telefonszám", "value" => "", "required" => 0)
+        );
+
+        foreach($fields as $key => $value) {
+
+            if($value['required'] && ! isset($data->$key)) {
+                return array("success" => false, "error" => "Kötelező mezó hiányzik: " . $value['name']);
+            } 
+
+            if (isset($data->$key)) {
+                $value['value'] = $data->$key;
+            }
+        }
+
+        //print_r($fields);
+        
+        return array("success" => true);
+        */
+
+        $inputFilter = new InputFilter();
+
+        $factory = new InputFactory();
+
+        //$targy = new Input('targy');
+
+        //$inputFilter->add($targy);
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'targy',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'), 
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'szoveg',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));        
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'kategoria',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'regio',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));        
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'telepules',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'), 
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'ar',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 1,
+                        'max' => 2000000000,  //2 billion
+                        'inclusive' => true,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'telefons',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'), 
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'ar',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 7,
+                        'max' => 365,
+                        'inclusive' => true,
+                    ),
+                ),
+            ),
+        )));
+
+/*
+        if(!isset($user)) {
+
+            $email = new Input('email');
+            $email->getValidatorChain()
+                  ->attach(new Validator\EmailAddress());
+
+            $password = new Input('jelszo');
+            $password->getValidatorChain()
+                    ->attach(new Validator\StringLength(8));
+
+            $inputFilter->add($email)
+                        ->add($password);
+        }
+*/
+
+        $inputFilter->setData((array)$data);
+
+        $ret = array("success" => true);
+
+        if (! $inputFilter->isValid()) {
+            //echo "The form is not valid\n";
+            $errors = array();
+            foreach ($inputFilter->getInvalidInput() as $error) {
+                //print_r($error);//->getMessages());
+                $errors[] = array(
+                    "field" => $error->getName(),
+                    "message" => $error->getMessages()
+                );
+            }
+
+            $ret = array("success" => false, "errors" => $errors);
+        }
+
+
+        return $ret;
 
         $sql = 'INSERT INTO hirdetes (szoveg, kep) values(?, ?)';
         $resultset = $this->adapter->query($sql, array($data->szoveg, $data->kep));
@@ -126,8 +360,9 @@ class HirdetesMapper
 
     public function update($data)
     {
-        //print_r(array_values((array) $data));
-        //exit;
+        print 'update';
+        print_r(array_values((array) $data));
+        exit;
 
         $sql = 'UPDATE hirdetes SET szoveg = ?, kep = ? WHERE id = ?';
         $this->adapter->query($sql, array($data->szoveg, $data->kep, $data->id));

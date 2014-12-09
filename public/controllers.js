@@ -232,73 +232,77 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $state.go('mainpage');
   }
 
-  // $rootScope.viewBusy = RovatService.query({ps: 1000}, function(response) {
+   $rootScope.viewBusy = RovatService.query({ps: 1000}, function(response) {
 
-  //   $rootScope.rovatok = response._embedded.rovatok;
+     $rootScope.rovatok = response._embedded.rovatok;
 
-  //   $rootScope.forovatok = [];
-  //   $rootScope.alrovatok = [];
+     $rootScope.forovatok = [];
+     $rootScope.alrovatok = [];
 
-  //   for(var i = 0; i < $rootScope.rovatok.length; i++) {
-  //     if($rootScope.rovatok[i].parent == 0) {
-  //       $rootScope.forovatok.push($rootScope.rovatok[i]);
-  //     } else {
-  //       $rootScope.alrovatok.push($rootScope.rovatok[i]);
-  //     }
-  //   }
+     for(var i = 0; i < $rootScope.rovatok.length; i++) {
+       if($rootScope.rovatok[i].parent == 0) {
+         $rootScope.forovatok.push($rootScope.rovatok[i]);
+       } else {
+         $rootScope.alrovatok.push($rootScope.rovatok[i]);
+       }
+     }
 
-  //   //$rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+     $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
-  // }).$promise;
+     console.log($rootScope.forovatok);
 
-  // $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
+     console.log($rootScope.alrovatok);
 
-  //   $rootScope.regiok = response._embedded.regio;
+   }).$promise;
 
-  //   $rootScope.foregiok = [];
-  //   $rootScope.alregiok = [];
-  //   $rootScope._alregiok = [];
+ $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
 
-  //   for(var i = 0; i < $rootScope.regiok.length; i++) {
-  //     if($rootScope.regiok[i].parent == 0) {
-  //       $rootScope.foregiok.push($rootScope.regiok[i]);
-  //     } else {
-  //       $rootScope.alregiok.push($rootScope.regiok[i]);
+   $rootScope.regiok = response._embedded.regio;
 
-  //       if(angular.isUndefined($rootScope._alregiok[$rootScope.regiok[i].parent])) {
-  //           $rootScope._alregiok[$rootScope.regiok[i].parent] = [];
-  //       }
+   $rootScope.foregiok = [];
+   $rootScope.alregiok = [];
+   $rootScope._alregiok = [];
 
-  //       $rootScope._alregiok[$rootScope.regiok[i].parent].push($rootScope.regiok[i]);
-  //     }
-  //   }
+   for(var i = 0; i < $rootScope.regiok.length; i++) {
+     if($rootScope.regiok[i].parent == 0) {
+       $rootScope.foregiok.push($rootScope.regiok[i]);
+     } else {
+       $rootScope.alregiok.push($rootScope.regiok[i]);
 
-  //   //$rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-  // }).$promise;
+       if(angular.isUndefined($rootScope._alregiok[$rootScope.regiok[i].parent])) {
+           $rootScope._alregiok[$rootScope.regiok[i].parent] = [];
+       }
 
-  // $rootScope.resetRegio = function() {
-  //   $rootScope.regio = {id: 0, nev: 'Regio'}
-  //   $rootScope.foregio = {id: 0, nev: 'Regio'};
-  // };
+       $rootScope._alregiok[$rootScope.regiok[i].parent].push($rootScope.regiok[i]);
+     }
+   }
 
-  // $rootScope.setRegio  = function (foregio, regio) {
-  //   $rootScope.foregio = foregio;
-  //   $rootScope.regio = regio || {id: 0, nev: 'Regio'};
-  // };
+  $rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+ }).$promise;
 
-  // $rootScope.resetRegio();
+ $rootScope.resetRegio = function() {
+   $rootScope.regio = {id: 0, nev: 'Regio'}
+   $rootScope.foregio = {id: 0, nev: 'Regio'};
+ };
 
-  // $rootScope.resetRovat = function() {
-  //   $rootScope.rovat = {id: 0, nev: 'Mindem rovatban'}
-  //   $rootScope.forovat = {id: 0, nev: 'Minden rovatban'};
-  // };
+ $rootScope.setRegio  = function (foregio, regio) {
+   $rootScope.foregio = foregio;
+   $rootScope.regio = regio || {id: 0, nev: 'Regio'};
+ };
 
-  // $rootScope.setRovat  = function (forovat, rovat) {
-  //   $rootScope.forovat = forovat;
-  //   $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
-  // };
+ $rootScope.resetRegio();
 
-  // $rootScope.resetRovat();
+ $rootScope.resetRovat = function() {
+   $rootScope.rovat = {id: 0, nev: 'Mindem rovatban'}
+   $rootScope.forovat = {id: 0, nev: 'Minden rovatban'};
+ };
+
+ $rootScope.setRovat  = function (forovat, rovat) {
+   $rootScope.forovat = forovat;
+   $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
+ };
+
+ $rootScope.resetRovat();
 
   $rootScope.filter = {
     text: '',
@@ -388,6 +392,8 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   };
 
+  $state.go('hirdetesek');
+
 }]);
 
 hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', function ($scope, $rootScope, $state) {
@@ -476,21 +482,28 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
 
-  
-  console.log( "ready!" );
-
   var myDropzone = new Dropzone("div#my-dropzone", { url: "/file/post"});
 
   $scope.feladva = 0;
-  
-  $scope.hirdetes = new HirdetesService();
+  $scope.error = 0;
 
-  $scope.addUser = function() { 
-     $scope.hirdetesBusy = $scope.hirdetes.$save(function() {
-      $scope.hirdetes = {};
-      $scope.feladva = 1;
-      //$state.go('hirdetesek'); 
-    });
+  $scope.hirdetes = new HirdetesService();
+  $scope.hirdetes.lejarat = 365;
+
+  $scope.createHirdetes = function() {    
+    $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
+        console.log(response);
+        $scope.response = response;
+        if(response.success) {
+          console.log("response.success");
+          //$scope.hirdetes = {};
+          $scope.feladva = 1;
+        } else {
+          console.log("not response.success");
+          $scope.error = 1;
+        }
+        //$state.go('hirdetesek'); 
+      });
   };
 });
 

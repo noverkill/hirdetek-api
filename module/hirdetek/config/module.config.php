@@ -321,7 +321,7 @@ return array(
                 ),
                 'collection' => array(
                     'GET' => false,
-                    'POST' => true,
+                    'POST' => false,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
@@ -360,6 +360,22 @@ return array(
                 ),
             ),
             'hirdetek\\V1\\Rest\\Megosztas\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'hirdetek\\V1\\Rest\\Kedvencek\\Controller' => array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,

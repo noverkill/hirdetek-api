@@ -50,24 +50,35 @@
 
 		<div class="col-sm-9">
 
-			<form class="form-vertical" action="">
+            <div class="alert alert-info" role="alert" ng-show="feladva">
+                <p>Hirdetését rögzítettök!</p>
+            </div>
+
+            <div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
+                {{err.message}}: {{err.field}}
+            </div>
+
+			<form class="form-vertical" ng-show="! feladva" ng-submit="createHirdetes()" cg-busy="hirdetesBusy">
 
 				<div class="panel panel-default">
+					
 					<div class="panel-heading">Új hirdetés létrehozása</div>
+					
 					<div class="panel-body">
 
 						<div class="form-group">
+
 							<div class="row">
 
 								<div class="col-sm-12">
 									<label>Tárgy </label>
-									<input type="text" class="form-control " >
+									<input type="text" class="form-control required" ng-model="hirdetes.targy">
 								</div>
 
 								<div class="col-sm-12">
 									<br />
 									<label>Szöveg </label>
-									<textarea class="form-control col-sm-8 expand" rows="6" style="width: 99%"></textarea>
+									<textarea class="form-control col-sm-8 expand required" rows="6" style="width: 99%" ng-model="hirdetes.szoveg"></textarea>
 								</div>
 
 								<!--div class="col-sm-12"><br />
@@ -78,40 +89,61 @@
 								<div class="col-sm-12">
 									<br />
 									<label>Kategória </label>
-									<select id="category" class="form-control " name="category">
-										<option value="">Válasszon kategóriát</option>
+									<select ng-model="hirdetes.forovat" ng-options="forovat.nev for forovat in forovatok track by forovat.id" class="form-control required">
+										<option value=''>Kérjük válasszon kategóriát</option>
 									</select>
+								</div> 
+
+								<div class="col-sm-12">
+									<br />
+									<label>Alkategória </label>
+									<select ng-disabled="hirdetes.forovat == undefined" ng-model="hirdetes.alrovat" ng-options="alrovat.nev for alrovat in alrovatok | filter: {parent: hirdetes.forovat.id}" class="form-control required">
+										<option value=''>Kérjük válasszon alkategóriát</option>
+									</select>
+									<!--track by alrovat.id-->
 								</div>  								
 
 								<div class="col-sm-12">
 									<br />
-									<label>Ár </label>
-									<input type="text" class="form-control " >
-								</div> 
+									<label>Régió</label>
+									<select ng-model="hirdetes.regio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control required">
+										<option value=''>Kérjük válasszon régiót</option>
+									</select>
+								</div>
 
 								<div class="col-sm-6">
 									<br />
 									<label>Település</label>
-									<input type="text" class="form-control "  >
+									<input type="text" class="form-control " ng-model="hirdetes.telepules">
 								</div>
 
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<br />
-									<label>Régió</label>
-									<input type="text" class="form-control "  >
-								</div>
+									<label>Ár </label>
+									<input type="text" class="form-control " ng-model="hirdetes.ar">
+								</div> 
 
 								<div class="col-sm-6">
 									<br />
 									<label>Telefonszám</label>
-									<input type="text" class="form-control "  >
-								</div> 								
+									<input type="text" class="form-control " ng-model="hirdetes.telefon">
+								</div>
 
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<br />
-									<label>Mobil</label>
-									<input type="text" class="form-control "  >
-								</div> 
+									<label>Lejarat </label>
+									<select id="lejarat" class="form-control required" name="lejarat" ng-model="hirdetes.lejarat">
+										<option value="365">1 év</option>
+										<option value="183">1/2 év</option>
+										<option value="122">1/4 év</option>
+										<option value="92">3 hónap</option>
+										<option value="61">2 hónap</option>
+										<option value="31">1 hónap</option>
+										<option value="21">3 hét</option>
+										<option value="14">2 hét</option>
+										<option value="7">1 hét</option>
+									</select>
+								</div>  	
 
 							</div>
 
@@ -130,7 +162,7 @@
 
 				</div>				
 
-				<div class="panel panel-default">
+				<div class="panel panel-default" ng-show="! user.isLogged()">
 					<div class="panel-heading">Felhasználó adatai</div>
 					<div class="panel-body">
 
@@ -180,19 +212,19 @@
 
 						<div class="checkbox">
 							<label>
-								<input type="checkbox"> A hirdetési szabályzatot elfogadom
+								<input type="checkbox" ng-model="hirdetes.szabalyzat"> A hirdetési szabályzatot elfogadom
 							</label>
 						</div>
 
 						<br />
 
-						<a href="account_credits.html" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</a>
+						<!--a href="account_credits.html" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</a-->
+
+						<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</button>
 
 					</div>
 
-				</div>	
-
-
+				</div>
 
 			</form>
 
