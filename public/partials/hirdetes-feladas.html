@@ -100,16 +100,25 @@
 									<select ng-disabled="hirdetes.forovat == undefined" ng-model="hirdetes.alrovat" ng-options="alrovat.nev for alrovat in alrovatok | filter: {parent: hirdetes.forovat.id}" class="form-control required">
 										<option value=''>Kérjük válasszon alkategóriát</option>
 									</select>
-									<!--track by alrovat.id-->
-								</div>  								
+								</div> 
+									<!--track by alrovat.id-->															
 
 								<div class="col-sm-12">
 									<br />
 									<label>Régió</label>
-									<select ng-model="hirdetes.regio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control required">
+									<select ng-model="hirdetes.foregio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control required">
 										<option value=''>Kérjük válasszon régiót</option>
 									</select>
 								</div>
+
+								<div class="col-sm-12">
+									<br />
+									<label>Alrégió</label>
+									<select ng-disabled="hirdetes.foregio == undefined" ng-model="hirdetes.alregio" ng-options="alregio.nev for alregio in regiok | filter: {parent: hirdetes.foregio.id}" class="form-control">
+										<option value=''>Kérjük válasszon alrégiót</option>
+									</select>
+								</div>
+									<!--track by foregio.id-->								
 
 								<div class="col-sm-6">
 									<br />

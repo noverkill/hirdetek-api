@@ -1,9 +1,11 @@
 <?php
 namespace hirdetek\V1\Rest\Hirdetes;
 
-use Zend\Db\Sql;
+use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Insert;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Paginator\Adapter\DbSelect;
 use Zend\Db\Sql\Predicate\PredicateSet;
@@ -116,48 +118,18 @@ class HirdetesMapper
 
     public function create($data, $user)
     {
-        //print_r($data);
-        //print_r($user);
+        //print_r($this->adapter);
         //exit;
 
-        /*
-        if(! (isset($data->szabalyzat) && $data->szabalyzat == 1)) {
-            return array("success" => false, "error" => "Szabályzat!!");
-        }
-
-        $fields = array (
-            "targy" => array("name" => "Tárgy", "value" => "", "required" => 1), 
-            "szoveg" => array("name" => "Szöveg", "value" => "", "required" => 1),
-            "rovat" => array("name" => "Kategória", "value" => "", "required" => 1),
-            "ar" => array("name" => "Ár", "value" => "", "required" => 0),
-            "telepules" => array("name" => "Telelpülés", "value" => "", "required" => 0),
-            "regio" => array("name" => "Régió", "value" => "", "required" => 1),
-            "telefon" => array("name" => "Telefonszám", "value" => "", "required" => 0)
-        );
-
-        foreach($fields as $key => $value) {
-
-            if($value['required'] && ! isset($data->$key)) {
-                return array("success" => false, "error" => "Kötelező mezó hiányzik: " . $value['name']);
-            } 
-
-            if (isset($data->$key)) {
-                $value['value'] = $data->$key;
-            }
-        }
-
-        //print_r($fields);
-        
-        return array("success" => true);
-        */
+        // buzi angular submit buzi object from select hogy baszna szajba a retkes kurva anyjat
+        if(isset($data->forovat)) $data->forovat = $data->forovat['id'];
+        if(isset($data->alrovat)) $data->alrovat = $data->alrovat['id'];
+        if(isset($data->foregio)) $data->foregio = $data->foregio['id'];
+        if(isset($data->alregio)) $data->alregio = $data->alregio['id'];
 
         $inputFilter = new InputFilter();
 
         $factory = new InputFactory();
-
-        //$targy = new Input('targy');
-
-        //$inputFilter->add($targy);
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'targy',
@@ -199,7 +171,7 @@ class HirdetesMapper
         )));        
 
         $inputFilter->add($factory->createInput(array(
-            'name'     => 'kategoria',
+            'name'     => 'forovat',
             'required' => true,
             'filters'  => array(
                 array('name' => 'Digits'),
@@ -217,11 +189,46 @@ class HirdetesMapper
         )));
 
         $inputFilter->add($factory->createInput(array(
-            'name'     => 'regio',
+            'name'     => 'alrovat',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'foregio',
             'required' => true,
             'filters'  => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        ))); 
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'alregio',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
             ),
             'validators' => array(
                 array(
@@ -274,7 +281,7 @@ class HirdetesMapper
         )));
 
         $inputFilter->add($factory->createInput(array(
-            'name'     => 'telefons',
+            'name'     => 'telefon',
             'required' => false,
             'filters'  => array(
                 array('name' => 'StripTags'),
@@ -294,8 +301,8 @@ class HirdetesMapper
         )));
 
         $inputFilter->add($factory->createInput(array(
-            'name'     => 'ar',
-            'required' => false,
+            'name'     => 'lejarat',
+            'required' => true,
             'filters'  => array(
                 array('name' => 'Digits'),
             ),
@@ -308,6 +315,14 @@ class HirdetesMapper
                         'inclusive' => true,
                     ),
                 ),
+            ),
+        )));        
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'szabalyzat',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'Boolean'),
             ),
         )));
 
@@ -329,8 +344,6 @@ class HirdetesMapper
 
         $inputFilter->setData((array)$data);
 
-        $ret = array("success" => true);
-
         if (! $inputFilter->isValid()) {
             //echo "The form is not valid\n";
             $errors = array();
@@ -342,20 +355,57 @@ class HirdetesMapper
                 );
             }
 
-            $ret = array("success" => false, "errors" => $errors);
+            return array("success" => false, "errors" => $errors);
+
         }
 
 
-        return $ret;
+        //print_r($data);
 
-        $sql = 'INSERT INTO hirdetes (szoveg, kep) values(?, ?)';
-        $resultset = $this->adapter->query($sql, array($data->szoveg, $data->kep));
+        $values = array('targy' => $data->targy, 'szoveg' => $data->szoveg);
+
+        if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
+        else $values['rovat'] = $data->forovat;
+
+        if(isset($data->alregio)) $values['regio'] = $data->alregio;
+        else $values['regio'] = $data->foregio;
+
+        if(isset($data->telepules)) {     
+            $values['telepules'] = $data->telepules;
+        }
+
+        if(isset($data->ar)) {
+            $values['ar'] = $data->ar;
+        }
+
+        if(isset($data->telefon)) {
+            $values['telefon'] = $data->telefon;
+        }
+
+        //feladas es lejarat
+        $values['feladas'] = new Expression('NOW()');
+        $values['lejarat'] = new Expression('DATE_ADD(NOW(), INTERVAL ' . $data->lejarat . ' DAY)'); 
+
+        $sql = new Sql($this->adapter);
+
+        $insert = $sql->insert('hirdetes')
+                        //->columns(array_keys($values))   // allowed column names for security??? http://framework.zend.com/manual/2.3/en/modules/zend.db.sql.html
+                        ->values($values);
+
+        $sqlString = $sql->getSqlStringForSqlObject($insert);
+
+        //print $sqlString; 
+
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $resultset = $statement->execute();
 
         $data->id = $resultset->getGeneratedValue();
 
-        $entity = new HirdetesEntity();
-        $entity->exchangeArray((array)$data);
-        return $entity;
+        return array("success" => true, "id" => $data->id);
+
+        // $entity = new HirdetesEntity();
+        // $entity->exchangeArray((array)$data);
+        // return $entity;
     }
 
     public function update($data)

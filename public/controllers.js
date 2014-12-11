@@ -249,9 +249,9 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
      $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
-     console.log($rootScope.forovatok);
+     // console.log($rootScope.forovatok);
 
-     console.log($rootScope.alrovatok);
+     // console.log($rootScope.alrovatok);
 
    }).$promise;
 
