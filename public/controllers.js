@@ -100,7 +100,13 @@ hirdetekApp.config(function($stateProvider) {
 
     url: '/hirdetes-feladas',
     templateUrl: 'partials/hirdetes-feladas.html',
-    controller: 'HirdetesCreateController'
+    controller: 'HirdetesCreateController'  
+
+  }).state('hirdetes-feladva', {
+
+    url: '/hirdetes-feladas',
+    templateUrl: 'partials/hirdetes-feladva.html',
+    //controller: 'HirdetesFeladvaController'
 
   }).state('login', {
 
@@ -482,9 +488,10 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
 
+  console.log('HirdetesCreateController');
+
   var myDropzone = new Dropzone("div#my-dropzone", { url: "/file/post"});
 
-  $scope.feladva = 0;
   $scope.error = 0;
 
   $scope.hirdetes = new HirdetesService();
@@ -495,9 +502,8 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
         console.log(response);
         $scope.response = response;
         if(response.success) {
-          console.log("response.success");
+          $state.go('hirdetes-feladva');
           //$scope.hirdetes = {};
-          $scope.feladva = 1;
         } else {
           console.log("not response.success");
           $scope.error = 1;

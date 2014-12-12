@@ -50,15 +50,11 @@
 
 		<div class="col-sm-9">
 
-            <div class="alert alert-info" role="alert" ng-show="feladva">
-                <p>Hirdetését rögzítettök!</p>
-            </div>
-
             <div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
                 {{err.message}}: {{err.field}}
             </div>
 
-			<form class="form-vertical" ng-show="! feladva" ng-submit="createHirdetes()" cg-busy="hirdetesBusy">
+			<form class="form-vertical" ng-submit="createHirdetes()" cg-busy="hirdetesBusy">
 
 				<div class="panel panel-default">
 					

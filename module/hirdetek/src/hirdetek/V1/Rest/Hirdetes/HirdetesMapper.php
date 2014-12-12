@@ -326,10 +326,11 @@ class HirdetesMapper
             ),
         )));
 
-/*
-        if(!isset($user)) {
+
+        if(! isset($user)) {  
 
             $email = new Input('email');
+
             $email->getValidatorChain()
                   ->attach(new Validator\EmailAddress());
 
@@ -340,7 +341,6 @@ class HirdetesMapper
             $inputFilter->add($email)
                         ->add($password);
         }
-*/
 
         $inputFilter->setData((array)$data);
 
@@ -362,7 +362,30 @@ class HirdetesMapper
 
         //print_r($data);
 
-        $values = array('targy' => $data->targy, 'szoveg' => $data->szoveg);
+        if(isset($user)) {
+
+            $sql = new Sql($this->adapter);
+
+            $select = $sql->select('users')
+                          ->columns(array('id'))
+                          ->where(array('email' => $user['user_id']))
+                          ->order('id')
+                          ->limit(1);
+
+            $sqlString = $sql->getSqlStringForSqlObject($select);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+
+            $resultset = $statement->execute()->current();
+
+            $user_id = $resultset['id'];
+        
+        } else {
+
+            $user_id = 0;
+        }
+
+        $values = array('user_id' => $user_id, 'targy' => $data->targy, 'szoveg' => $data->szoveg);
 
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
         else $values['rovat'] = $data->forovat;
