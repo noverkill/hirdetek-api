@@ -118,8 +118,9 @@ class HirdetesMapper
 
     public function create($data, $user)
     {
+        //print_r($data);
         //print_r($this->adapter);
-        //exit;
+        exit;
 
         // buzi angular submit buzi object from select hogy baszna szajba a retkes kurva anyjat
         if(isset($data->forovat)) $data->forovat = $data->forovat['id'];

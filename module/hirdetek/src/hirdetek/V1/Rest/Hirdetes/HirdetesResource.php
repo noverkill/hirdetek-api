@@ -21,6 +21,37 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function create($data)
     {
+
+        $request = $this->getEvent()->getRequest();
+
+        $files = $request->getfiles();
+
+        $filename = '';
+
+        if($files->count() > 0) {
+
+            foreach ($files as $files) {
+                
+                //print_r($files);
+                
+                $filename = str_replace(' ', '.', microtime()) . "_" . $files['name'];
+
+                $upload_dir = "./upload/"; 
+                
+                $time = time();
+
+                $folder_name = date('Y', $time) . '/' . date('m', $time) . '/' . date('d', $time) . '/'; 
+
+                //print $upload_dir . $folder_name;
+
+                if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
+
+                move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);
+            }
+
+            return;
+        }
+
         $user = $this->getIdentity()->getAuthenticationIdentity();
 
         return $this->mapper->create($data, $user);

@@ -18,7 +18,37 @@ hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
       },
       'update': {
         method: 'PUT'
+      },
+      /*
+      save: {
+       method: 'POST',
+       transformRequest: function(data) {
+
+        console.log('hirdetes save transformRequest');
+        console.log(data);
+
+        var fd = new FormData();
+
+        angular.forEach(data, function(value, key) {
+          if (value instanceof FileList) {
+            if (value.length == 1) {
+              fd.append(key, value[0]);
+            } else {
+              angular.forEach(value, function(file, index) {
+                fd.append(key + '_' + index, file);
+              });
+            }
+          } else {
+            fd.append(key, value);
+          }
+        });
+
+        return fd;
+
+       }, 
+       header: 'undefined' 
       }
+      */
     }
   );
 }]);
@@ -488,9 +518,13 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
 
-  console.log('HirdetesCreateController');
+  var myDropzone = new Dropzone("div#myDropzone", { url: "/hirdetes"})
 
-  var myDropzone = new Dropzone("div#my-dropzone", { url: "/file/post"});
+  //mi a faszer nem mukodik ez a szar??????
+  Dropzone.options.myDropzone = {
+    maxFilesize: 2, // MB
+    addRemoveLinks: false
+  }
 
   $scope.error = 0;
 
@@ -499,7 +533,7 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
 
   $scope.createHirdetes = function() {    
     $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
-        console.log(response);
+        //console.log(response);
         $scope.response = response;
         if(response.success) {
           $state.go('hirdetes-feladva');

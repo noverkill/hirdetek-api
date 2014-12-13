@@ -226,6 +226,7 @@ return array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
                 0 => 'application/vnd.hirdetek.v1+json',
                 1 => 'application/json',
+                2 => 'image/jpeg',
             ),
             'hirdetek\\V1\\Rest\\Rovatok\\Controller' => array(
                 0 => 'application/vnd.hirdetek.v1+json',
@@ -390,6 +391,26 @@ return array(
                     'PUT' => false,
                     'DELETE' => false,
                 ),
+            ),
+        ),
+    ),
+    'zf-content-validation' => array(
+        'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
+            'input_filter' => 'hirdetek\\V1\\Rest\\Hirdetes\\Validator',
+        ),
+    ),
+    'input_filter_specs' => array(
+        'hirdetek\\V1\\Rest\\Hirdetes\\Validator' => array(
+            0 => array(
+                'name' => 'file',
+                'required' => false,
+                'filters' => array(),
+                'validators' => array(),
+                'description' => 'Uploaded imag',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'error_message' => 'Nem sikerült feltölteni a képet',
+                'type' => 'Zend\\InputFilter\\FileInput',
             ),
         ),
     ),
