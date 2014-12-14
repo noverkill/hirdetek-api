@@ -22,39 +22,31 @@ class HirdetesResource extends AbstractResourceListener
     public function create($data)
     {
 
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
         $request = $this->getEvent()->getRequest();
+
+        $id = $request->getQuery('id');
 
         $files = $request->getfiles();
 
         $filename = '';
 
-        if($files->count() > 0) {
+        $upload_dir = "./upload/";         
+
+        $time = time();
+
+        $folder_name = date('Y', $time) . '/' . date('m', $time) . '/' . date('d', $time) . '/';
+
+        if($files->count() > 0  && $id && $user) {
 
             foreach ($files as $files) {
                 
-                //print_r($files);
-                
-                $filename = str_replace(' ', '.', microtime()) . "_" . $files['name'];
-
-                $upload_dir = "./upload/"; 
-                
-                $time = time();
-
-                $folder_name = date('Y', $time) . '/' . date('m', $time) . '/' . date('d', $time) . '/'; 
-
-                //print $upload_dir . $folder_name;
-
-                if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
-
-                move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);
+                $filename = str_replace(' ', '.', microtime()) . "_" . substr($files['name'], -100);
             }
-
-            return;
         }
 
-        $user = $this->getIdentity()->getAuthenticationIdentity();
-
-        return $this->mapper->create($data, $user);
+        return $this->mapper->create($data, $user, $id, $filename, $folder_name, $upload_dir, $files);
 
         //return new ApiProblem(405, 'The POST method has not been defined');
     }

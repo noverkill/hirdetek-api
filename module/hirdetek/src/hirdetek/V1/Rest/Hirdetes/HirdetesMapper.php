@@ -116,11 +116,86 @@ class HirdetesMapper
         return $entity;
     }
 
-    public function create($data, $user)
+    public function create($data, $user, $id, $filename, $folder_name, $upload_dir, $files)
     {
         //print_r($data);
         //print_r($this->adapter);
-        exit;
+        //exit;
+
+        // print "id:" . $id;
+        // print "user:";
+        // print_r($user);
+        // print "filename:" . $filename;
+
+        if($filename && $id && $user) {
+
+            //check if user exists
+            $sql = new Sql($this->adapter);
+
+            $select = $sql->select('users')
+                          ->columns(array('id'))
+                          ->where(array('email' => $user['user_id']))
+                          ->order('id')
+                          ->limit(1);
+
+            $sqlString = $sql->getSqlStringForSqlObject($select);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+
+            $resultset = $statement->execute()->current();
+
+            if(is_array($resultset) && isset($resultset['id'])) {
+
+                $user_id = $resultset['id'];
+
+                //check if hirdetes exists and owned by the user
+                $sql = new Sql($this->adapter);
+
+                $select = $sql->select('hirdetes')
+                              ->columns(array('id'))
+                              ->where(array('id' => $id,'user_id' => $user_id))
+                              ->order('id')
+                              ->limit(1);
+
+                $sqlString = $sql->getSqlStringForSqlObject($select);
+
+                $statement = $sql->prepareStatementForSqlObject($select);
+
+                $resultset = $statement->execute()->current();
+
+                if(is_array($resultset) && isset($resultset['id'])) {
+
+                    $id = $resultset['id'];
+                                    
+                    //save image to file system
+                    if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
+
+                    move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);  
+
+                    //svae image to database
+                    $values['ad_id'] = $id;
+                    $values['user_id'] = $user_id;
+                    $values['name'] = $filename;
+                    $values['created'] = new Expression('NOW()');
+
+                    $sql = new Sql($this->adapter);
+
+                    $insert = $sql->insert('images')
+                                    ->values($values);
+
+                    $sqlString = $sql->getSqlStringForSqlObject($insert);
+
+                    $statement = $sql->prepareStatementForSqlObject($insert);
+                    $resultset = $statement->execute();
+
+                    $image_id = $resultset->getGeneratedValue();                  
+
+                    return array("success" => true, 'id' => $id, 'message' => "Kép feltöltve!");
+                }
+            }
+
+            return array("success" => false, 'id' => $id, 'message' => "A kép feltöltése sikertelen volt!");
+        }
 
         // buzi angular submit buzi object from select hogy baszna szajba a retkes kurva anyjat
         if(isset($data->forovat)) $data->forovat = $data->forovat['id'];

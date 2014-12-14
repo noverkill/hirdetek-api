@@ -128,15 +128,15 @@ hirdetekApp.config(function($stateProvider) {
 
   }).state('hirdetes-feladas', {
 
-    url: '/hirdetes-feladas',
+    url: '/hirdetes/feladas',
     templateUrl: 'partials/hirdetes-feladas.html',
     controller: 'HirdetesCreateController'  
 
   }).state('hirdetes-feladva', {
 
-    url: '/hirdetes-feladas',
+    url: '/hirdetes/:id/feladas',
     templateUrl: 'partials/hirdetes-feladva.html',
-    //controller: 'HirdetesFeladvaController'
+    controller: 'HirdetesFeladvaController'
 
   }).state('login', {
 
@@ -516,15 +516,25 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 });
 
 
-hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope, $state, $stateParams, HirdetesService) {
 
-  var myDropzone = new Dropzone("div#myDropzone", { url: "/hirdetes"})
+  console.log('HirdetesFeladvaController');
+  console.log($stateParams.id);
+
+  var myDropzone = new Dropzone("div#myDropzone", { 
+    url: "/hirdetes?id=" + $stateParams.id,
+    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()}
+  })
 
   //mi a faszer nem mukodik ez a szar??????
   Dropzone.options.myDropzone = {
     maxFilesize: 2, // MB
     addRemoveLinks: false
   }
+
+});
+
+hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
 
   $scope.error = 0;
 
@@ -533,10 +543,10 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
 
   $scope.createHirdetes = function() {    
     $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
-        //console.log(response);
+        console.log(response);
         $scope.response = response;
         if(response.success) {
-          $state.go('hirdetes-feladva');
+          $state.go('hirdetes-feladva',{id:response.id});
           //$scope.hirdetes = {};
         } else {
           console.log("not response.success");
