@@ -91,6 +91,7 @@ return array(
                 4 => 'maxar',
                 5 => 'ord',
                 6 => 'ordir',
+                7 => 'userid',
             ),
             'page_size' => 25,
             'page_size_param' => 'ps',

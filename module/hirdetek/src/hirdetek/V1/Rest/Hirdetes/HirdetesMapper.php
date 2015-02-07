@@ -28,12 +28,17 @@ class HirdetesMapper
     {
         $select = (new Select())
                     ->from(array('h' => 'hirdetes'))
-                    ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'))
-                    ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'))
-                    ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'))
-                    ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'));
+                    ->join( array ('i' => 'images'), new Expression('i.ad_id = h.id AND i.sorrend=1'), array('image_id' => 'id', 'image_created' => 'created', 'image_name' => 'name'), 'left')
+                    ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'), 'left')
+                    ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'), 'left')
+                    ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'), 'left')
+                    ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'), 'left');
 
         $where = (new Where());
+
+        if ($params->get('userid')) {
+            $where->nest->equalTo('h.user_id', $params['userid']);
+        }        
 
         if ($params->get('search')) {
             $where->nest->like('h.szoveg', "%" . $params['search'] . "%");
@@ -172,7 +177,24 @@ class HirdetesMapper
 
                     move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);  
 
+                    //calculate sorrend
+
+                    $sql = new Sql($this->adapter);
+
+                    $select = $sql->select('images')
+                                  ->columns(array(new Expression('MAX(sorrend) as max')))
+                                  ->where(array('ad_id' => $id));
+
+                    $sqlString = $sql->getSqlStringForSqlObject($select);
+
+                    $statement = $sql->prepareStatementForSqlObject($select);
+
+                    $resultset = $statement->execute()->current();
+
+                    $values['sorrend'] = ++$resultset['max'];
+
                     //svae image to database
+                    
                     $values['ad_id'] = $id;
                     $values['user_id'] = $user_id;
                     $values['name'] = $filename;

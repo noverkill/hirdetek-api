@@ -50,7 +50,7 @@
                 <div class="collapse navbar-collapse">
 
                     <ul class="nav navbar-nav navbar-right visible-xs">
-                        
+
                         <li class="active" ng-click="goHome()"><a href="#">Főoldal</a></li>
 
                         <span ng-show="user.logged == 0">
@@ -60,6 +60,7 @@
 
                         <span ng-show="user.logged">
                             <li><a href="#" ui-sref="profile({id: 100})">Profilom</a></li>
+                            <li><a href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a></li>
                             <li><a href="#" ng-click="user.logout()">Kilépés</a></li>
                         </span>
 
@@ -77,13 +78,14 @@
                                 <!--a data-toggle="modal" data-target="#modalLogin" ng-click="login()" href="#">Login</a> | -->
 
                                 <span ng-show="user.logged == 0">
-                                    <a href="#" ui-sref="login">Bejelentkezés</a> |                                    
+                                    <a href="#" ui-sref="login">Bejelentkezés</a> |
                                     <a href="#" ui-sref="register">Regisztráció</a> |
-                                </span>                                
+                                </span>
 
                                 <span ng-show="user.logged">
-                                    <a href="#" ui-sref="profile({id: 100})">Profilom</a> |  
-                                    <a href="#" ng-click="user.logout()">Kilépés</a> |                                  
+                                    <a href="#" ui-sref="profile({id: 100})">Profilom</a> |
+                                    <a href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a> |
+                                    <a href="#" ng-click="user.logout()">Kilépés</a> |
                                 </span>
 
                                 <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Új hirdetés</a>
@@ -117,21 +119,21 @@
                             <p>Feladó</p>
 
                             <div class="form-group">
-                                <input placeholder="Ön neve" class="form-control" ng-model="share.sender.name" type="text">                
+                                <input placeholder="Ön neve" class="form-control" ng-model="share.sender.name" type="text">
                             </div>
 
                             <div class="form-group">
-                                <input placeholder="Ön email címe" class="form-control" ng-model="share.sender.email" type="text">                
-                            </div>                            
+                                <input placeholder="Ön email címe" class="form-control" ng-model="share.sender.email" type="text">
+                            </div>
 
                             <p>Címzett</p>
 
                             <div class="form-group">
-                                <input placeholder="Címzett neve" class="form-control" ng-model="share.recipient.name" type="text">                
+                                <input placeholder="Címzett neve" class="form-control" ng-model="share.recipient.name" type="text">
                             </div>
 
                             <div class="form-group">
-                                <input placeholder="Címzett email címe" class="form-control" ng-model="share.recipient.email" type="text">                
+                                <input placeholder="Címzett email címe" class="form-control" ng-model="share.recipient.email" type="text">
                             </div>
 
                             <div class="row">
@@ -148,7 +150,7 @@
 
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->           
+        </div><!-- /.modal -->
 
         <div class="modal fade" id="modalSave" tabindex="-1" role="dialog" aria-labelledby="modalSave" aria-hidden="true">
             <div class="modal-dialog modal-md">
@@ -170,7 +172,7 @@
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->        
+        </div><!-- /.modal -->
 
 
         <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLogin" aria-hidden="true">
@@ -183,18 +185,18 @@
                     <div class="modal-body">
 
                         <b ng-show="mustLoginMessage">A funnkció használatához be kell jelentkezni!</b>
-                        
+
                         <p>Amenyiben már regisztrált kérjük adja meg az adatait</p>
 
                         <!--form method="POST" action="account_dashboard.html" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p"-->
                         <form method="POST" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p">
 
                             <div class="form-group">
-                                <input placeholder="Felhasználó név / email" class="form-control" name="username" type="text">                
+                                <input placeholder="Felhasználó név / email" class="form-control" name="username" type="text">
                             </div>
 
                             <div class="form-group">
-                                <input placeholder="Jelszó" class="form-control" name="password" type="password" value="">                
+                                <input placeholder="Jelszó" class="form-control" name="password" type="password" value="">
                             </div>
 
                             <div class="row">

@@ -32,7 +32,7 @@ class HirdetesResource extends AbstractResourceListener
 
         $filename = '';
 
-        $upload_dir = "./upload/";         
+        $upload_dir = "./public/upload/";         
 
         $time = time();
 

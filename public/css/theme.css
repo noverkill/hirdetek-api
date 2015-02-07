@@ -553,11 +553,13 @@ LISTINGS
 p.muted {
   color: #999999;
 }
+
 .edit-listings tr:hover .remove-ad {
   display: inline;
 }
+
 .edit-listings tr:hover .extend-ad:after {
-  content: " | ";
+  //content: " | ";
   color: #222222;
 }
 .edit-listings .no-views {
@@ -574,7 +576,8 @@ p.muted {
 }
 .edit-listings .remove-ad {
   color: #FF0000;
-  display: none;
+  //display: none;
+  //visibility: hidden;
 }
 .edit-listings .remove-ad:hover {
   color: #FF0000;

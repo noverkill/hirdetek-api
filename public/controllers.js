@@ -45,8 +45,8 @@ hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
 
         return fd;
 
-       }, 
-       header: 'undefined' 
+       },
+       header: 'undefined'
       }
       */
     }
@@ -124,19 +124,25 @@ hirdetekApp.config(function($stateProvider) {
 
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
-    controller: 'HirdetesCreateController'  
+    controller: 'HirdetesCreateController'
 
   }).state('hirdetes-feladas', {
 
     url: '/hirdetes/feladas',
     templateUrl: 'partials/hirdetes-feladas.html',
-    controller: 'HirdetesCreateController'  
+    controller: 'HirdetesCreateController'
 
   }).state('hirdetes-feladva', {
 
     url: '/hirdetes/:id/feladas',
     templateUrl: 'partials/hirdetes-feladva.html',
     controller: 'HirdetesFeladvaController'
+
+  }).state('hirdeteseim', {
+
+    url: '/hirdeteseim/:id',
+    templateUrl: 'partials/account-ads.html',
+    controller: 'HirdeteseimCtrl'
 
   }).state('login', {
 
@@ -165,7 +171,7 @@ hirdetekApp.config(function($stateProvider) {
 
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
-    controller: 'UserEditController'  
+    controller: 'UserEditController'
 
   }).state('profile', {
 
@@ -390,7 +396,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
   $rootScope.shareHirdetesClick = function(id) {
      $rootScope.share.id = id;
      $rootScope.share.success = 0;
-  };  
+  };
 
   $rootScope.shareHirdetes = function() {
 
@@ -406,7 +412,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         $rootScope.share.success = 1;
     });
 
-  };  
+  };
 
   $rootScope.shareReset();
 
@@ -478,17 +484,53 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
 }]);
 
+hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService) {
+
+  $scope.pageChanged = function() {
+      $scope.hirdetesBusy = HirdetesService.query({
+        userid:   $stateParams.id,
+      }, function(response) {
+        $scope.hirdetesek = response._embedded.hirdetes;
+        console.log($scope.hirdetesek);
+        $scope.totalItems = response.total_items;
+    }, function(error) {
+        $scope.hirdetesek = [];
+        $scope.totalItems = 0;
+    }).$promise;
+  };
+
+  $scope.pageChanged();
+
+  $scope.createPath = function (dt, name) {
+    if(dt == null || name == null) return;
+    console.log('createPath');
+    console.log(dt);
+    console.log(name);
+    var uploadDir = '/upload';
+    var date = new Date(dt);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    if(month < 10) month = '0' + month;
+    var day = date.getDate();
+    if(day < 10) day = '0' + day;
+    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + name;
+    console.log(path);
+    return path;
+  }
+
+});
+
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
 
-	$scope.hirdetesService = HirdetesService.get({ 
-    id: $stateParams.id 
+	$scope.hirdetesService = HirdetesService.get({
+    id: $stateParams.id
   }, function(response) {
-    $scope.hirdetes = response;  
+    $scope.hirdetes = response;
   }).$promise;
 
   $scope.doSearch = function() {
      $state.go('hirdetesek');
-  };  
+  };
 
 });
 
@@ -521,17 +563,27 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
   console.log('HirdetesFeladvaController');
   console.log($stateParams.id);
 
-  var myDropzone = new Dropzone("div#myDropzone", { 
+  var myDropzone = new Dropzone("div#myDropzone", {
     url: "/hirdetes?id=" + $stateParams.id,
+    addRemoveLinks: false,
+    maxFiles: 4,
+    acceptedFiles: 'image/jpeg, image/gif, image/png',
+    dictRemoveFile: '',
+    dictMaxFilesExceeded: 'max 4 kép tölthető fel!',
     headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()}
-  })
+  });
+
+  myDropzone.on('removedFile', function(){
+    console.log('file has been removed');
+  });
 
   //mi a faszer nem mukodik ez a szar??????
+  /*
   Dropzone.options.myDropzone = {
     maxFilesize: 2, // MB
     addRemoveLinks: false
   }
-
+  */
 });
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
@@ -541,7 +593,7 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
   $scope.hirdetes = new HirdetesService();
   $scope.hirdetes.lejarat = 365;
 
-  $scope.createHirdetes = function() {    
+  $scope.createHirdetes = function() {
     $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
         console.log(response);
         $scope.response = response;
@@ -552,7 +604,7 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
           console.log("not response.success");
           $scope.error = 1;
         }
-        //$state.go('hirdetesek'); 
+        //$state.go('hirdetesek');
       });
   };
 });
@@ -616,7 +668,7 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
     }
   };
 
-  $scope.loadUser = function() { 
+  $scope.loadUser = function() {
     $scope.userBusy = UserService.get({ id: $stateParams.id }, function(response) {
         $scope.user = response;
     }).$promise;
@@ -629,14 +681,14 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
 hirdetekApp.controller('UserCreateController', function($scope, $state, $stateParams, UserService) {
 
   $scope.registered = 0;
-  
-  $scope.user = new UserService(); 
 
-  $scope.addUser = function() { 
+  $scope.user = new UserService();
+
+  $scope.addUser = function() {
      $scope.userBusy = $scope.user.$save(function() {
       $scope.user = {};
       $scope.registered = 1;
-      //$state.go('users'); 
+      //$state.go('users');
     });
   };
 

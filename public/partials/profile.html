@@ -2,9 +2,9 @@
 
 <div class="container">
     <div class="row">
-        
+
         <div class="col-sm-3">
-            <div class="sidebar-account">		
+            <div class="sidebar-account">
             	<div class="row ">
             		<div class="col-lg-12">
 
@@ -14,9 +14,9 @@
                                 <ul class="nav">
                                     <li>
                                         <a class="active" href="#" ui-sref="hirdetes-feladas">Új hirdetés</a>
-                                    </li>                       
-                                    <li>    
-                                        <a class="active" href="#" ui-sref="hirdeteseim">Hirdetéseim</a>
+                                    </li>
+                                    <li>
+                                        <a class="active" href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a>
                                     </li>
                                 </ul>
                             </div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-            </div>        
+            </div>
         </div>
 
         <div class="col-sm-9">
@@ -55,7 +55,7 @@
 
                     <form class="form-horizontal" ng-submit="updateUser()">
                         <fieldset>
-                            
+
                             <!--div class="form-group">
 
                                 <div class="col-sm-4">
@@ -102,8 +102,8 @@
                                 <div class="col-sm-12">
                                     <label for="inputEmail1" style="width: 100%" class="control-label">About you</label><br /><br />
                                     <textarea class="form-control col-sm-8" rows="6" style="width: 99%"></textarea>
-                                </div>						  
-                            </div>	
+                                </div>
+                            </div>
 
                             <hr /-->
 
@@ -133,7 +133,7 @@
                                 <div class="col-sm-10">
                                     <input type="text" ng-model="user.telefon" class="form-control" id="inputTelefon" placeholder="">
                                 </div>
-                            </div>	
+                            </div>
 
                             <div class="form-group">
                                 <label for="inputWeblap" class="col-sm-2 control-label">Weblap</label>
@@ -174,7 +174,7 @@
                 </div>
 
             </fieldset>
-        
+
         </form>
 
     </div>
