@@ -9,7 +9,6 @@ nbproject
 composer.lock
 vendor/
 public/vendor/
-public/upload/*
 config/development.config.php
 config/autoload/local.php
 config/autoload/*.local.php
