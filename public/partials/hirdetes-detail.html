@@ -10,7 +10,7 @@
                 <div class="col-sm-7">
 
                     <ol class="breadcrumb">
-                        <li><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Back to listings</a></li>
+                        <li><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza a hirdetésekhez</a></li>
                         <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();">Mind</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();">{{hirdetes.r_rovat_nev}}</a></li>
@@ -47,14 +47,14 @@
                         {{hirdetes.szoveg}}
                     </p>
 
-                    <p>Azonosito: {{hirdetes.azonosito}} | Feladva {{hirdetes.days_active}} napja ({{hirdetes.feladas}})</p>
+                    <p>Azonosito: {{hirdetes.id}} | Feladva {{hirdetes.days_active}} napja ({{hirdetes.feladas}})</p>
 
                     <p>
                         <span class="classified_links ">
-                            <a class="link-info" ng-click="shareHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
+                            <!--a class="link-info" ng-click="shareHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
                             <a class="link-info" ng-click="saveHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#"><i class="fa fa-star"></i> Kedvencekhez</a>&nbsp;
-                            <a class="link-info" href="#"><i class="fa fa-envelope-o"></i> Kapcsolat</a>&nbsp;
-                            <a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a>
+                            <a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a>&nbsp;-->
+                            <a class="link-info" href="#"><i class="fa fa-envelope-o"></i> Kapcsolat</a>
                         </span>
                     </p>
 
@@ -62,58 +62,22 @@
 
                 <div class="col-sm-5 center zoom-gallery">
 
-                    <div class="row center">
+                    <div class="row center" ng-show="hirdetes.image_created!=null">
 
                         <div class="col-sm-12">
 
-                            <a class="fancybox" rel="group" href="css/images/single/1.jpg">
-                                <img id="img_01" alt="" class="raised" src="css/images/single/1.jpg" style="width: 100%" />
+                            <a class="fancybox" rel="group" href="{{createPath(hirdetes.image_created, hirdetes.image_name)}}">
+                                <img id="img_01" alt="" class="raised" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width: 100%" />
                             </a>
 
                             <br />
                             <br />
 
-                            <div class="row" id="gallery" >
+                            <div class="row" id="gallery" ng-show="hirdetes.images.length>0">
 
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/2.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/2.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/3.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/3.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/4.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/4.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/5.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/5.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/6.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/6.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/7.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/7.jpg" style="width: 100%" />
-                                    </a>
-                                </div>
-
-                                <div class="col-xs-4" style="margin-bottom: 10px;">
-                                    <a href="css/images/single/8.jpg" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" src="css/images/single/thumbs/8.jpg" style="width: 100%" />
+                                <div class="col-xs-4" style="margin-bottom: 10px;" ng-repeat="image in hirdetes.images">
+                                    <a href="{{createPath(image.created, image.name)}}" class="fancybox thumbnail" rel="group" >
+                                        <img alt="" ng-src="{{createPath(image.created, image.name)}}" style="width: 100%" />
                                     </a>
                                 </div>
 
@@ -126,9 +90,9 @@
                     <br />
 
                     <div class="col-sm-12" style="text-align: center; margin: 0 auto">
-                        <button data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="text-align: center;width: 180px; " type="button">Reply to ad</button>
+                        <button data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="text-align: center;width: 180px; " type="button">Kapcsolat</button>
                         <br />
-                        <p>or call Alan on 9824614705</p>
+                        <p ng-show="hirdetes.telefon!=''">telefonszám: {{hirdetes.telefon}}</p>
                     </div>
 
                     <br />

@@ -257,7 +257,10 @@
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
 
                 <div class="col-sm-2">
-                    <a href="details.html" class="thumbnail " ><img alt="176 * 120" src="css/images/listings/3.jpg"></a>
+                    <a class="thumbnail " href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
+                        <!--img alt="176 * 120" src="css/images/listings/3.jpg"-->
+                        <img ng-src="{{hirdetes.image_created == null && '/css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
+                    </a>
                 </div>
 
                 <div class="col-sm-10">
@@ -268,7 +271,7 @@
                     <p>
                         <span class="classified_links pull-right">
                             <a class="link-info underline" ng-click="shareHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#">Megosztás</a>&nbsp;
-                            
+
                             <a class="link-info underline" ng-show="! user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#">Kedvencekhez</a>
                             <a class="link-info underline" ng-show="user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalSave" href="#">Kedvencekhez</a>&nbsp;
 

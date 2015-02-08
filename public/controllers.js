@@ -434,6 +434,23 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   };
 
+  $rootScope.createPath = function (dt, name) {
+    if(dt == null || name == null) return;
+    console.log('createPath');
+    console.log(dt);
+    console.log(name);
+    var uploadDir = '/upload';
+    var date = new Date(dt);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    if(month < 10) month = '0' + month;
+    var day = date.getDate();
+    if(day < 10) day = '0' + day;
+    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + name;
+    console.log(path);
+    return path;
+  }
+
   $state.go('hirdetesek');
 
 }]);
@@ -501,23 +518,6 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
 
   $scope.pageChanged();
 
-  $scope.createPath = function (dt, name) {
-    if(dt == null || name == null) return;
-    console.log('createPath');
-    console.log(dt);
-    console.log(name);
-    var uploadDir = '/upload';
-    var date = new Date(dt);
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    if(month < 10) month = '0' + month;
-    var day = date.getDate();
-    if(day < 10) day = '0' + day;
-    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + name;
-    console.log(path);
-    return path;
-  }
-
 });
 
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
@@ -526,6 +526,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
     id: $stateParams.id
   }, function(response) {
     $scope.hirdetes = response;
+    console.log(response);
   }).$promise;
 
   $scope.doSearch = function() {
@@ -562,6 +563,8 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
 
   console.log('HirdetesFeladvaController');
   console.log($stateParams.id);
+
+  $scope.hirdetes = {id: $stateParams.id};
 
   var myDropzone = new Dropzone("div#myDropzone", {
     url: "/hirdetes?id=" + $stateParams.id,

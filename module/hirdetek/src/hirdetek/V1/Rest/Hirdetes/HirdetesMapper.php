@@ -38,7 +38,7 @@ class HirdetesMapper
 
         if ($params->get('userid')) {
             $where->nest->equalTo('h.user_id', $params['userid']);
-        }        
+        }
 
         if ($params->get('search')) {
             $where->nest->like('h.szoveg', "%" . $params['search'] . "%");
@@ -93,17 +93,18 @@ class HirdetesMapper
 
     public function fetchOne($id)
     {
-        $sql = 'SELECT h.*,
+        $sql = 'SELECT h.*, i.id as image_id, i.created as image_created, i.name as image_name,
                 DATEDIFF(CURDATE(),h.feladas) as days_active,
                 r.id as r_rovat_id, r.nev as r_rovat_nev, r.slug as r_rovat_slug,
                 pr.id as p_rovat_id, pr.nev as p_rovat_nev, pr.slug as p_rovat_slug,
                 g.id as g_regio_id, g.nev as g_regio_nev, g.slug as g_regio_slug,
                 pg.id as p_regio_id, pg.nev as p_regio_nev, pg.slug as p_regio_slug
                 FROM hirdetes h
-                JOIN rovat r ON r.id = h.rovat
-                JOIN rovat pr ON pr.id = r.parent
-                JOIN regio g ON g.id = h.regio
-                JOIN regio pg ON pg.id = g.parent
+                LEFT JOIN rovat r ON r.id = h.rovat
+                LEFT JOIN rovat pr ON pr.id = r.parent
+                LEFT JOIN regio g ON g.id = h.regio
+                LEFT JOIN regio pg ON pg.id = g.parent
+                LEFT JOIN images i ON i.ad_id = h.id AND i.sorrend = 1
                 WHERE h.id = ?';
 
         $resultset = $this->adapter->query($sql, array($id));
@@ -113,6 +114,18 @@ class HirdetesMapper
         if (!$data) {
             return false;
         }
+
+        $sql = 'SELECT *
+                FROM images
+                WHERE ad_id = ?
+                AND sorrend > 1
+                ORDER BY sorrend';
+
+        $resultset = $this->adapter->query($sql, array($id));
+
+        $images = $resultset->toArray();
+
+        $data[0]['images'] = $images;
 
         $entity = new HirdetesEntity();
 
@@ -171,11 +184,11 @@ class HirdetesMapper
                 if(is_array($resultset) && isset($resultset['id'])) {
 
                     $id = $resultset['id'];
-                                    
+
                     //save image to file system
                     if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
 
-                    move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);  
+                    move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);
 
                     //calculate sorrend
 
@@ -194,7 +207,7 @@ class HirdetesMapper
                     $values['sorrend'] = ++$resultset['max'];
 
                     //svae image to database
-                    
+
                     $values['ad_id'] = $id;
                     $values['user_id'] = $user_id;
                     $values['name'] = $filename;
@@ -210,7 +223,7 @@ class HirdetesMapper
                     $statement = $sql->prepareStatementForSqlObject($insert);
                     $resultset = $statement->execute();
 
-                    $image_id = $resultset->getGeneratedValue();                  
+                    $image_id = $resultset->getGeneratedValue();
 
                     return array("success" => true, 'id' => $id, 'message' => "Kép feltöltve!");
                 }
@@ -235,7 +248,7 @@ class HirdetesMapper
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
-                //array('name' => 'Alnum'), 
+                //array('name' => 'Alnum'),
             ),
             'validators' => array(
                 array(
@@ -266,7 +279,7 @@ class HirdetesMapper
                     ),
                 ),
             ),
-        )));        
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'forovat',
@@ -320,7 +333,7 @@ class HirdetesMapper
                     ),
                 ),
             ),
-        ))); 
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'alregio',
@@ -338,7 +351,7 @@ class HirdetesMapper
                     ),
                 ),
             ),
-        )));        
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'telepules',
@@ -346,7 +359,7 @@ class HirdetesMapper
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
-                //array('name' => 'Alnum'), 
+                //array('name' => 'Alnum'),
             ),
             'validators' => array(
                 array(
@@ -384,7 +397,7 @@ class HirdetesMapper
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
-                //array('name' => 'Alnum'), 
+                //array('name' => 'Alnum'),
             ),
             'validators' => array(
                 array(
@@ -414,7 +427,7 @@ class HirdetesMapper
                     ),
                 ),
             ),
-        )));        
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'szabalyzat',
@@ -425,7 +438,7 @@ class HirdetesMapper
         )));
 
 
-        if(! isset($user)) {  
+        if(! isset($user)) {
 
             $email = new Input('email');
 
@@ -477,7 +490,7 @@ class HirdetesMapper
             $resultset = $statement->execute()->current();
 
             $user_id = $resultset['id'];
-        
+
         } else {
 
             $user_id = 0;
@@ -491,7 +504,7 @@ class HirdetesMapper
         if(isset($data->alregio)) $values['regio'] = $data->alregio;
         else $values['regio'] = $data->foregio;
 
-        if(isset($data->telepules)) {     
+        if(isset($data->telepules)) {
             $values['telepules'] = $data->telepules;
         }
 
@@ -505,7 +518,7 @@ class HirdetesMapper
 
         //feladas es lejarat
         $values['feladas'] = new Expression('NOW()');
-        $values['lejarat'] = new Expression('DATE_ADD(NOW(), INTERVAL ' . $data->lejarat . ' DAY)'); 
+        $values['lejarat'] = new Expression('DATE_ADD(NOW(), INTERVAL ' . $data->lejarat . ' DAY)');
 
         $sql = new Sql($this->adapter);
 
@@ -515,7 +528,7 @@ class HirdetesMapper
 
         $sqlString = $sql->getSqlStringForSqlObject($insert);
 
-        //print $sqlString; 
+        //print $sqlString;
 
         $statement = $sql->prepareStatementForSqlObject($insert);
         $resultset = $statement->execute();
