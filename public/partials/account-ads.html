@@ -26,7 +26,7 @@
                     </div>
                 </div>
 
-                <div class="row hidden-xs">
+                <!--div class="row hidden-xs">
                     <div class="col-lg-12">
                         <div class="well">
 
@@ -34,15 +34,15 @@
                                 <div class="col-lg-3">
                                     <img src="css/images/icons/Crest.png" width="45"/>
                                 </div>
-                                <!--div class="col-lg-9">
+                                <div class="col-lg-9">
                                     <h4 style="margin-top: 0">Hirdetés kiemelés</h4>
                                     <p>Emelje ki hirdetését</p>
-                                </div-->
+                                </div>
                             </div>
 
                         </div>
                     </div>
-                </div>
+                </div-->
 
             </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="col-sm-9">
             <div class="panel panel-default">
                 <div class="panel-heading">Hirdeteseim</div>
-                <div class="panel-body">
+                <div class="panel-body" cg-busy="hirdetesBusy">
                     <form class="form-vertical">
                         <fieldset>
 
@@ -62,7 +62,7 @@
                                             <tr>
                                                 <th></th>
                                                 <th></th>
-                                                <th style="text-align:right">Feladas&nbsp;datuma</th>
+                                                <th style="text-align:right">Feladás&nbsp;dátuma</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -77,7 +77,7 @@
                                                 <td align="left">
                                                     <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}}</a><!--a href="#" class="no-views">(98 megtekintes)</a--><br />
 
-                                                    <a class="edit-ad" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>Szerkesztes</a>
+                                                    <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})'>Szerkesztes</a>
                                                     <a class="edit-ad" href="#" data-toggle="tooltip" title="Extend ad by 30 days">Hosszabbitas</a>
                                                     <a class="remove-ad" href="#" onclick="return confirm('Biztosan törli?')">Torles</a>
                                                     <p >{{hirdetes.szoveg}}</p>

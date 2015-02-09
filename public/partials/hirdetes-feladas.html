@@ -2,11 +2,11 @@
 <hr class="topbar"/>
 
 <div class="container">
-	
+
 	<div class="row">
 
 		<div class="col-sm-3">
-			<div class="sidebar-account">       
+			<div class="sidebar-account">
 				<div class="row ">
 					<div class="col-lg-12">
 
@@ -16,8 +16,8 @@
 								<ul class="nav">
 									<li>
 										<a class="active" href="#" ui-sref="profile({id: 100})">Profilom</a>
-									</li>                       
-									<li>    
+									</li>
+									<li>
 										<a class="active" href="#" ui-sref="hirdeteseim({id: 10})">Hirdetéseim</a>
 									</li>
 								</ul>
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 
-				<div class="row hidden-xs">
+				<!--div class="row hidden-xs">
 					<div class="col-lg-12">
 						<div class="well">
 
@@ -43,7 +43,7 @@
 
 						</div>
 					</div>
-				</div>
+				</div-->
 
 			</div>
 		</div>
@@ -57,9 +57,9 @@
 			<form ng-submit="createHirdetes()" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" >
 
 				<div class="panel panel-default">
-					
+
 					<div class="panel-heading">Új hirdetés létrehozása</div>
-					
+
 					<div class="panel-body">
 
 						<div class="form-group">
@@ -74,13 +74,13 @@
 								<div class="col-sm-12">
 									<br />
 									<label>Szöveg </label>
-									<textarea class="form-control col-sm-8 expand required" rows="6" style="width: 99%" ng-model="hirdetes.szoveg"></textarea>
+									<textarea class="form-control col-sm-8 expand required" rows="16" style="width: 99%" ng-model="hirdetes.szoveg"></textarea>
 								</div>
 
 								<!--div class="col-sm-12"><br />
 									<label>Kulcs szavak</label>
 									<input type="text" class="form-control " >
-								</div-->    
+								</div-->
 
 								<div class="col-sm-12">
 									<br />
@@ -88,7 +88,7 @@
 									<select ng-model="hirdetes.forovat" ng-options="forovat.nev for forovat in forovatok track by forovat.id" class="form-control required">
 										<option value=''>Kérjük válasszon kategóriát</option>
 									</select>
-								</div> 
+								</div>
 
 								<div class="col-sm-12">
 									<br />
@@ -96,8 +96,8 @@
 									<select ng-disabled="hirdetes.forovat == undefined" ng-model="hirdetes.alrovat" ng-options="alrovat.nev for alrovat in alrovatok | filter: {parent: hirdetes.forovat.id}" class="form-control required">
 										<option value=''>Kérjük válasszon alkategóriát</option>
 									</select>
-								</div> 
-									<!--track by alrovat.id-->															
+								</div>
+									<!--track by alrovat.id-->
 
 								<div class="col-sm-12">
 									<br />
@@ -114,7 +114,7 @@
 										<option value=''>Kérjük válasszon alrégiót</option>
 									</select>
 								</div>
-									<!--track by foregio.id-->								
+									<!--track by foregio.id-->
 
 								<div class="col-sm-6">
 									<br />
@@ -126,7 +126,7 @@
 									<br />
 									<label>Ár </label>
 									<input type="text" class="form-control " ng-model="hirdetes.ar">
-								</div> 
+								</div>
 
 								<div class="col-sm-6">
 									<br />
@@ -154,8 +154,8 @@
 
 						</div>
 
-					</div>          
-				</div>			
+					</div>
+				</div>
 
 				<div class="panel panel-default" ng-show="! user.isLogged()">
 					<div class="panel-heading">Felhasználó adatai</div>
@@ -168,7 +168,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Név</label>
                                         <input type="text" class="form-control " id="nev" ng-model="user.nev" placeholder="Név">
-                                    </div>     
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email</label>
@@ -183,13 +183,13 @@
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Jelszó mégegyszer</label>
                                         <input type="password" class="form-control" id="confirm-password" placeholder="Jelszó mégegyszer">
-                                    </div>							  
+                                    </div>
 
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" checked="true"> Hírlevél
                                         </label>
-                                    </div>							
+                                    </div>
 
 								</div>
 
@@ -224,7 +224,7 @@
 			</form>
 
 		</div>
-	
+
 	</div>
 
 </div>

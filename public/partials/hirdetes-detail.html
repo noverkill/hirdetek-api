@@ -12,9 +12,9 @@
                     <ol class="breadcrumb">
                         <li><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza a hirdetésekhez</a></li>
                         <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();">Mind</a></li>
-                        <li ng-if="hirdetes.p_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
+                        <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();">{{hirdetes.r_rovat_nev}}</a></li>
-
+                        <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();">{{hirdetes.r_rovat_nev}}</a></li>
                     </ol>
 
                 </div>
@@ -67,7 +67,7 @@
                         <div class="col-sm-12">
 
                             <a class="fancybox" rel="group" href="{{createPath(hirdetes.image_created, hirdetes.image_name)}}">
-                                <img id="img_01" alt="" class="raised" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width: 100%" />
+                                <img id="img_01" alt="" class="raised" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" />
                             </a>
 
                             <br />

@@ -14,6 +14,10 @@ class HirdetesEntity
     public $telefon;
     public $feladas;
     public $days_active;
+    public $forovat;
+    public $alrovat;
+    public $foregio;
+    public $alregio;
     public $r_rovat_id;
     public $r_rovat_nev;
     public $r_rovat_slug;
@@ -44,6 +48,10 @@ class HirdetesEntity
             'telefon'      => $this->telefon,
             'feladas'      => $this->feladas,
             'days_active'  => $this->days_active,
+            'forovat'      => $this->forovat,
+            'alrovat'      => $this->alrovat,
+            'foregio'      => $this->foregio,
+            'alregio'      => $this->alregio,
             'r_rovat_id'   => $this->r_rovat_id,
             'r_rovat_nev'  => $this->r_rovat_nev,
             'r_rovat_slug' => $this->r_rovat_slug,
@@ -76,6 +84,10 @@ class HirdetesEntity
         $this->telefon       = $array['telefon'];
         $this->feladas       = $array['feladas'];
         $this->days_active   = $array['days_active'];
+        $this->forovat       = $array['forovat'];
+        $this->alrovat       = $array['alrovat'];
+        $this->foregio       = $array['foregio'];
+        $this->alregio       = $array['alregio'];
         $this->r_rovat_id    = $array['r_rovat_id'];
         $this->r_rovat_nev   = $array['r_rovat_nev'];
         $this->r_rovat_slug  = $array['r_rovat_slug'];

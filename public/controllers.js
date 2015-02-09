@@ -117,7 +117,8 @@ hirdetekApp.config(function($stateProvider) {
   }).state('editHirdetes', {
 
     url: '/hirdetes/:id/edit',
-    templateUrl: 'partials/hirdetes-edit.html',
+    //templateUrl: 'partials/hirdetes-edit.html',
+    templateUrl: 'partials/hirdetes-szerkesztes.html',
     controller: 'HirdetesEditController'
 
   }).state('newHirdetes', {
@@ -553,6 +554,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 
   $scope.loadHirdetes = function() { //Issues a GET request to /api/movies/:id to get a movie to update
     $scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
+    console.log($scope.hirdetes);
   };
 
   $scope.loadHirdetes(); // Load a movie which can be edited on UI
@@ -569,10 +571,10 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
   var myDropzone = new Dropzone("div#myDropzone", {
     url: "/hirdetes?id=" + $stateParams.id,
     addRemoveLinks: false,
-    maxFiles: 4,
+    maxFiles: 6,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
-    dictMaxFilesExceeded: 'max 4 kép tölthető fel!',
+    dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
     headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()}
   });
 

@@ -93,19 +93,23 @@ class HirdetesMapper
 
     public function fetchOne($id)
     {
-        $sql = 'SELECT h.*, i.id as image_id, i.created as image_created, i.name as image_name,
+        $sql = "SELECT h.*, i.id as image_id, i.created as image_created, i.name as image_name,
                 DATEDIFF(CURDATE(),h.feladas) as days_active,
                 r.id as r_rovat_id, r.nev as r_rovat_nev, r.slug as r_rovat_slug,
                 pr.id as p_rovat_id, pr.nev as p_rovat_nev, pr.slug as p_rovat_slug,
                 g.id as g_regio_id, g.nev as g_regio_nev, g.slug as g_regio_slug,
-                pg.id as p_regio_id, pg.nev as p_regio_nev, pg.slug as p_regio_slug
+                pg.id as p_regio_id, pg.nev as p_regio_nev, pg.slug as p_regio_slug,
+                IF(pr.id IS NULL, r.id, pr.id) as forovat,
+                IF(pr.id IS NULL, 0, r.id) as alrovat,
+                IF(pg.id IS NULL, g.id, pg.id) as foregio,
+                IF(pg.id IS NULL, -1, g.id) as alregio
                 FROM hirdetes h
                 LEFT JOIN rovat r ON r.id = h.rovat
                 LEFT JOIN rovat pr ON pr.id = r.parent
                 LEFT JOIN regio g ON g.id = h.regio
                 LEFT JOIN regio pg ON pg.id = g.parent
                 LEFT JOIN images i ON i.ad_id = h.id AND i.sorrend = 1
-                WHERE h.id = ?';
+                WHERE h.id = ?";
 
         $resultset = $this->adapter->query($sql, array($id));
 
@@ -275,7 +279,7 @@ class HirdetesMapper
                     'options' => array(
                         'encoding' => 'UTF-8',
                         'min'      => 1,
-                        'max'      => 255,
+                        'max'      => 1500,
                     ),
                 ),
             ),
