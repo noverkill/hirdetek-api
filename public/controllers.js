@@ -580,18 +580,19 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
     dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
     headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
     dictRemoveFileConfirmation: "Biztosan törli?",
-    complete: function(file) {
-      if (file._removeLink) {
-        $('div#myDropzone').sortable('refresh');
-        //return file._removeLink.textContent = this.options.dictRemoveFile;
-        return file._removeLink.textContent = "Törlés";
-      }
-    },
     init: function() {
 
       this.element.querySelector(".dz-message").remove();
 
       thisDropzone = this;
+
+      thisDropzone.on("complete", function(file) {
+          if(! file.xhr) return;
+          file.image_id = angular.fromJson(file.xhr.response).image_id;
+          $(file.previewElement).data('id', file.image_id); // updates the data object
+          $(file.previewElement).attr('data-id', file.image_id); // updates the attribute
+
+      });
 
       thisDropzone.on("addedfile", function(file) {
 
@@ -602,13 +603,22 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
         var _this = thisDropzone;
         var _file = file;
 
+        //console.log('addedfile');
+        //console.log(_file);
+        //console.log(_file.previewElement);
+
+        if( _file.image_id) {
+          $(_file.previewElement).data('id', _file.image_id); // updates the data object
+          $(_file.previewElement).attr('data-id', _file.image_id); // updates the attribute
+        }
+
         // Listen to the click event
         removeButton.addEventListener("click", function(e) {
           // Make sure the button click doesn't submit the form:
           e.preventDefault();
           e.stopPropagation();
 
-          console.log(_file);
+          //console.log(_file);
 
           if(! _file.image_id && ! _file.accepted) {
             return _this.removeFile(file);
@@ -655,7 +665,19 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
       opacity: 0.5,
       containment: '#myDropzone',
       distance: 20,
-      tolerance: 'pointer'
+      tolerance: 'pointer',
+      update: function(event, ui) {
+
+        var data = $(this).sortable('toArray', {attribute: 'data-id'});//.toString();
+
+        for(var i = 0; i < data.length; i++) {
+          console.log(data[i]);
+          if(data[i] == "") {
+            alert("Amennyiben új képet töltött fel akkor kérjük az átrendezés elött várja meg amíg a kép teljesen feltöltődik (zöld pipa) vagy amennyiben nem töltődött fel (piros X) akkor kérjük távolítsa el!");
+            return false;
+          }
+        }
+      }
   });
 });
 
