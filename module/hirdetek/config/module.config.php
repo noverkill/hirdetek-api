@@ -47,6 +47,15 @@ return array(
                     ),
                 ),
             ),
+            'hirdetek.rest.kep' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/kep[/:kep_id]',
+                    'defaults' => array(
+                        'controller' => 'hirdetek\\V1\\Rest\\Kep\\Controller',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -56,6 +65,7 @@ return array(
             2 => 'hirdetek.rest.regio',
             3 => 'hirdetek.rest.megosztas',
             4 => 'hirdetek.rest.kedvencek',
+            5 => 'hirdetek.rest.kep',
         ),
     ),
     'service_manager' => array(
@@ -65,6 +75,7 @@ return array(
             'hirdetek\\V1\\Rest\\Regio\\RegioResource' => 'hirdetek\\V1\\Rest\\Regio\\RegioResourceFactory',
             'hirdetek\\V1\\Rest\\Megosztas\\MegosztasResource' => 'hirdetek\\V1\\Rest\\Megosztas\\MegosztasResourceFactory',
             'hirdetek\\V1\\Rest\\Kedvencek\\KedvencekResource' => 'hirdetek\\V1\\Rest\\Kedvencek\\KedvencekResourceFactory',
+            'hirdetek\\V1\\Rest\\Kep\\KepResource' => 'hirdetek\\V1\\Rest\\Kep\\KepResourceFactory',
         ),
     ),
     'zf-rest' => array(
@@ -187,6 +198,28 @@ return array(
             'collection_class' => 'hirdetek\\V1\\Rest\\Kedvencek\\KedvencekCollection',
             'service_name' => 'kedvencek',
         ),
+        'hirdetek\\V1\\Rest\\Kep\\Controller' => array(
+            'listener' => 'hirdetek\\V1\\Rest\\Kep\\KepResource',
+            'route_name' => 'hirdetek.rest.kep',
+            'route_identifier_name' => 'kep_id',
+            'collection_name' => 'kep',
+            'entity_http_methods' => array(
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+                1 => 'POST',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'hirdetek\\V1\\Rest\\Kep\\KepEntity',
+            'collection_class' => 'hirdetek\\V1\\Rest\\Kep\\KepCollection',
+            'service_name' => 'kep',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
@@ -195,6 +228,7 @@ return array(
             'hirdetek\\V1\\Rest\\Regio\\Controller' => 'HalJson',
             'hirdetek\\V1\\Rest\\Megosztas\\Controller' => 'HalJson',
             'hirdetek\\V1\\Rest\\Kedvencek\\Controller' => 'HalJson',
+            'hirdetek\\V1\\Rest\\Kep\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
@@ -222,6 +256,11 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
+            'hirdetek\\V1\\Rest\\Kep\\Controller' => array(
+                0 => 'application/vnd.hirdetek.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
         ),
         'content_type_whitelist' => array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
@@ -242,6 +281,10 @@ return array(
                 1 => 'application/json',
             ),
             'hirdetek\\V1\\Rest\\Kedvencek\\Controller' => array(
+                0 => 'application/vnd.hirdetek.v1+json',
+                1 => 'application/json',
+            ),
+            'hirdetek\\V1\\Rest\\Kep\\Controller' => array(
                 0 => 'application/vnd.hirdetek.v1+json',
                 1 => 'application/json',
             ),
@@ -307,6 +350,18 @@ return array(
                 'entity_identifier_name' => 'id',
                 'route_name' => 'hirdetek.rest.kedvencek',
                 'route_identifier_name' => 'kedvencek_id',
+                'is_collection' => true,
+            ),
+            'hirdetek\\V1\\Rest\\Kep\\KepEntity' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'hirdetek.rest.kep',
+                'route_identifier_name' => 'kep_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ),
+            'hirdetek\\V1\\Rest\\Kep\\KepCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'hirdetek.rest.kep',
+                'route_identifier_name' => 'kep_id',
                 'is_collection' => true,
             ),
         ),

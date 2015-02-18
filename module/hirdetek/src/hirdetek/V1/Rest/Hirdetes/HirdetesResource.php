@@ -32,7 +32,7 @@ class HirdetesResource extends AbstractResourceListener
 
         $filename = '';
 
-        $upload_dir = "./public/upload/";         
+        $upload_dir = "./public/upload/";
 
         $time = time();
 
@@ -41,7 +41,7 @@ class HirdetesResource extends AbstractResourceListener
         if($files->count() > 0  && $id && $user) {
 
             foreach ($files as $files) {
-                
+
                 $filename = str_replace(' ', '.', microtime()) . "_" . substr($files['name'], -100);
             }
         }

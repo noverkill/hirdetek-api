@@ -66,6 +66,19 @@ hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
   );
 }]);
 
+hirdetekApp.service( 'KepService', [ '$resource', function( $resource ) {
+  return $resource( 'http://localhost:8888/kep/:id', { id: '@id'}, {
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
+      'update': {
+        method: 'PUT'
+      }
+    }
+  );
+}]);
+
 hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
   return $resource( 'http://localhost:8888/regio/:id', { id: '@id'}, {
       'query': {
@@ -561,34 +574,51 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
 });
 
 
-hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope, $state, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope, $state, $stateParams, HirdetesService, KepService) {
 
-  console.log('HirdetesFeladvaController');
-  console.log($stateParams.id);
+  //console.log('HirdetesFeladvaController');
+  //console.log($stateParams.id);
 
   $scope.hirdetes = {id: $stateParams.id};
 
   var myDropzone = new Dropzone("div#myDropzone", {
     url: "/hirdetes?id=" + $stateParams.id,
-    addRemoveLinks: false,
     maxFiles: 6,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
     dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
-    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()}
-  });
+    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
+    init: function() {
+      this.on("addedfile", function(file) {
+        // Create the remove button
+        var removeButton = Dropzone.createElement("<button class='btn btn-dropzone'>Kép törlés</button>");
 
-  myDropzone.on('removedFile', function(){
-    console.log('file has been removed');
-  });
+        // Capture the Dropzone instance as closure.
+        var _this = this;
+        var _file = file;
 
-  //mi a faszer nem mukodik ez a szar??????
-  /*
-  Dropzone.options.myDropzone = {
-    maxFilesize: 2, // MB
-    addRemoveLinks: false
-  }
-  */
+        // Listen to the click event
+        removeButton.addEventListener("click", function(e) {
+          // Make sure the button click doesn't submit the form:
+          e.preventDefault();
+          e.stopPropagation();
+
+          var image_id = angular.fromJson(_file.xhr.response).image_id;
+
+          //console.log(image_id);
+
+          KepService.delete({id: image_id}, function(response) {
+              //console.log(response);
+              //$scope.response = response;
+
+              // Remove the file preview.
+              _this.removeFile(file);
+          });
+        });
+        file.previewElement.appendChild(removeButton);
+      });
+    }
+  });
 });
 
 hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {

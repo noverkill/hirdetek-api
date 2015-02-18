@@ -229,7 +229,7 @@ class HirdetesMapper
 
                     $image_id = $resultset->getGeneratedValue();
 
-                    return array("success" => true, 'id' => $id, 'message' => "Kép feltöltve!");
+                    return array('success' => true, 'id' => $id, 'image_id' => $image_id, 'message' => 'Kép feltöltve!');
                 }
             }
 
