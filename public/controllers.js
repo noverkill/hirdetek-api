@@ -450,9 +450,9 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $rootScope.createPath = function (dt, name) {
     if(dt == null || name == null) return;
-    console.log('createPath');
-    console.log(dt);
-    console.log(name);
+    //console.log('createPath');
+    //console.log(dt);
+    //console.log(name);
     var uploadDir = '/upload';
     var date = new Date(dt);
     var year = date.getFullYear();
@@ -461,7 +461,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     var day = date.getDate();
     if(day < 10) day = '0' + day;
     var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + name;
-    console.log(path);
+    //console.log(path);
     return path;
   }
 
@@ -522,7 +522,7 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
         userid:   $stateParams.id,
       }, function(response) {
         $scope.hirdetesek = response._embedded.hirdetes;
-        console.log($scope.hirdetesek);
+        //console.log($scope.hirdetesek);
         $scope.totalItems = response.total_items;
     }, function(error) {
         $scope.hirdetesek = [];
@@ -549,7 +549,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
 
 });
 
-hirdetekApp.controller('HirdetesEditController', function($scope, $state, $stateParams, HirdetesService, popupService) {
+hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $state, $stateParams, HirdetesService, popupService, KepService) {
 
   $scope.updateHirdetes = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
     $scope.hirdetes.$update(function() {
@@ -571,6 +571,92 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $state, $state
   };
 
   $scope.loadHirdetes(); // Load a movie which can be edited on UI
+
+  var myDropzone = new Dropzone("div#myDropzone", {
+    url: "/hirdetes?id=" + $stateParams.id,
+    maxFiles: 6,
+    acceptedFiles: 'image/jpeg, image/gif, image/png',
+    dictRemoveFile: '',
+    dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
+    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
+    dictRemoveFileConfirmation: "Biztosan törli?",
+    complete: function(file) {
+      if (file._removeLink) {
+        $('div#myDropzone').sortable('refresh');
+        //return file._removeLink.textContent = this.options.dictRemoveFile;
+        return file._removeLink.textContent = "Törlés";
+      }
+    },
+    init: function() {
+
+      this.element.querySelector(".dz-message").remove();
+
+      thisDropzone = this;
+
+      thisDropzone.on("addedfile", function(file) {
+
+        // Create the remove button
+        var removeButton = Dropzone.createElement("<button class='btn btn-dropzone'>Kép törlés</button>");
+
+        // Capture the Dropzone instance as closure.
+        var _this = thisDropzone;
+        var _file = file;
+
+        // Listen to the click event
+        removeButton.addEventListener("click", function(e) {
+          // Make sure the button click doesn't submit the form:
+          e.preventDefault();
+          e.stopPropagation();
+
+          console.log(_file);
+
+          if(! _file.image_id && ! _file.accepted) {
+            return _this.removeFile(file);
+          }
+
+          if(confirm("Biztosan törli?")) {
+
+            var image_id = _file.image_id || angular.fromJson(_file.xhr.response).image_id;
+
+            console.log(image_id);
+
+            KepService.delete({id: image_id}, function(response) {
+                //console.log(response);
+                //$scope.response = response;
+                // Remove the file preview.
+                thisDropzone.removeFile(file);
+            });
+          }
+        });
+        file.previewElement.appendChild(removeButton);
+      });
+
+      HirdetesService.get({
+        id: $stateParams.id
+      }, function(response) {
+        //console.log(response);
+        var images = response.images;
+        //console.log(images);
+        $.each(images, function(key,value){
+            var mockFile = { name: value.name, size: value.size, image_id: value.id, accepted: 1, upload: {bytesSent: 123} };
+            //thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+            thisDropzone.files.push(mockFile);
+            mockFile.status = Dropzone.ADDED;
+            thisDropzone.emit("addedfile", mockFile);
+            thisDropzone.options.thumbnail.call(thisDropzone, mockFile,  $rootScope.createPath(value.created, value.name));
+        });
+      });
+    }
+  });
+
+  $("div#myDropzone").sortable({
+      items:'.dz-preview',
+      cursor: 'move',
+      opacity: 0.5,
+      containment: '#myDropzone',
+      distance: 20,
+      tolerance: 'pointer'
+  });
 });
 
 
