@@ -698,14 +698,14 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
         var data = $(this).sortable('toArray', {attribute: 'data-id'});//.toString();
 
         for(var i = 0; i < data.length; i++) {
-          console.log(data[i]);
+          //console.log(data[i]);
           if(data[i] == "") {
             alert("Amennyiben új képet töltött fel akkor kérjük az átrendezés elött várja meg amíg a kép teljesen feltöltődik (zöld pipa) vagy amennyiben nem töltődött fel (piros X) akkor kérjük távolítsa el!");
             return false;
           }
         }
 
-        $scope.kepBusy = $http({
+        $scope.hirdetesService = $http({
           method: 'POST',
           url: "/kep",
           data: data,
