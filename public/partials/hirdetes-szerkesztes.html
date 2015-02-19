@@ -48,13 +48,13 @@
 			</div>
 		</div>
 
-		<div class="col-sm-9">
+		<div class="col-sm-9" cg-busy="hirdetesService">
 
             <div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
                 {{err.message}}: {{err.field}}
             </div>
 
-			<form ng-submit="updateHirdetes()" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" >
+			<form ng-submit="updateHirdetes()" enctype="multipart/form-data" class="form-vertical" >
 
 				<div class="panel panel-default">
 

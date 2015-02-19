@@ -548,15 +548,232 @@ class HirdetesMapper
 
     public function update($data)
     {
-        print 'update';
-        print_r(array_values((array) $data));
-        exit;
 
-        $sql = 'UPDATE hirdetes SET szoveg = ?, kep = ? WHERE id = ?';
-        $this->adapter->query($sql, array($data->szoveg, $data->kep, $data->id));
+        $inputFilter = new InputFilter();
+
+        $factory = new InputFactory();
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'targy',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'szoveg',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 1500,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'forovat',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'alrovat',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'foregio',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'alregio',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 0,
+                        'max' => 100,
+                        'inclusive' => false,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'telepules',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'ar',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Digits'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'Between',
+                    'options' => array(
+                        'min' => 1,
+                        'max' => 2000000000,  //2 billion
+                        'inclusive' => true,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'telefon',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->setData((array)$data);
+
+        if ($inputFilter->isValid()) {
+            $rovat = (int) $data->alrovat < 1 ? (int) $data->forovat : (int) $data->alrovat;
+
+            $regio = (int) $data->alregio < 1 ? (int) $data->foregio : (int) $data->alregio;
+
+            $sql = 'UPDATE hirdetes
+                    SET telepules = ?,
+                        targy = ?,
+                        szoveg = ?,
+                        ar = ?,
+                        telefon = ?,
+                        rovat = ?,
+                        regio = ?
+                    WHERE id = ?';
+
+            $this->adapter->query(
+                $sql,
+                array(
+                    $data->telepules,
+                    $data->targy,
+                    $data->szoveg,
+                    $data->ar,
+                    $data->telefon,
+                    $rovat,
+                    $regio,
+                    $data->id
+                )
+            );
+        }
 
         $entity = new HirdetesEntity();
         $entity->exchangeArray((array)$data);
+
+        if (! $inputFilter->isValid()) {
+            //echo "The form is not valid\n";
+            $errors = array();
+            foreach ($inputFilter->getInvalidInput() as $error) {
+                //print_r($error);//->getMessages());
+                $errors[] = array(
+                    "field" => $error->getName(),
+                    "message" => $error->getMessages()
+                );
+            }
+
+            $entity->success = false;
+            $entity->errors = $errors;
+        }
+
+        //print_r($entity);
+
         return $entity;
     }
 

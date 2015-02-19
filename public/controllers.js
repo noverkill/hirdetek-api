@@ -540,7 +540,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
     id: $stateParams.id
   }, function(response) {
     $scope.hirdetes = response;
-    console.log(response);
+    //console.log(response);
   }).$promise;
 
   $scope.doSearch = function() {
@@ -552,9 +552,21 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
 hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, popupService, KepService) {
 
   $scope.updateHirdetes = function() {
-    $scope.hirdetesBusy = $scope.hirdetes.$update(); /*(function() {
-      //$state.go('hirdetesek');
-    });*/
+    //console.log($scope.hirdetes);
+    $scope.hirdetesService = $scope.hirdetes.$update(function(response) {
+        //console.log(response);
+        $scope.response = response;
+        if(response.success) {
+          //$state.go('hirdetes-feladva',{id:response.id});
+          $state.go('hirdeteseim');
+          //$scope.hirdetes = {};
+        } else {
+          //console.log("not response.success");
+          $scope.error = 1;
+        }
+        //$state.go('hirdetesek');
+      });
+    //console.log($scope.hirdetes);
   };
 
   $scope.deleteHirdetes = function() { // Delete a movie. Issues a DELETE to /api/movies/:id
@@ -565,12 +577,21 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
     }
   };
 
+/*
   $scope.loadHirdetes = function() { //Issues a GET request to /api/movies/:id to get a movie to update
-    $scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
+    //$scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
     //console.log($scope.hirdetes);
+
+    $scope.hirdetesService = HirdetesService.get({
+      id: $stateParams.id
+    }, function(response) {
+      $scope.hirdetes = response;
+      //console.log(response);
+    }).$promise;
   };
 
   $scope.loadHirdetes(); // Load a movie which can be edited on UI
+*/
 
   var myDropzone = new Dropzone("div#myDropzone", {
     url: "/hirdetes?id=" + $stateParams.id,
@@ -628,7 +649,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
 
             var image_id = _file.image_id || angular.fromJson(_file.xhr.response).image_id;
 
-            console.log(image_id);
+            //console.log(image_id);
 
             KepService.delete({id: image_id}, function(response) {
                 //console.log(response);
@@ -641,12 +662,17 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
         file.previewElement.appendChild(removeButton);
       });
 
-      HirdetesService.get({
+      $scope.hirdetesService = HirdetesService.get({
         id: $stateParams.id
       }, function(response) {
         //console.log(response);
+
+        $scope.hirdetes = response;
+
         var images = response.images;
-        images.unshift({'id': response.image_id, 'ad_id': $stateParams.id, 'user_id': '???', 'created': response.image_created, 'name': response.image_name, 'sorrend': 1});
+        if(response.image_id) {
+          images.unshift({'id': response.image_id, 'ad_id': $stateParams.id, 'user_id': '???', 'created': response.image_created, 'name': response.image_name, 'sorrend': 1});
+        }
         //console.log(images);
         $.each(images, function(key,value){
             var mockFile = { name: value.name, size: value.size, image_id: value.id, accepted: 1, upload: {bytesSent: 123} };
@@ -656,7 +682,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
             thisDropzone.emit("addedfile", mockFile);
             thisDropzone.options.thumbnail.call(thisDropzone, mockFile,  $rootScope.createPath(value.created, value.name));
         });
-      });
+      }).$promise;
     }
   });
 

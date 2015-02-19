@@ -34,6 +34,8 @@ class HirdetesEntity
     public $image_created;
     public $image_nev;
     public $images;
+    public $success;
+    public $errors;
 
     public function getArrayCopy()
     {
@@ -67,7 +69,9 @@ class HirdetesEntity
             'image_id'     => $this->image_id,
             'image_created'=> $this->image_created,
             'image_name'   => $this->image_name,
-            'images'       => $this->images
+            'images'       => $this->images,
+            'success'      => $this->success,
+            'errors'       => $this->errors
 
         );
     }
@@ -100,9 +104,11 @@ class HirdetesEntity
         $this->p_regio_id    = $array['p_regio_id'];
         $this->p_regio_nev   = $array['p_regio_nev'];
         $this->p_regio_slug  = $array['p_regio_slug'];
-        $this->image_id        = $array['image_id'];
-        $this->image_created   = $array['image_created'];
-        $this->image_name      = $array['image_name'];
+        $this->image_id      = $array['image_id'];
+        $this->image_created = $array['image_created'];
+        $this->image_name    = $array['image_name'];
         $this->images        = $array['images'];
+        $this->success       = true;
+        $this->errors        = null;
     }
 }
