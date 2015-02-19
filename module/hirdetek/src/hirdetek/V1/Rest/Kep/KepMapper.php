@@ -24,6 +24,18 @@ class KepMapper
         $this->adapter = $adapter;
     }
 
+    public function create($data)
+    {
+        //reorder images
+        $i = 1;
+        foreach($data as $id) {
+            $sql = 'UPDATE images SET sorrend=? WHERE id = ?';
+            $this->adapter->query($sql, array($i, $id));
+            $i++;
+        }
+        return true;
+    }
+
     public function delete($id)
     {
         $sql = 'DELETE FROM images WHERE id = ?';

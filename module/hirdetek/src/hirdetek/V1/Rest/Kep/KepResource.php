@@ -22,7 +22,9 @@ class KepResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        return new ApiProblem(405, 'The POST method has not been defined');
+        //print_r($data);
+        return $this->mapper->create($data);
+        //return new ApiProblem(405, 'The POST method has not been defined');
     }
 
     /**
@@ -90,6 +92,7 @@ class KepResource extends AbstractResourceListener
      */
     public function replaceList($data)
     {
+        print_r($data);
         return new ApiProblem(405, 'The PUT method has not been defined for collections');
     }
 

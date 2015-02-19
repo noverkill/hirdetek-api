@@ -549,12 +549,12 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
 
 });
 
-hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $state, $stateParams, HirdetesService, popupService, KepService) {
+hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, popupService, KepService) {
 
-  $scope.updateHirdetes = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
-    $scope.hirdetes.$update(function() {
-      $state.go('hirdetesek'); // on success go back to home i.e. movies state.
-    });
+  $scope.updateHirdetes = function() {
+    $scope.hirdetesBusy = $scope.hirdetes.$update(); /*(function() {
+      //$state.go('hirdetesek');
+    });*/
   };
 
   $scope.deleteHirdetes = function() { // Delete a movie. Issues a DELETE to /api/movies/:id
@@ -567,7 +567,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
 
   $scope.loadHirdetes = function() { //Issues a GET request to /api/movies/:id to get a movie to update
     $scope.hirdetes = HirdetesService.get({ id: $stateParams.id });
-    console.log($scope.hirdetes);
+    //console.log($scope.hirdetes);
   };
 
   $scope.loadHirdetes(); // Load a movie which can be edited on UI
@@ -646,6 +646,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
       }, function(response) {
         //console.log(response);
         var images = response.images;
+        images.unshift({'id': response.image_id, 'ad_id': $stateParams.id, 'user_id': '???', 'created': response.image_created, 'name': response.image_name, 'sorrend': 1});
         //console.log(images);
         $.each(images, function(key,value){
             var mockFile = { name: value.name, size: value.size, image_id: value.id, accepted: 1, upload: {bytesSent: 123} };
@@ -677,6 +678,12 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $s
             return false;
           }
         }
+
+        $scope.kepBusy = $http({
+          method: 'POST',
+          url: "/kep",
+          data: data,
+        });
       }
   });
 });
@@ -738,13 +745,13 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
 
   $scope.createHirdetes = function() {
     $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
-        console.log(response);
+        //console.log(response);
         $scope.response = response;
         if(response.success) {
           $state.go('hirdetes-feladva',{id:response.id});
           //$scope.hirdetes = {};
         } else {
-          console.log("not response.success");
+          //console.log("not response.success");
           $scope.error = 1;
         }
         //$state.go('hirdetesek');

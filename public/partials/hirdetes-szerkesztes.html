@@ -54,7 +54,7 @@
                 {{err.message}}: {{err.field}}
             </div>
 
-			<form ng-submit="createHirdetes()" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" >
+			<form ng-submit="updateHirdetes()" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" >
 
 				<div class="panel panel-default">
 
@@ -167,7 +167,7 @@
 
 			<div class="panel panel-default">
 				<div class="panel-heading">Fényképek szerkesztése</div>
-				<div class="panel-body">
+				<div class="panel-body" cg-busy="kepBusy">
 					<div id="myDropzone" class="dropzone"></div>
 					<br />
 					<p><small>* a hirdetési listákban mindig az első helyen lévő kép jelenik meg, és szintén ez az a kép amelyik nagy méretben látható a hirdetés részleteinél</small></p>
