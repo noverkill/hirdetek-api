@@ -49,7 +49,7 @@
 
         <div class="col-sm-9">
             <div class="panel panel-default">
-                <div class="panel-heading">Hirdeteseim</div>
+                <div class="panel-heading" id="myads">Hirdeteseim</div>
                 <div class="panel-body" cg-busy="hirdetesBusy">
                     <form class="form-vertical">
                         <fieldset>
@@ -68,7 +68,7 @@
                                         <tbody>
 
 
-                                            <tr ng-repeat="hirdetes in hirdetesek">
+                                            <tr ng-repeat="hirdetes in hirdetesek" ng-attr-id="{{ 'ad-' + hirdetes.id }}">
 
                                                 <td align="center">
                                                     <img ng-src="{{hirdetes.image_created == null && '/css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
@@ -79,7 +79,7 @@
 
                                                     <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})' title="Szerkesztés">Szerkesztés</a>
                                                     <a class="edit-ad" ng-attr-id="{{ 'extend-ad-' + hirdetes.id }}" ng-click='extendHirdetes(hirdetes)' data-toggle="tooltip" title="Hosszabbítás 30 nappal">Hosszabbítás 30 nappal</a>
-                                                    <a class="remove-ad" href="#" onclick="return confirm('Biztosan törli?')">Törlés</a>
+                                                    <a class="remove-ad"  ng-click='deleteHirdetes(hirdetes.id)'>Törlés</a>
                                                     <p >{{hirdetes.szoveg}}</p>
                                                 </td>
 

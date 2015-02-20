@@ -515,7 +515,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
 }]);
 
-hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService, popupService) {
 
   $scope.pageChanged = function() {
       $scope.hirdetesBusy = HirdetesService.query({
@@ -549,6 +549,20 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
         //} else {}
     }).$promise;
   };
+
+  $scope.deleteHirdetes = function(id) { // Delete a movie. Issues a DELETE to /api/movies/:id
+    if (popupService.showPopup('Biztosan törli?')) {
+    $scope.hirdetesBusy = HirdetesService.delete({id: id}, function(response) {
+        //console.log(response);
+        $('#ad-' + id).remove();
+          $.notify(
+            "Hirdetés sikeresen törölve!",
+            "info",
+            {position: 'top center', clickToHide: false, autoHide: true, autoHideDelay: 1}
+          );
+      }).$promise;
+    }
+  };
 });
 
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
@@ -566,7 +580,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $sta
 
 });
 
-hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, popupService, KepService) {
+hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, KepService) {
 
   $scope.updateHirdetes = function() {
     //console.log($scope.hirdetes);
@@ -584,14 +598,6 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
         //$state.go('hirdetesek');
       });
     //console.log($scope.hirdetes);
-  };
-
-  $scope.deleteHirdetes = function() { // Delete a movie. Issues a DELETE to /api/movies/:id
-    if (popupService.showPopup('Really delete this?')) {
-      $scope.hirdetes.$delete(function() {
-        $state.go('hirdetesek'); // on success go back to home i.e. movies state.
-      });
-    }
   };
 
 /*
