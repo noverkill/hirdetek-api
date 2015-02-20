@@ -77,8 +77,8 @@
                                                 <td align="left">
                                                     <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}}</a><!--a href="#" class="no-views">(98 megtekintes)</a--><br />
 
-                                                    <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})'>Szerkesztés</a>
-                                                    <a class="edit-ad" href="#" data-toggle="tooltip" title="Extend ad by 30 days">Hosszabbítás</a>
+                                                    <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})' title="Szerkesztés">Szerkesztés</a>
+                                                    <a class="edit-ad" ng-attr-id="{{ 'extend-ad-' + hirdetes.id }}" ng-click='extendHirdetes(hirdetes)' data-toggle="tooltip" title="Hosszabbítás 30 nappal">Hosszabbítás 30 nappal</a>
                                                     <a class="remove-ad" href="#" onclick="return confirm('Biztosan törli?')">Törlés</a>
                                                     <p >{{hirdetes.szoveg}}</p>
                                                 </td>

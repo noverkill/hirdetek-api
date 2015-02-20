@@ -549,6 +549,23 @@ class HirdetesMapper
     public function update($data)
     {
 
+        //hosszabbitas 30 nappal
+        if ($data->lejarat == 30) {
+
+            $sql = 'UPDATE hirdetes
+                    SET lejarat = ADDDATE(lejarat, INTERVAL 30 DAY)
+                    WHERE id = ?';
+
+            $this->adapter->query(
+                $sql,
+                array(
+                    (int) $data->id,
+                )
+            );
+
+            return $this->fetchOne($data->id);
+        }
+
         $inputFilter = new InputFilter();
 
         $factory = new InputFactory();
@@ -725,6 +742,7 @@ class HirdetesMapper
         $inputFilter->setData((array)$data);
 
         if ($inputFilter->isValid()) {
+
             $rovat = (int) $data->alrovat < 1 ? (int) $data->forovat : (int) $data->alrovat;
 
             $regio = (int) $data->alregio < 1 ? (int) $data->foregio : (int) $data->alregio;
@@ -736,7 +754,8 @@ class HirdetesMapper
                         ar = ?,
                         telefon = ?,
                         rovat = ?,
-                        regio = ?
+                        regio = ?,
+                        lejarat = ?
                     WHERE id = ?';
 
             $this->adapter->query(
@@ -749,7 +768,8 @@ class HirdetesMapper
                     $data->telefon,
                     $rovat,
                     $regio,
-                    $data->id
+                    $data->id,
+                    $data->lejarat
                 )
             );
         }

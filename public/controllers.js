@@ -532,6 +532,23 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
 
   $scope.pageChanged();
 
+  $scope.extendHirdetes = function(hirdetes) {
+    hirdetes.lejarat = 30;
+    //console.log(hirdetes);
+    $scope.hirdetesBusy = HirdetesService.update({id: hirdetes.id}, hirdetes, function(response) {
+        //console.log(response);
+        $scope.response = response;
+        $scope.hirdetes = response;
+        //console.log($scope.hirdetes);
+        //if(response.success) {
+          $("#extend-ad-" + hirdetes.id).notify(
+            "Meghosszabítva 30 nappal (" + $scope.hirdetes.lejarat + ")",
+            "success",
+            {clickToHide: false, autoHide: true, autoHideDelay: 1}
+          );
+        //} else {}
+    }).$promise;
+  };
 });
 
 hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
@@ -694,9 +711,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
       distance: 20,
       tolerance: 'pointer',
       update: function(event, ui) {
-
         var data = $(this).sortable('toArray', {attribute: 'data-id'});//.toString();
-
         for(var i = 0; i < data.length; i++) {
           //console.log(data[i]);
           if(data[i] == "") {
@@ -704,7 +719,6 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
             return false;
           }
         }
-
         $scope.hirdetesService = $http({
           method: 'POST',
           url: "/kep",
@@ -713,7 +727,6 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
       }
   });
 });
-
 
 hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope, $state, $stateParams, HirdetesService, KepService) {
 

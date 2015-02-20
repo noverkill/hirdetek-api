@@ -13,6 +13,7 @@ class HirdetesEntity
     public $ar;
     public $telefon;
     public $feladas;
+    public $lejarat;
     public $days_active;
     public $forovat;
     public $alrovat;
@@ -49,6 +50,7 @@ class HirdetesEntity
             'ar'           => $this->ar,
             'telefon'      => $this->telefon,
             'feladas'      => $this->feladas,
+            'lejarat'      => $this->lejarat,
             'days_active'  => $this->days_active,
             'forovat'      => $this->forovat,
             'alrovat'      => $this->alrovat,
@@ -87,6 +89,7 @@ class HirdetesEntity
         $this->ar            = $array['ar'];
         $this->telefon       = $array['telefon'];
         $this->feladas       = $array['feladas'];
+        $this->lejarat       = $array['lejarat'];
         $this->days_active   = $array['days_active'];
         $this->forovat       = $array['forovat'];
         $this->alrovat       = $array['alrovat'];
