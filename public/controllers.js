@@ -211,6 +211,22 @@ hirdetekApp.config(function($stateProvider) {
 
 hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', 'RovatService', 'RegioService', function($http, $state, $injector, $rootScope, $cookieStore, RovatService, RegioService) {
 
+    /*
+    $rootScope
+        .$on('$stateChangeStart',
+            function(event, toState, toParams, fromState, fromParams){
+                //console.log('stateChangeStart');
+                $("#ui-view").html("");
+                //$(".page-loading").removeClass("hidden");
+        });
+
+    $rootScope
+        .$on('$stateChangeSuccess',
+            function(event, toState, toParams, fromState, fromParams){
+                //$(".page-loading").addClass("hidden");
+        });
+    */
+
   $rootScope.user = {
 
         credentials: {
@@ -234,7 +250,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
             $rootScope.user.forget(credentials);
           }
 
-          $http.post('/oauth', this.credentials).
+          $rootScope.userBusy = $http.post('/oauth', this.credentials).
             success(function(data, status, headers, config) {
               $rootScope.user.logged = 1;
               $cookieStore.put('tk', data.access_token);
@@ -249,6 +265,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         logout: function () {
             $cookieStore.remove('tk');
             $rootScope.user.logged = 0;
+            $state.go('login')
         },
         getTk: function() {
             return $cookieStore.get('tk');
