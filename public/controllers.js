@@ -1,4 +1,35 @@
+var oldTime = 0;
+showTime();
+
+function showTime() {
+
+    var date = new Date();
+    var newTime = date.getTime();
+
+    console.log(newTime);
+    console.log('oldTime: ' + oldTime);
+
+    if(oldTime>0) {
+      var elapsed = newTime - oldTime;
+      console.log('Elapsed: ' + elapsed);
+    }
+
+    oldTime = newTime;
+}
+
+var siteurl = 'http://hirdetek-api.com';
+
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
+
+//https://robots.thoughtbot.com/preload-resource-data-into-angularjs
+hirdetekApp.directive("preloadResource", function() {
+    return {
+      link: function(scope, element, attrs) {
+        scope.preloadResource = JSON.parse(attrs.preloadResource);
+        element.remove();
+      }
+    };
+  });
 
 hirdetekApp.value('cgBusyDefaults',{
     message:'Kis türelmet...'
@@ -11,50 +42,20 @@ hirdetekApp.service('popupService',function($window){
 });
 
 hirdetekApp.service( 'HirdetesService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8888/hirdetes/:id', { id: '@id'}, {
+  return $resource( siteurl + '/hirdetes/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
       },
       'update': {
         method: 'PUT'
-      },
-      /*
-      save: {
-       method: 'POST',
-       transformRequest: function(data) {
-
-        console.log('hirdetes save transformRequest');
-        console.log(data);
-
-        var fd = new FormData();
-
-        angular.forEach(data, function(value, key) {
-          if (value instanceof FileList) {
-            if (value.length == 1) {
-              fd.append(key, value[0]);
-            } else {
-              angular.forEach(value, function(file, index) {
-                fd.append(key + '_' + index, file);
-              });
-            }
-          } else {
-            fd.append(key, value);
-          }
-        });
-
-        return fd;
-
-       },
-       header: 'undefined'
       }
-      */
     }
   );
 }]);
 
 hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8888/rovatok/:id', { id: '@id'}, {
+  return $resource( siteurl + '/rovatok/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -67,7 +68,7 @@ hirdetekApp.service( 'RovatService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'KepService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8888/kep/:id', { id: '@id'}, {
+  return $resource( siteurl + '/kep/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -80,7 +81,7 @@ hirdetekApp.service( 'KepService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8888/regio/:id', { id: '@id'}, {
+  return $resource( siteurl + '/regio/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -93,7 +94,7 @@ hirdetekApp.service( 'RegioService', [ '$resource', function( $resource ) {
 }]);
 
 hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
-  return $resource( 'http://localhost:8888/user/:id', { id: '@id'}, {
+  return $resource( siteurl + '/user/:id', { id: '@id'}, {
       'query': {
         method: 'GET',
         isArray: false
@@ -109,7 +110,7 @@ hirdetekApp.config(function($stateProvider) {
 
   $stateProvider.state('mainpage', {
 
-    url: '/',
+    url: '',
     templateUrl: 'partials/hirdetesek.html',
     controller: 'HirdetesListCtrl'
     // templateUrl: 'partials/mainpage.html',
@@ -211,6 +212,8 @@ hirdetekApp.config(function($stateProvider) {
 
 hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', 'RovatService', 'RegioService', function($http, $state, $injector, $rootScope, $cookieStore, RovatService, RegioService) {
 
+  //showTime();
+
     /*
     $rootScope
         .$on('$stateChangeStart',
@@ -219,7 +222,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
                 $("#ui-view").html("");
                 //$(".page-loading").removeClass("hidden");
         });
-
     $rootScope
         .$on('$stateChangeSuccess',
             function(event, toState, toParams, fromState, fromParams){
@@ -289,7 +291,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $injector.get("$http").defaults.transformRequest = function(data, headersGetter) {
 
-      //curl -i "http://localhost:8888/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
+      //curl -i siteurl + "/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
       //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
 
       if($rootScope.user.isLogged()) {
@@ -305,30 +307,57 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $state.go('mainpage');
   }
 
-   $rootScope.viewBusy = RovatService.query({ps: 1000}, function(response) {
+  $rootScope.loadRovatok = function () {
 
-     $rootScope.rovatok = response._embedded.rovatok;
+    if($rootScope.rovatokLoaded) return;
 
-     $rootScope.forovatok = [];
-     $rootScope.alrovatok = [];
+   $rootScope.rovatok = $rootScope.preloadResource.rovatok._embedded.rovatok;
 
-     for(var i = 0; i < $rootScope.rovatok.length; i++) {
-       if($rootScope.rovatok[i].parent == 0) {
-         $rootScope.forovatok.push($rootScope.rovatok[i]);
-       } else {
-         $rootScope.alrovatok.push($rootScope.rovatok[i]);
-       }
+   $rootScope.forovatok = [];
+   $rootScope.alrovatok = [];
+
+   for(var i = 0; i < $rootScope.rovatok.length; i++) {
+     if($rootScope.rovatok[i].parent == 0) {
+       $rootScope.forovatok.push($rootScope.rovatok[i]);
+     } else {
+       $rootScope.alrovatok.push($rootScope.rovatok[i]);
      }
+   }
 
-     $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+   $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
 
-     // console.log($rootScope.forovatok);
+    $rootScope.rovatokLoaded = 1;
+  }
 
-     // console.log($rootScope.alrovatok);
+  $rootScope.loadRegiok = function () {
 
-   }).$promise;
+    if($rootScope.regiokLoaded) return;
 
- $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
+    $rootScope.regiok = $rootScope.preloadResource.regiok._embedded.regio;
+
+    $rootScope.foregiok = [];
+    $rootScope.alregiok = [];
+    $rootScope._alregiok = [];
+
+    for(var i = 0; i < $rootScope.regiok.length; i++) {
+     if($rootScope.regiok[i].parent == 0) {
+       $rootScope.foregiok.push($rootScope.regiok[i]);
+     } else {
+       $rootScope.alregiok.push($rootScope.regiok[i]);
+
+       if(angular.isUndefined($rootScope._alregiok[$rootScope.regiok[i].parent])) {
+           $rootScope._alregiok[$rootScope.regiok[i].parent] = [];
+       }
+
+       $rootScope._alregiok[$rootScope.regiok[i].parent].push($rootScope.regiok[i]);
+     }
+    }
+
+    $rootScope.regiokLoaded = 1;
+  }
+
+/*
+  $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
 
    $rootScope.regiok = response._embedded.regio;
 
@@ -350,8 +379,34 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
      }
    }
 
-  $rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+    $rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+  }).$promise;
+*/
+
+/*
+$rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
+
+   $rootScope.rovatok = response._embedded.rovatok;
+
+   $rootScope.forovatok = [];
+   $rootScope.alrovatok = [];
+
+   for(var i = 0; i < $rootScope.rovatok.length; i++) {
+     if($rootScope.rovatok[i].parent == 0) {
+       $rootScope.forovatok.push($rootScope.rovatok[i]);
+     } else {
+       $rootScope.alrovatok.push($rootScope.rovatok[i]);
+     }
+   }
+
+   $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+
+   // console.log($rootScope.forovatok);
+
+   // console.log($rootScope.alrovatok);
+
  }).$promise;
+}*/
 
  $rootScope.resetRegio = function() {
    $rootScope.regio = {id: 0, nev: 'Regio'}
@@ -363,8 +418,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
    $rootScope.regio = regio || {id: 0, nev: 'Regio'};
  };
 
- $rootScope.resetRegio();
-
  $rootScope.resetRovat = function() {
    $rootScope.rovat = {id: 0, nev: 'Mindem rovatban'}
    $rootScope.forovat = {id: 0, nev: 'Minden rovatban'};
@@ -374,8 +427,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
    $rootScope.forovat = forovat;
    $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
  };
-
- $rootScope.resetRovat();
 
   $rootScope.filter = {
     text: '',
@@ -399,10 +450,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $rootScope.listing.ord = ord;
     $rootScope.listing.ordir = $rootScope.listing.ordir == 'DESC' ? 'ASC' : 'DESC';
   };
-
-  $rootScope.date = new Date();
-
-  //$state.go('mainpage');
 
   //modal window's setup functions
 
@@ -434,7 +481,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $rootScope.share.success = 0;
 
     $rootScope.megosztasWait = $http({
-        url: 'http://localhost:8888/megosztas',
+        url: siteurl + '/megosztas',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         data: $rootScope.share
@@ -445,15 +492,13 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   };
 
-  $rootScope.shareReset();
-
   $rootScope.saveHirdetesClick = function(id) {
 
     $rootScope.saveSuccess = 0;
     $rootScope.mustLoginMessage = 1;
 
     $rootScope.saveWait = $http({
-      url: 'http://localhost:8888/kedvencek',
+      url: siteurl + '/kedvencek',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       data: {'id': id}
@@ -482,10 +527,21 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     return path;
   }
 
-  $state.go('hirdetesek');
+  $rootScope.date = new Date();
+
+  $rootScope.rovatokLoaded = 0;
+  $rootScope.regiokLoaded = 0;
+
+  $rootScope.resetRegio();
+  $rootScope.resetRovat();
+
+  //$rootScope.shareReset();
+
+  $rootScope.HirdetesekLoaded = 0;
 
 }]);
 
+/*
 hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', function ($scope, $rootScope, $state) {
 
   $scope.doSearch = function() {
@@ -493,8 +549,53 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
   };
 
 }]);
+*/
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', 'HirdetesService', function ($scope, $rootScope, $state, HirdetesService) {
+
+
+  $scope.loadHirdetesek = function() {
+
+    if($rootScope.HirdetesekLoaded) {
+      $scope.pageChanged(1);
+      return;
+    }
+
+    $scope.hirdetesBusy = HirdetesService.query({
+      page:   $rootScope.listing.currentPage,
+      rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
+      regio:  $rootScope.regio.id || $rootScope.foregio.id,
+      search: $rootScope.filter.text,
+      minar:  $rootScope.filter.minar,
+      maxar:  $rootScope.filter.maxar,
+      ord:    $rootScope.listing.ord,
+      ordir:  $rootScope.listing.ordir
+      }, function(response) {
+        $rootScope.root_hirdetesek = response._embedded.hirdetes;
+        $rootScope.totalItems = response.total_items;
+        $rootScope.HirdetesekLoaded = 1;
+        $scope.pageChanged(1)
+        showTime();
+      }, function(error) {
+          $rootScope.root_hirdetesek = [];
+          $rootScope.totalItems = 0;
+      }
+    ).$promise;
+  }
+
+  $scope.pageChanged = function(p) {
+    $scope.hirdetesek = $rootScope.root_hirdetesek.slice(p,p+5);
+  }
+
+  $scope.doSearch = function() {
+     $rootScope.setPage(1);
+     $scope.pageChanged(1);
+  };
+
+  $scope.loadHirdetesek();
+
+  $rootScope.loadRovatok();
+  $rootScope.loadRegiok();
 
   $( "#regionsBtn" ).bind( "click", function() {
       $('#myTab a:eq(0)').tab('show');
@@ -503,33 +604,6 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       });
       return false;
   });
-
-  $scope.pageChanged = function() {
-      $scope.hirdetesBusy = HirdetesService.query({
-          page:   $rootScope.listing.currentPage,
-          rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
-          regio:  $rootScope.regio.id || $rootScope.foregio.id,
-          search: $rootScope.filter.text,
-          minar:  $rootScope.filter.minar,
-          maxar:  $rootScope.filter.maxar,
-          ord:    $rootScope.listing.ord,
-          ordir:  $rootScope.listing.ordir
-      }, function(response) {
-        $scope.hirdetesek = response._embedded.hirdetes;
-        $scope.totalItems = response.total_items;
-    }, function(error) {
-        $scope.hirdetesek = [];
-        $scope.totalItems = 0;
-    }).$promise;
-  };
-
-  $scope.doSearch = function() {
-     $rootScope.setPage(1);
-     $scope.pageChanged();
-  };
-
-  $scope.pageChanged();
-
 }]);
 
 hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService, popupService) {

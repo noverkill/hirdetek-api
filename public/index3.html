@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="hirdetekApp">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+        <title>Aprohirdeto</title>
+
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.2.15/angular-locale_hu-hu.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-resource.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-cookies.js"></script>
+        <script type="text/javascript" src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+        <script type="text/javascript" src="js/angular-busy.js"></script>
+        <script type="text/javascript" src="controllers3.js"></script>
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.flot.js"></script>
+        <script type="text/javascript" src="js/dropzone.js"></script>
+
+        <!-- Add fancyBox main JS and CSS files -->
+        <script type="text/javascript" src="js/fancybox/jquery.fancybox.js?v=2.1.5"></script>
+        <script type="text/javascript" src="js/fancybox/helpers/jquery.fancybox-buttons.js?v=2.1.5"></script>
+        <script type="text/javascript" src="js/fancybox/helpers/jquery.fancybox-media.js?v=2.1.5"></script>
+
+        <!--script type="text/javascript" src="js/global.js"></script-->
+
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+
+        <!-- Bootstrap core CSS -->
+        <link id="switch_style" rel="stylesheet" type="text/css" href="css/bootstrap.css" media="screen" />
+
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" type="text/css" href="css/theme.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="css/dropzone.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"  media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox.css?v=2.1.5" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/fancybox/helpers/jquery.fancybox-buttons.css?v=2.1.5" media="screen" />
+        <link rel="stylesheet" type="text/css" href="css/angular-busy.css" media="screen" />
+
+    </head>
+
+    <body ng-controller="HirdetesListCtrl">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-sm-12 listings">
+
+                    <a ng-click="pageChanged(1)">page 1</a>
+                    <a ng-click="pageChanged(2)">page 2</a>
+
+                    <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
+
+                        <div class="col-sm-2">
+                            <a class="thumbnail " href="#">
+                                <img src='/css/images/no-image.png' style="width:75px" />
+                            </a>
+                        </div>
+
+                        <div class="col-sm-10">
+                            <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
+                            <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
+                            <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
+                            <p>{{hirdetes.szoveg}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

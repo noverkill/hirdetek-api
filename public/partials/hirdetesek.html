@@ -27,7 +27,7 @@
                                                 <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
                                                 >{{forovat.nev}} <span class="caret"></span>
                                                 </button>
-                                                <ul class="dropdown-menu" role="menu">
+                                                <ul class="dropdown-menu" role="menu" cg-busy="rovatBusy">
                                                     <li><a href="#" ng-click="resetRovat()">Minden rovatban</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
                                                 </ul>
                                             </div>
@@ -285,10 +285,8 @@
             <div >
                 <ul class="pagination pull-right">
                     <li><a href="#">Prev</a></li>
-                    <li class="active">
-                        <a href="#">1</a>
-                    </li>
-                    <li ><a href="#">2</a></li>
+                    <li class="active"><a gotoPage(1)>1</a></li>
+                    <li ><a ng-click="gotoPage(2)">2</a></li>
                     <li ><a href="#">3</a></li>
                     <li ><a href="#">4</a></li>
                     <li ><a href="#">5</a></li>
