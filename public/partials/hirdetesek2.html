@@ -1,0 +1,35 @@
+<div class="jumbotron home-tron-search well ">
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-12 listings">
+
+            <a ng-click="pageChanged(1)">page 1</a>
+            <a ng-click="pageChanged(2)">page 2</a>
+
+            <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
+
+                <div class="col-sm-2">
+                    <a class="thumbnail " href="#">
+                        <!--img alt="176 * 120" src="css/images/listings/3.jpg"-->
+                        <img src='/css/images/no-image.png' style="width:75px" />
+                    </a>
+                </div>
+
+                <div class="col-sm-10">
+                    <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{::hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{::hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
+                    <p class="muted"><strong ng-if="hirdetes.telepules">{{::hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{::hirdetes.g_regio_nev}}</a></p>
+                    <p class="muted">Feladva {{::hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{::hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{::hirdetes.r_rovat_nev}}</a></p>
+                    <p>{{::hirdetes.szoveg}}</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

@@ -436,8 +436,11 @@ $rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
 
   $rootScope.listing = {
     currentPage: 1,
-    itemsPerPage: 25,
-    maxSize: 5,
+    itemsPerPage: 5,
+    totalItems: 0,
+    totalPages: Array(0),
+    maxPagerSize: 4,
+    pagerPages: [],
     ord: 'feladas',
     ordir: 'DESC'
   }
@@ -553,16 +556,9 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', 'HirdetesService', function ($scope, $rootScope, $state, HirdetesService) {
 
-
   $scope.loadHirdetesek = function() {
-
-    if($rootScope.HirdetesekLoaded) {
-      $scope.pageChanged(1);
-      return;
-    }
-
-    $scope.hirdetesBusy = HirdetesService.query({
-      page:   $rootScope.listing.currentPage,
+    return HirdetesService.query({
+      page:   $rootScope.root_currentPage,
       rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
       regio:  $rootScope.regio.id || $rootScope.foregio.id,
       search: $rootScope.filter.text,
@@ -571,31 +567,55 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       ord:    $rootScope.listing.ord,
       ordir:  $rootScope.listing.ordir
       }, function(response) {
-        $rootScope.root_hirdetesek = response._embedded.hirdetes;
-        $rootScope.totalItems = response.total_items;
-        $rootScope.HirdetesekLoaded = 1;
-        $scope.pageChanged(1)
+        $rootScope.root_hirdetesek = $rootScope.root_hirdetesek.concat(response._embedded.hirdetes);
+        $rootScope.listing.totalItems = response.total_items;
+        $rootScope.listing.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.itemsPerPage);
+        $rootScope.root_totalPages = Math.ceil($rootScope.listing.totalItems / 25);
         showTime();
       }, function(error) {
-          $rootScope.root_hirdetesek = [];
-          $rootScope.totalItems = 0;
+
       }
     ).$promise;
   }
 
-  $scope.pageChanged = function(p) {
-    $scope.hirdetesek = $rootScope.root_hirdetesek.slice(p,p+5);
+  $scope.gotoPage = function(p) {
+    if(p < 1 || p > $rootScope.listing.totalPages) return;
+
+    $rootScope.listing.currentPage = p;
+
+    var startIndex = (p - 1) * $rootScope.listing.itemsPerPage;
+    var endIndex = startIndex + $rootScope.listing.itemsPerPage;
+
+    $scope.hirdetesek = $rootScope.root_hirdetesek.slice(startIndex, endIndex);
+
+    $rootScope.listing.pagerPages = [];
+    for(var page = p - $rootScope.listing.maxPagerSize; page < p - 1 + $rootScope.listing.maxPagerSize; page++)
+      $rootScope.listing.pagerPages.push(page);
+
+    //pre-load hirdetesek
+    if($rootScope.root_hirdetesek.length < (endIndex + 4 * $rootScope.listing.itemsPerPage)) {
+      if($rootScope.root_currentPage + 1 < $rootScope.root_totalPages) {
+        $rootScope.root_currentPage++;
+        $scope.loadHirdetesek();
+      }
+    }
+  }
+
+  if(! $rootScope.HirdetesekLoaded) {
+    $rootScope.root_hirdetesek = [];
+    $rootScope.root_currentPage = 1;
+    $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
+      $rootScope.HirdetesekLoaded = 1;
+      $scope.gotoPage(1);
+    })
+    $rootScope.loadRovatok();
+    $rootScope.loadRegiok();
   }
 
   $scope.doSearch = function() {
      $rootScope.setPage(1);
      $scope.pageChanged(1);
   };
-
-  $scope.loadHirdetesek();
-
-  $rootScope.loadRovatok();
-  $rootScope.loadRegiok();
 
   $( "#regionsBtn" ).bind( "click", function() {
       $('#myTab a:eq(0)').tab('show');
@@ -614,10 +634,10 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
       }, function(response) {
         $scope.hirdetesek = response._embedded.hirdetes;
         //console.log($scope.hirdetesek);
-        $scope.totalItems = response.total_items;
+        $rootScope.listing.totalItems = response.total_items;
     }, function(error) {
         $scope.hirdetesek = [];
-        $scope.totalItems = 0;
+        $rootScope.listing.totalItems = 0;
     }).$promise;
   };
 
@@ -911,6 +931,7 @@ hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state)
 
 });
 
+/*
 hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($scope, UserService) {
 
   $scope.maxSize = 5;
@@ -931,6 +952,7 @@ hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($sco
   $scope.pageChanged();
 
 }]);
+*/
 
 hirdetekApp.controller('UserViewController', function($scope, $stateParams, UserService) {
 
