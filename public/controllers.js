@@ -591,7 +591,10 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
   $scope.gotoPage = function(p) {
 
-    if(p < 1 || p > $rootScope.listing.totalPages) return;
+    if(p < 1 || p > $rootScope.listing.totalPages) {
+      $rootScope.hirdetesek = [];
+      return;
+    }
 
     $rootScope.listing.setCurrentPage(p);
     $rootScope.listing.server.setCurrentPage(Math.ceil((p * $rootScope.listing.itemsPerPage) / $rootScope.listing.server.itemsPerPage));
@@ -611,7 +614,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
     var startIndex = (((p - 1) * $rootScope.listing.itemsPerPage) % ($rootScope.listing.server.itemsPerPage));
     var endIndex = startIndex + $rootScope.listing.itemsPerPage;
 
-    $scope.hirdetesek = $rootScope.listing.server.hirdetesek[$rootScope.listing.server.currentPage].slice(startIndex, endIndex);
+    $rootScope.hirdetesek = $rootScope.listing.server.hirdetesek[$rootScope.listing.server.currentPage].slice(startIndex, endIndex);
 
     $rootScope.listing.pagerPages = [];
     for(var page = p - $rootScope.listing.maxPagerSize; page < p - 1 + $rootScope.listing.maxPagerSize; page++)
@@ -682,13 +685,14 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
     $rootScope.loadRovatok();
     $rootScope.loadRegiok();
-  } else {
-    $scope.gotoPage($rootScope.listing.currentPage);
   }
 
   $scope.doSearch = function() {
-     $rootScope.setPage(1);
-     $scope.pageChanged(1);
+     $rootScope.listing.server.setCurrentPage(1);
+      $rootScope.listing.server.hirdetesek = [];
+      $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
+        $scope.gotoPage(1);
+      })
   };
 
   $( "#regionsBtn" ).bind( "click", function() {

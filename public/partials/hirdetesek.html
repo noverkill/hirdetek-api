@@ -81,7 +81,7 @@
                 <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();">{{foregio.nev}}</a></li>
                 <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
                 <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
-                <li class="active">{{totalItems}} hirdetés</li>
+                <li class="active">Hirdetések száma: {{listing.totalItems}} / Oldalak száma: {{listing.totalPages}} / Aktuális oldal:  {{listing.currentPage}}</li>
             </ol>
 
         </div>
@@ -97,7 +97,7 @@
                 <div class="row ">
 
                     <div class="col-sm-11 hidden-xs">
-                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%" ng-click="resetRegio();doSearch()">Minden régió  <span class="caret"></span></a>
+                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%">Régiók  <span class="caret"></span></a>
                     </div>
 
                     <div data-backdrop="" id="regionsModal" class="bs-countries-modal-sm  hidden-xs" tabindex="-1" role="dialog" aria-labelledby="regionsModal" aria-hidden="true">
@@ -108,8 +108,13 @@
 
                                         <ul class="nav nav-tabs" id="myTab">
                                             <li class="" ng-repeat="foreg in foregiok">
-                                                <a data-toggle="tab" href="#regio{{foreg.id}}" ng-click="setRegio(foreg);doSearch()">
+                                                <a data-toggle="tab" href="#" ng-click="setRegio(foreg);doSearch()">
                                                     {{foreg.nev}}
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a data-toggle="tab" href="#" ng-click="resetRegio();doSearch()">
+                                                    Minden régió
                                                 </a>
                                             </li>
                                         </ul>
@@ -124,7 +129,9 @@
 
                                                         <div class="col-sm-12">
 
-                                                            <a href="#" ng-repeat="alreg in _alregiok[foreg.id]" ng-click="setRegio(foreg,alreg);doSearch()" style="display:block">
+                                                            <a href="#" ng-click="setRegio(foreg);doSearch()" style="display:block">
+                                                                Mind
+                                                            </a>                                              <a href="#" ng-repeat="alreg in _alregiok[foreg.id]" ng-click="setRegio(foreg,alreg);doSearch()" style="display:block">
                                                                 {{alreg.nev}}
                                                             </a>
 
@@ -180,7 +187,7 @@
                                         <div class="row filter-row">
 
                                             <div class="col-sm-2 pull-right" style="margin-top: 10px;">
-                                                <button class="btn btn-primary pull-right" data-ng-click="setPage(1);pageChanged()">Frissítés</button>
+                                                <button class="btn btn-primary pull-right" data-ng-click="doSearch(1)">Frissítés</button>
                                             </div>
                                         </div>
 
@@ -252,6 +259,10 @@
                     <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Dátum<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='feladas'"></i></a>
                     <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Ár <i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='ar'"></i></a>
                 </div>
+            </div>
+
+            <div class="row" style="margin-top:10px" ng-show="hirdetesek.length==0">
+                <h3>Hirdetés nem található</h3>
             </div>
 
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
