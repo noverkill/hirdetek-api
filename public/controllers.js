@@ -1,5 +1,5 @@
-var oldTime = 0;
-showTime();
+//var oldTime = 0;
+//showTime();
 
 function showTime() {
 
@@ -435,19 +435,30 @@ $rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
   };
 
   $rootScope.listing = {
-    currentPage: 1,
-    itemsPerPage: 5,
+    server: {
+      hirdetesek: [],
+      itemsPerPage: 25,
+      totalPages: 0,
+      currentPage: 0,
+      direction: 1, //upward
+      preloadPage: 5,
+      setCurrentPage: function(p) {
+        $rootScope.listing.server.currentPage = p;
+      }
+    },
+    currentPage: 0,
+    itemsPerPage: 5,    //server.itemsPerpage should be divisible by this (server.itemsPerpage-nek oszthatonak kell lenni ezzel az ertekkel)
     totalItems: 0,
-    totalPages: Array(0),
+    totalPages: 0,
     maxPagerSize: 4,
     pagerPages: [],
     ord: 'feladas',
-    ordir: 'DESC'
+    ordir: 'DESC',
+    setCurrentPage: function(p) {
+      $rootScope.listing.direction = ($rootScope.listing.currentPage <= p) ? 1 : -1;
+      $rootScope.listing.currentPage = p;
+    }
   }
-
-  $rootScope.setPage = function (pageNo) {
-    $rootScope.listing.currentPage = pageNo;
-  };
 
   $rootScope.setOrd = function (ord) {
     $rootScope.listing.ord = ord;
@@ -558,7 +569,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
   $scope.loadHirdetesek = function() {
     return HirdetesService.query({
-      page:   $rootScope.root_currentPage,
+      page:   $rootScope.listing.server.currentPage,
       rovat:  $rootScope.rovat.id || $rootScope.forovat.id,
       regio:  $rootScope.regio.id || $rootScope.foregio.id,
       search: $rootScope.filter.text,
@@ -567,11 +578,11 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       ord:    $rootScope.listing.ord,
       ordir:  $rootScope.listing.ordir
       }, function(response) {
-        $rootScope.root_hirdetesek = $rootScope.root_hirdetesek.concat(response._embedded.hirdetes);
+        $rootScope.listing.server.hirdetesek[$rootScope.listing.server.currentPage] = response._embedded.hirdetes;
         $rootScope.listing.totalItems = response.total_items;
         $rootScope.listing.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.itemsPerPage);
-        $rootScope.root_totalPages = Math.ceil($rootScope.listing.totalItems / 25);
-        showTime();
+        $rootScope.listing.server.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.server.itemsPerPage);
+        //showTime();
       }, function(error) {
 
       }
@@ -579,37 +590,100 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   }
 
   $scope.gotoPage = function(p) {
+
     if(p < 1 || p > $rootScope.listing.totalPages) return;
 
-    $rootScope.listing.currentPage = p;
+    $rootScope.listing.setCurrentPage(p);
+    $rootScope.listing.server.setCurrentPage(Math.ceil((p * $rootScope.listing.itemsPerPage) / $rootScope.listing.server.itemsPerPage));
 
-    var startIndex = (p - 1) * $rootScope.listing.itemsPerPage;
+    if(angular.isUndefined($rootScope.listing.server.hirdetesek[$rootScope.listing.server.currentPage])){
+      //post-load hirdetesek
+      $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
+        $scope.sliceHirdetesek(p);
+      });
+    } else {
+      $scope.sliceHirdetesek(p);
+    }
+  }
+
+  $scope.sliceHirdetesek = function(p) {
+
+    var startIndex = (((p - 1) * $rootScope.listing.itemsPerPage) % ($rootScope.listing.server.itemsPerPage));
     var endIndex = startIndex + $rootScope.listing.itemsPerPage;
 
-    $scope.hirdetesek = $rootScope.root_hirdetesek.slice(startIndex, endIndex);
+    $scope.hirdetesek = $rootScope.listing.server.hirdetesek[$rootScope.listing.server.currentPage].slice(startIndex, endIndex);
 
     $rootScope.listing.pagerPages = [];
     for(var page = p - $rootScope.listing.maxPagerSize; page < p - 1 + $rootScope.listing.maxPagerSize; page++)
       $rootScope.listing.pagerPages.push(page);
 
-    //pre-load hirdetesek
-    if($rootScope.root_hirdetesek.length < (endIndex + 4 * $rootScope.listing.itemsPerPage)) {
-      if($rootScope.root_currentPage + 1 < $rootScope.root_totalPages) {
-        $rootScope.root_currentPage++;
+    //$scope.preloadPages();
+  }
+
+  //pre-load hirdetesek
+  $scope.preloadPages = function() {
+
+    var preloadNeedUpToPage = $rootScope.listing.server.currentPage + ($rootScope.listing.direction * $rootScope.listing.server.preloadPage);
+
+    if(! angular.isDefined($rootScope.listing.server.hirdetesek[preloadNeedUpToPage])) {
+
+      var i = 1;
+
+      while(i < preloadNeedUpToPage) {
+
+        var preloadPage = $rootScope.listing.server.currentPage + ($rootScope.listing.direction * i);
+
+        if(preloadPage < 1 || preloadPage > $rootScope.listing.server.totalPages) return;
+
+        if(! angular.isDefined($rootScope.listing.server.hirdetesek[preloadPage])) {
+          $rootScope.listing.server.setCurrentPage(preloadPage);
+          $scope.loadHirdetesek();
+          break;
+        }
+
+        i++;
+      }
+    } else {
+        //console.log('preloaded');
+    }
+
+    /*
+    if($rootScope.listing.server.hirdetesek.length < (endIndex + $rootScope.listing.server.preloadPage * $rootScope.listing.itemsPerPage)) {
+      console.log('pre-load');
+      if($rootScope.listing.server.currentPage + 1 < $rootScope.listing.server.totalPages) {
+        $rootScope.listing.server.currentPage++;
         $scope.loadHirdetesek();
       }
     }
+    */
   }
 
   if(! $rootScope.HirdetesekLoaded) {
-    $rootScope.root_hirdetesek = [];
-    $rootScope.root_currentPage = 1;
+
+    /*
+    $rootScope.listing.server.hirdetesek = [];
+
     $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
       $rootScope.HirdetesekLoaded = 1;
       $scope.gotoPage(1);
     })
+    */
+
+    var response = $rootScope.preloadResource.hirdetesek;
+
+    $rootScope.listing.server.setCurrentPage(1);
+    $rootScope.listing.server.hirdetesek[1] = response._embedded.hirdetes;
+    $rootScope.listing.totalItems = response.total_items;
+    $rootScope.listing.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.itemsPerPage);
+    $rootScope.listing.server.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.server.itemsPerPage);
+    $rootScope.HirdetesekLoaded = 1;
+
+    $scope.gotoPage(1);
+
     $rootScope.loadRovatok();
     $rootScope.loadRegiok();
+  } else {
+    $scope.gotoPage($rootScope.listing.currentPage);
   }
 
   $scope.doSearch = function() {

@@ -287,8 +287,9 @@
                 <p>current page: {{listing.currentPage}}</p>
                 <p>Pager pages: {{listing.pagerPages}}</p-->
                 <ul class="pagination pull-right">
+                    <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(1)">Első</a></li>
                     <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(listing.currentPage - 1)">Előző</a></li>
-                    <li ng-repeat="page in listing.pagerPages" ng-if="(page + 1 > 0) && (page + 1 < listing.totalPages)" ng-class="(page + 1 == listing.currentPage) ? 'active' : ''">
+                    <li ng-repeat="page in listing.pagerPages" ng-if="(page + 1 > 0) && (page < listing.totalPages)" ng-class="(page + 1 == listing.currentPage) ? 'active' : ''">
                         <a href="#" ng-click="gotoPage(page + 1)">
                             {{page + 1}}
                         </a>
@@ -302,7 +303,8 @@
                     <li class="hidden-sm hidden-xs"><a href="#">8</a></li>
                     <li class="hidden-sm hidden-xs"><a href="#">9</a></li>
                     <li class="hidden-sm hidden-xs"><a href="#">10</a></li-->
-                    <li><a href="#" ng-click="gotoPage(listing.currentPage + 1)">Következő</a></li>
+                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.currentPage + 1)">Következő</a></li>
+                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.totalPages)">Utolsó</a></li>
                 </ul>
             </div>
 
