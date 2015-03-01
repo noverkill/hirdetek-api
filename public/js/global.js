@@ -1,33 +1,3 @@
-var myDropzone;
-
-Dropzone.options.myDropzone = {
-	init: function() {
-	  this.on("addedfile", function(file) {
-
-	    // Create the remove button
-	    var removeButton = Dropzone.createElement("<button class='btn btn-dropzone'>Remove file</button>");
-	    
-
-	    // Capture the Dropzone instance as closure.
-	    var _this = this;
-
-	    // Listen to the click event
-	    removeButton.addEventListener("click", function(e) {
-	      // Make sure the button click doesn't submit the form:
-	      e.preventDefault();
-	      e.stopPropagation();
-
-	      // Remove the file preview.
-	      _this.removeFile(file);
-	      // If you want to the delete the file on the server as well,
-	      // you can do the AJAX request here.
-	    });
-
-	    // Add the button to the file preview element.
-	    file.previewElement.appendChild(removeButton);
-	  });
-	}
-};
 
 /**************************
 *
@@ -35,7 +5,7 @@ Dropzone.options.myDropzone = {
 *
 **************************/
 (function($){
-	$.fn.extend({ 
+	$.fn.extend({
         //plugin name - rotaterator
         rotaterator: function(options) {
 
@@ -49,7 +19,7 @@ Dropzone.options.myDropzone = {
 
         	return this.each(function() {
         		var o =options;
-        		var obj = $(this);                
+        		var obj = $(this);
         		var items = $(obj.children(), obj);
         		items.each(function() {$(this).hide();})
         		if(!o.child){var next = $(obj).children(':first');
@@ -77,13 +47,13 @@ $(function(){
 	//always activate first tab
 	$('#myTab a:eq(1)').tab('show');
 
-    
+
     //listings show more
     $( "#more_make" ).bind( "click", function() {
         $('#more_make_list').show();
         $('#more_make_link').hide();
         return false;
-    });    
+    });
     $( "#less_make" ).bind( "click", function() {
         $('#more_make_list').hide();
         $('#more_make_link').show();
@@ -115,16 +85,12 @@ $(function(){
 	var textarea_height = $('textarea.expand').height();
     $('textarea.expand').focus(function () {
         $(this).animate({ height: "400px" }, 500);
-    });    
+    });
     $('textarea.expand').focusout(function () {
         $(this).animate({ height: textarea_height }, 500);
     });
 
-	//activate dropzone
-	if($("#my-dropzone").length > 0) {
-		//myDropzone = new Dropzone("#my-dropzone", {url: "test.php", autoProcessQueue:false});
-	}
-    
+    /*
     $(document)
         .on('change', '.btn-file :file', function() {
             $('#file-select').attr('src', 'css/images/loading.png');
@@ -137,7 +103,8 @@ $(function(){
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
         readURL(event);
     });
-    
+    */
+
     //fancybox
     $(".fancybox").fancybox({
         prevEffect		: 'none',
@@ -148,7 +115,7 @@ $(function(){
 			buttons	: {}
 		}
 	});
-    
+
     $(".fancybox-button").fancybox({
 		prevEffect		: 'none',
 		nextEffect		: 'none',
@@ -158,7 +125,7 @@ $(function(){
 			buttons	: {}
 		}
 	});
-    
+
     $('.fancybox-media').fancybox({
 		openEffect  : 'none',
 		closeEffect : 'none',
@@ -166,48 +133,37 @@ $(function(){
 			media : {}
 		}
 	});
-    
+
     //for the dropdown regions box
+    /*
     $( "#regionsBtn" ).bind( "click", function() {
-        $('#myTab a:eq(0)').tab('show');
+        $('#myTab a:eq(1)').tab('show');
         $('#regionsModal').modal({
             keyboard: false
         });
         return false;
     });
-    
-    $(document).click(function(event) { 
+    */
+
+    /*
+    $(document).click(function(event) {
         if($(event.target).parents().index($('#regionsModal')) == -1) {
             if($('#regionsModal').is(":visible")) {
                 $('#regionsModal').modal('hide');
             }
-        }        
+        }
     });
-    
+    */
+
     $('[data-toggle="tooltip"]').tooltip();
-    
+
     //the login modals
     $('#modalLogin').on('show.bs.modal', function () {
         $('#modalSignup').modal('hide');
     });
-    
+
     $('#modalForgot').on('show.bs.modal', function () {
         $('#modalLogin').modal('hide');
     });
 
 });
-
-function readURL(event) {
-    var input = event.target;
-    console.log(input.files[0]);
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            $('#file-select')
-                .attr('src', e.target.result);
-        };
-
-        reader.readAsDataURL(input.files[0]);
-    }
-}

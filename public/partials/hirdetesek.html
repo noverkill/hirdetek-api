@@ -20,7 +20,7 @@
 
                                         <span class="input-group-addon input-group-addon-text hidden-xs">Keresett kifejezés</span>
 
-                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobas lakas, ulogarnitura " ng-model='filter.text'>
+                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobás lakás, ülőgarnítúra " ng-model='filter.text'>
 
                                         <div class="input-group-addon hidden-xs">
                                             <div class="btn-group" >
@@ -94,10 +94,40 @@
 
             <div class="sidebar ">
 
+                <div class="row " ng-show="forovat.id>0">
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Alrovatok</div>
+                            <div class="panel-body">
+                                <ul class="nav nav-category">
+                                    <li>
+                                        <!--a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a-->
+                                        <ul>
+                                            <li>
+                                                <a class="active" href="#" ng-if="rovat.id==0" ng-click="setRovat(forovat);doSearch()"><strong>{{forovat.nev}}</strong></a>
+                                                <a class="active" href="#" ng-if="rovat.id>0" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
+                                                <ul>
+                                                    <li ng-show="rovat.id>0">
+                                                        <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a>
+                                                    </li>
+                                                    <li ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id && alrov.id != rovat.id">
+                                                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row ">
 
                     <div class="col-sm-11 hidden-xs">
-                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%">Régiók  <span class="caret"></span></a>
+                        <a class="btn btn-primary pull-right" id="regionsBtn" style="width: 100%">{{regio.id > 0 ? regio.nev : foregio.nev}} <span class="caret"></span></a>
                     </div>
 
                     <div data-backdrop="" id="regionsModal" class="bs-countries-modal-sm  hidden-xs" tabindex="-1" role="dialog" aria-labelledby="regionsModal" aria-hidden="true">
@@ -108,31 +138,32 @@
 
                                         <ul class="nav nav-tabs" id="myTab">
                                             <li class="" ng-repeat="foreg in foregiok">
-                                                <a data-toggle="tab" href="#" ng-click="setRegio(foreg);doSearch()">
+                                                <a data-toggle="tab" href="#" ng-click="setRegio2(foreg)">
                                                     {{foreg.nev}}
-                                                </a>
-                                            </li>
-                                            <li class="">
-                                                <a data-toggle="tab" href="#" ng-click="resetRegio();doSearch()">
-                                                    Minden régió
                                                 </a>
                                             </li>
                                         </ul>
 
                                         <div class="tab-content " id="myTabContent">
 
-                                            <div id="regio{{foreg.id}}" class="tab-pane fade counties-pane" ng-class="(foreg.id==foregio.id) ? 'active in' : ''" ng-repeat="foreg in foregiok">
+                                            <div id="regio{{foreg.id}}" class="tab-pane fade counties-pane" ng-class="(foreg.id==foregio2.id) ? 'active in' : ''" ng-repeat="foreg in foregiok">
 
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-9">
 
                                                     <div class="row directory-block">
 
                                                         <div class="col-sm-12">
 
                                                             <a href="#" ng-click="setRegio(foreg);doSearch()" style="display:block">
-                                                                Mind
-                                                            </a>                                              <a href="#" ng-repeat="alreg in _alregiok[foreg.id]" ng-click="setRegio(foreg,alreg);doSearch()" style="display:block">
+                                                                {{foreg.nev}}
+                                                            </a>
+
+                                                            <a href="#" ng-repeat="alreg in _alregiok[foreg.id]" ng-click="setRegio(foreg,alreg);doSearch()" style="display:block">
                                                                 {{alreg.nev}}
+                                                            </a>
+
+                                                            <a ng-show="foregio.id>0" class="link-info" href="#" ng-click="resetRegio();doSearch()">
+                                                                &lt;&lt; Összes régió
                                                             </a>
 
                                                             <br />
@@ -199,37 +230,7 @@
                     </div>
                 </div>
 
-                <div class="row " ng-show="forovat.id>0">
-                    <div class="col-sm-11">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Alkategoriák</div>
-                            <div class="panel-body">
-                                <ul class="nav nav-category">
-                                    <li>
-                                        <!--a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a-->
-                                        <ul>
-                                            <li>
-                                                <a class="active" href="#" ng-if="rovat.id==0" ng-click="setRovat(forovat);doSearch()"><strong>{{forovat.nev}}</strong></a>
-                                                <a class="active" href="#" ng-if="rovat.id>0" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
-                                                <ul>
-                                                    <li ng-show="rovat.id>0">
-                                                        <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a> (66)<a href="#" class="remove-category"><i class="fa fa-times"></i></a>
-                                                    </li>
-                                                    <li ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id && alrov.id != rovat.id">
-                                                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row ">
+                <!--div class="row ">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
                             <div class="panel-heading">Kategóriák</div>
@@ -243,7 +244,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div-->
 
             </div>
 

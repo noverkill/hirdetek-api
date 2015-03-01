@@ -24,8 +24,6 @@ class RegioMapper
 
         $collection = new RegioCollection($paginatorAdapter);
 
-        $collection = new RegioCollection($paginatorAdapter);
-
         return $collection;
     }
 

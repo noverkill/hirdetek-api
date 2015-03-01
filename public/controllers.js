@@ -408,14 +408,23 @@ $rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
  }).$promise;
 }*/
 
- $rootScope.resetRegio = function() {
-   $rootScope.regio = {id: 0, nev: 'Regio'}
-   $rootScope.foregio = {id: 0, nev: 'Regio'};
+/* for the regio chooser control */
+ $rootScope.setRegio2  = function (foregio) {
+   $rootScope.foregio2 = foregio;
+ };
+/**************************************/
+
+$rootScope.resetRegio = function() {
+   $rootScope.regio = {id: 0, nev: 'Régió', order: 1}
+   $rootScope.foregio = {id: 0, nev: 'Régió', order: 1};
  };
 
  $rootScope.setRegio  = function (foregio, regio) {
-   $rootScope.foregio = foregio;
-   $rootScope.regio = regio || {id: 0, nev: 'Regio'};
+  $rootScope.foregio = foregio;
+  $rootScope.regio = regio || {id: 0, nev: 'Régió', order: 1};
+  if($('#regionsModal').is(":visible")) {
+    $('#regionsModal').modal('hide');
+  }
  };
 
  $rootScope.resetRovat = function() {
@@ -685,6 +694,10 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
 
     $rootScope.loadRovatok();
     $rootScope.loadRegiok();
+
+    /* default for the regio chooser control */
+    $rootScope.foregio2 = $rootScope.foregiok[0];
+
   }
 
   $scope.doSearch = function() {
@@ -696,11 +709,19 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   };
 
   $( "#regionsBtn" ).bind( "click", function() {
-      $('#myTab a:eq(0)').tab('show');
+      $('#myTab a:eq(' + ($rootScope.foregio.order - 1) + ')').tab('show');
       $('#regionsModal').modal({
           keyboard: false
       });
       return false;
+  });
+
+  $(document).click(function(event) {
+      if($(event.target).parents().index($('#regionsModal')) == -1) {
+          if($('#regionsModal').is(":visible")) {
+              $('#regionsModal').modal('hide');
+          }
+      }
   });
 }]);
 
