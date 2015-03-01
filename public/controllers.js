@@ -32,7 +32,7 @@ hirdetekApp.directive("preloadResource", function() {
   });
 
 hirdetekApp.value('cgBusyDefaults',{
-    message:'Kis türelmet...'
+    message:'Betöltés...'
 });
 
 hirdetekApp.service('popupService',function($window){
@@ -417,6 +417,9 @@ $rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
 $rootScope.resetRegio = function() {
    $rootScope.regio = {id: 0, nev: 'Régió', order: 1}
    $rootScope.foregio = {id: 0, nev: 'Régió', order: 1};
+  if($('#regionsModal').is(":visible")) {
+    $('#regionsModal').modal('hide');
+  }
  };
 
  $rootScope.setRegio  = function (foregio, regio) {
@@ -574,7 +577,7 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
 }]);
 */
 
-hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', 'HirdetesService', function ($scope, $rootScope, $state, HirdetesService) {
+hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '$anchorScroll', 'HirdetesService', function ($scope, $rootScope, $state, $anchorScroll, HirdetesService) {
 
   $scope.loadHirdetesek = function() {
     return HirdetesService.query({
@@ -599,6 +602,8 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   }
 
   $scope.gotoPage = function(p) {
+
+    $anchorScroll();
 
     if(p < 1 || p > $rootScope.listing.totalPages) {
       $rootScope.hirdetesek = [];
@@ -681,6 +686,8 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
     })
     */
 
+    $anchorScroll();
+
     var response = $rootScope.preloadResource.hirdetesek;
 
     $rootScope.listing.server.setCurrentPage(1);
@@ -701,18 +708,25 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   }
 
   $scope.doSearch = function() {
-     $rootScope.listing.server.setCurrentPage(1);
-      $rootScope.listing.server.hirdetesek = [];
-      $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
-        $scope.gotoPage(1);
-      })
+
+    $anchorScroll();
+
+    $rootScope.listing.server.setCurrentPage(1);
+    $rootScope.listing.server.hirdetesek = [];
+    $scope.hirdetesBusy = $scope.loadHirdetesek().then(function(){
+      $scope.gotoPage(1);
+    })
   };
 
   $( "#regionsBtn" ).bind( "click", function() {
-      $('#myTab a:eq(' + ($rootScope.foregio.order - 1) + ')').tab('show');
-      $('#regionsModal').modal({
-          keyboard: false
-      });
+      if($('#regionsModal').is(":visible")) {
+        $('#regionsModal').modal('hide');
+      } else {
+        $('#myTab a:eq(' + ($rootScope.foregio.order - 1) + ')').tab('show');
+        $('#regionsModal').modal({
+            keyboard: false
+        });
+      }
       return false;
   });
 

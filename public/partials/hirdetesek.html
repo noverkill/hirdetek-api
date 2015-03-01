@@ -28,7 +28,12 @@
                                                 >{{forovat.nev}} <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu" cg-busy="rovatBusy">
-                                                    <li><a href="#" ng-click="resetRovat()">Minden rovatban</a></li><li ng-repeat="forov in forovatok"><a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a></li>
+                                                    <li>
+                                                        <a href="#" ng-click="resetRovat();doSearch()">Minden rovatban</a>
+                                                    </li>
+                                                    <li ng-repeat="forov in forovatok">
+                                                        <a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -66,7 +71,7 @@
 
 </div>
 
-<div class="container">
+<div class="container" cg-busy="hirdetesBusy">
 
     <br />
 
@@ -250,7 +255,7 @@
 
         </div>
 
-        <div class="col-sm-8 pull-right listings" cg-busy="hirdetesBusy">
+        <div class="col-sm-8 pull-right listings">
 
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
