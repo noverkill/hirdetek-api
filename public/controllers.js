@@ -695,7 +695,6 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
     $rootScope.listing.totalItems = response.total_items;
     $rootScope.listing.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.itemsPerPage);
     $rootScope.listing.server.totalPages = Math.ceil($rootScope.listing.totalItems / $rootScope.listing.server.itemsPerPage);
-    $rootScope.HirdetesekLoaded = 1;
 
     $scope.gotoPage(1);
 
@@ -705,6 +704,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
     /* default for the regio chooser control */
     $rootScope.foregio2 = $rootScope.foregiok[0];
 
+    $rootScope.HirdetesekLoaded = 1;
   }
 
   $scope.doSearch = function() {
@@ -738,6 +738,42 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       }
   });
 }]);
+
+hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, $state, $stateParams, $filter, HirdetesService) {
+
+  /*
+  $scope.hirdetesService = HirdetesService.get({
+    id: $stateParams.id
+  }, function(response) {
+    $scope.hirdetes = response;
+    //console.log(response);
+  }).$promise;
+  */
+
+   var found = $filter('filter')($rootScope.hirdetesek, {id: $stateParams.id}, true);
+
+   if (angular.isDefined(found) && found.length) {
+      $scope.hirdetes = found[0];
+      if (! angular.isDefined($scope.hirdetes.images)) {
+        $scope.imagesBusy = HirdetesService.get({
+          id: $stateParams.id
+        }, function(response) {
+          $scope.hirdetes.images = response.images;
+        }).$promise;
+      }
+   } else {
+      $scope.hirdetesService = HirdetesService.get({
+        id: $stateParams.id
+      }, function(response) {
+        $scope.hirdetes = response;
+      }).$promise;
+   }
+
+  $scope.doSearch = function() {
+     $state.go('hirdetesek');
+  };
+
+});
 
 hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService, popupService) {
 
@@ -787,21 +823,6 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
       }).$promise;
     }
   };
-});
-
-hirdetekApp.controller('HirdetesDetailController', function($scope, $state, $stateParams, HirdetesService) {
-
-	$scope.hirdetesService = HirdetesService.get({
-    id: $stateParams.id
-  }, function(response) {
-    $scope.hirdetes = response;
-    //console.log(response);
-  }).$promise;
-
-  $scope.doSearch = function() {
-     $state.go('hirdetesek');
-  };
-
 });
 
 hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, KepService) {

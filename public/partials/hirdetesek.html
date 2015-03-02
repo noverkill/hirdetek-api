@@ -80,11 +80,11 @@
         <div class="col-sm-12">
 
             <ol class="breadcrumb">
-                <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();">Mind</a></li>
-                <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat);doSearch();">{{forovat.nev}}</a></li>
-                <li ng-if="forovat.id > 0 && rovat.id > 0" class="active">{{rovat.nev}}</li>
-                <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();">{{foregio.nev}}</a></li>
-                <li ng-if="foregio.id > 0 && regio.id > 0">{{regio.nev}}</li>
+                <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();" class="link-info">Összes hirdetés</a></li>
+                <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat);doSearch();" class="link-info">{{forovat.nev}}</a></li>
+                <li ng-if="forovat.id > 0 && rovat.id > 0" class="active link-info">{{rovat.nev}}</li>
+                <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();" class="link-info">{{foregio.nev}}</a></li>
+                <li ng-if="foregio.id > 0 && regio.id > 0" class="link-info">{{regio.nev}}</li>
                 <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
                 <li class="active">Hirdetések száma: {{listing.totalItems}} / Oldalak száma: {{listing.totalPages}} / Aktuális oldal:  {{listing.currentPage}}</li>
             </ol>

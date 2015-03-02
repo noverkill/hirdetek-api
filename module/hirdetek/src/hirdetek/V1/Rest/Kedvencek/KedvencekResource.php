@@ -22,9 +22,9 @@ class KedvencekResource extends AbstractResourceListener
     public function create($data)
     {
         $user = $this->getIdentity()->getAuthenticationIdentity();
-        
+
         return $this->mapper->create($data, $user['user_id']);
-        
+
         //return new ApiProblem(405, 'The POST method has not been defined');
     }
 

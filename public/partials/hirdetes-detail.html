@@ -10,11 +10,11 @@
                 <div class="col-sm-7">
 
                     <ol class="breadcrumb">
-                        <li><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza a hirdetésekhez</a></li>
-                        <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();">Mind</a></li>
-                        <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
-                        <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();">{{hirdetes.r_rovat_nev}}</a></li>
-                        <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();">{{hirdetes.r_rovat_nev}}</a></li>
+                        <li ng-show="HirdetesekLoaded"><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza</a></li>
+                        <li><a href="#" class="link-info" ng-click="resetRovat();resetRegio();doSearch();">Összes hirdetés</a></li>
+                        <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" class="link-info" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
+                        <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
+                        <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
                     </ol>
 
                 </div>
@@ -25,7 +25,7 @@
 
                 <div class="col-sm-7">
                     <h1>{{hirdetes.targy}}</h1>
-                    <p><span ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </span><a ng-if="hirdetes.g_regio_id > 0" href="#" ng-click="setRegio({id: hirdetes.p_regio_id, nev: hirdetes.p_regio_nev}, {id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch();">{{hirdetes.g_regio_nev}}</a></p>
+                    <p><span ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </span><a ng-if="hirdetes.g_regio_id > 0" href="#" ng-click="setRegio({id: hirdetes.p_regio_id, nev: hirdetes.p_regio_nev}, {id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch();" class="link-info">{{hirdetes.g_regio_nev}}</a></p>
                 </div>
 
 
@@ -73,9 +73,9 @@
                             <br />
                             <br />
 
-                            <div class="row" id="gallery" ng-show="hirdetes.images.length>0">
+                            <div class="row" id="gallery" cg-busy="imagesBusy">
 
-                                <div class="col-xs-4" style="margin-bottom: 10px;" ng-repeat="image in hirdetes.images">
+                                <div class="col-xs-4" style="margin-bottom: 10px;" ng-repeat="image in hirdetes.images" ng-show="hirdetes.images.length>0">
                                     <a href="{{createPath(image.created, image.name)}}" class="fancybox thumbnail" rel="group" >
                                         <img alt="" ng-src="{{createPath(image.created, image.name)}}" style="width: 100%" />
                                     </a>
