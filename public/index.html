@@ -61,7 +61,7 @@
                         <span ng-show="user.logged">
                             <li><a href="#" ui-sref="profile({id: 100})">Profilom</a></li>
                             <li><a href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a></li>
-                            <li><a href="#" ng-click="user.logout()">Kilépés</a></li>
+                            <li><a href="#" ui-sref="logout">Kilépés</a></li>
                         </span>
 
                         <li><a href="#" ui-sref="hirdetes-feladas">Új hirdetés</a></li>
@@ -85,7 +85,7 @@
                                 <span ng-show="user.logged">
                                     <a href="#" ui-sref="profile({id: 100})">Profilom</a> |
                                     <a href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a> |
-                                    <a href="#" ng-click="user.logout()">Kilépés</a> |
+                                    <a href="#" ui-sref="logout">Kilépés</a> |
                                 </span>
 
                                 <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Új hirdetés</a>

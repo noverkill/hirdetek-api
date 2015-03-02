@@ -106,13 +106,14 @@ hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
   );
 }]);
 
-hirdetekApp.config(function($stateProvider) {
+hirdetekApp.config(function($httpProvider, $stateProvider) {
 
   $stateProvider.state('mainpage', {
 
     url: '',
     templateUrl: 'partials/hirdetesek.html',
-    controller: 'HirdetesListCtrl'
+    controller: 'HirdetesListCtrl',
+    data: {requireLogin: false}
     // templateUrl: 'partials/mainpage.html',
     // controller: 'MainpageCtrl'
 
@@ -120,93 +121,130 @@ hirdetekApp.config(function($stateProvider) {
 
     url: '/hirdetesek',
     templateUrl: 'partials/hirdetesek.html',
-    controller: 'HirdetesListCtrl'
+    controller: 'HirdetesListCtrl',
+    data: {requireLogin: false}
 
   }).state('detailHirdetes', {
 
     url: '/hirdetes/:id/detail',
     templateUrl: 'partials/hirdetes-detail.html',
-    controller: 'HirdetesDetailController'
+    controller: 'HirdetesDetailController',
+    data: {requireLogin: false}
 
   }).state('editHirdetes', {
 
     url: '/hirdetes/:id/edit',
     //templateUrl: 'partials/hirdetes-edit.html',
     templateUrl: 'partials/hirdetes-szerkesztes.html',
-    controller: 'HirdetesEditController'
+    controller: 'HirdetesEditController',
+    data: {requireLogin: true}
 
   }).state('newHirdetes', {
 
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
-    controller: 'HirdetesCreateController'
+    controller: 'HirdetesCreateController',
+    data: {requireLogin: true}
 
   }).state('hirdetes-feladas', {
 
     url: '/hirdetes/feladas',
     templateUrl: 'partials/hirdetes-feladas.html',
-    controller: 'HirdetesCreateController'
+    controller: 'HirdetesCreateController',
+    data: {requireLogin: true}
 
   }).state('hirdetes-feladva', {
 
     url: '/hirdetes/:id/feladas',
     templateUrl: 'partials/hirdetes-feladva.html',
-    controller: 'HirdetesFeladvaController'
+    controller: 'HirdetesFeladvaController',
+    data: {requireLogin: true}
 
   }).state('hirdeteseim', {
 
     url: '/hirdeteseim/:id',
     templateUrl: 'partials/account-ads.html',
-    controller: 'HirdeteseimCtrl'
+    controller: 'HirdeteseimCtrl',
+    data: {requireLogin: true}
 
   }).state('login', {
 
     url: '/login',
     templateUrl: 'partials/login.html',
-    controller: 'LoginController'
+    controller: 'LoginController',
+    data: {requireLogin: false}
 
   }).state('logout', {
 
     url: '/logout',
-    templateUrl: 'partials/logout.html',
-    controller: 'LogoutController'
+    templateUrl: 'partials/login.html',
+    controller: 'LogoutController',
+    data: {requireLogin: false}
 
   }).state('users', {
 
     url: '/',
     templateUrl: 'partials/users.html',
-    controller: 'UserListCtrl'
+    controller: 'UserListCtrl',
+    data: {requireLogin: true}
 
   }).state('viewUser', {
     url: '/user/:id/view',
     templateUrl: 'partials/user-view.html',
-    controller: 'UserViewController'
+    controller: 'UserViewController',
+    data: {requireLogin: true}
 
   }).state('editUser', {
 
     url: '/user/:id/edit',
     templateUrl: 'partials/user-edit.html',
-    controller: 'UserEditController'
+    controller: 'UserEditController',
+    data: {requireLogin: true}
 
   }).state('profile', {
 
     url: '/profile/:id',
     templateUrl: 'partials/profile.html',
-    controller: 'UserEditController'
+    controller: 'UserEditController',
+    data: {requireLogin: true}
 
   })/*.state('newUser', {
 
     url: '/user/new',
     templateUrl: 'partials/user-add.html',
-    controller: 'UserCreateController'
+    controller: 'UserCreateController',
+    data: {requireLogin: true}
 
   })*/.state('register', {
 
     url: '/register',
     templateUrl: 'partials/register.html',
-    controller: 'UserCreateController'
+    controller: 'UserCreateController',
+    data: {requireLogin: false}
 
   });
+
+  //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
+  $httpProvider.responseInterceptors.push(
+    function($q, $injector /*, $timeout*/) {
+
+      /*
+      $timeout(function () {
+        console.log('timeout');
+        $injector.get('$rootScope').user.logout();
+      });
+      */
+
+      return function (promise) {
+          return promise.then(function (response) {
+              return response;
+          },
+          function (response) {
+              $injector.get('$rootScope').user.logout();
+              return $q.reject(response);
+          });
+      }
+    });
 
 });
 
@@ -228,6 +266,31 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
                 //$(".page-loading").addClass("hidden");
         });
     */
+
+  $injector.get("$http").defaults.transformRequest = function(data, headersGetter) {
+
+      //curl -i siteurl + "/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
+      //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
+
+      if($rootScope.user.isLogged()) {
+        headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
+      }
+
+      if (data) {
+          return angular.toJson(data);
+      }
+  };
+
+  //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
+  $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+
+    var requireLogin = toState.data.requireLogin;
+
+    if (requireLogin && (! $rootScope.user.isLogged())) {
+      event.preventDefault();
+      $state.go('login');
+    }
+  });
 
   $rootScope.user = {
 
@@ -267,7 +330,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         logout: function () {
             $cookieStore.remove('tk');
             $rootScope.user.logged = 0;
-            $state.go('login')
         },
         getTk: function() {
             return $cookieStore.get('tk');
@@ -288,20 +350,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
           return angular.isDefined($cookieStore.get('credentials'));
         }
     }
-
-  $injector.get("$http").defaults.transformRequest = function(data, headersGetter) {
-
-      //curl -i siteurl + "/oauth" --user testclient:testpass -X POST -d "grant_type=client_credentials"
-      //headersGetter()['Authorization'] = "Bearer ef9475306488cfee6187de0ea483d3e357cebddb";
-
-      if($rootScope.user.isLogged()) {
-        headersGetter()['Authorization'] = "Bearer " + $rootScope.user.getTk();
-      }
-
-      if (data) {
-          return angular.toJson(data);
-      }
-  };
 
   $rootScope.goHome = function() {
     $state.go('mainpage');
@@ -1051,6 +1099,10 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
 
 hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, $http) {
 
+  if($rootScope.user.isLogged()) {
+    $state.go('hirdetesek');
+  }
+
   if($rootScope.user.hasCredentials()) {
     $scope.credentials = $rootScope.user.getCredentials();
   }
@@ -1058,11 +1110,9 @@ hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, 
 });
 
 hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
-
+  console.log('logoutController');
   $rootScope.user.logout();
-
-  //$state.go('hirdetesek');
-
+  $state.go('login');
 });
 
 /*
@@ -1120,7 +1170,11 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
 });
 
 
-hirdetekApp.controller('UserCreateController', function($scope, $state, $stateParams, UserService) {
+hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $state, $stateParams, UserService) {
+
+  if($rootScope.user.isLogged()) {
+    $state.go('hirdetesek');
+  }
 
   $scope.registered = 0;
 
