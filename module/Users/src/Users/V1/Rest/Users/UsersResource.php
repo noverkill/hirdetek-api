@@ -7,7 +7,7 @@ use ZF\Rest\AbstractResourceListener;
 class UsersResource extends AbstractResourceListener
 {
     protected $mapper;
- 
+
     public function __construct($mapper)
     {
         $this->mapper = $mapper;
@@ -41,7 +41,7 @@ class UsersResource extends AbstractResourceListener
         $user = $this->getIdentity()->getAuthenticationIdentity();
 
         return $this->mapper->update($data, $user['user_id']);
-        
+
         //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 

@@ -451,7 +451,7 @@ class HirdetesMapper
 
             $password = new Input('jelszo');
             $password->getValidatorChain()
-                    ->attach(new Validator\StringLength(8));
+                    ->attach(new Validator\StringLength(6));
 
             $inputFilter->add($email)
                         ->add($password);
@@ -470,7 +470,7 @@ class HirdetesMapper
                 );
             }
 
-            return array("success" => false, "errors" => $errors);
+            return array("success" => false, "errors" => $errors, "data" => $data);
 
         }
 

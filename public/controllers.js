@@ -1074,7 +1074,7 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
   });
 });
 
-hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, HirdetesService) {
+hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, $anchorScroll, HirdetesService) {
 
   $scope.error = 0;
 
@@ -1091,6 +1091,8 @@ hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $sta
         } else {
           //console.log("not response.success");
           $scope.error = 1;
+          //$scope.hirdetes = response.data;
+          $anchorScroll();
         }
         //$state.go('hirdetesek');
       });
@@ -1170,7 +1172,7 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
 });
 
 
-hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $state, $stateParams, UserService) {
+hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService) {
 
   if($rootScope.user.isLogged()) {
     $state.go('hirdetesek');
@@ -1180,12 +1182,22 @@ hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $sta
 
   $scope.user = new UserService();
 
+  $scope.error = 0;
+
   $scope.addUser = function() {
-     $scope.userBusy = $scope.user.$save(function() {
-      $scope.user = {};
-      $scope.registered = 1;
+     $scope.userBusy = $scope.user.$save(function(response) {
+      $scope.response = response;
+        if(response.success) {
+          $scope.user = {};
+          $scope.registered = 1;
+          $anchorScroll();
+        } else {
+          //console.log("not response.success");
+          $scope.error = 1;
+          //$scope.user = response.data;
+          $anchorScroll();
+        }
       //$state.go('users');
     });
   };
-
 });
