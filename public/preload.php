@@ -45,8 +45,8 @@
          LEFT JOIN images i ON i.ad_id = h.id AND i.sorrend=1
          LEFT JOIN rovat r ON r.id = h.rovat
          LEFT JOIN rovat pr ON pr.id = r.parent
-         LEFT JOIN rovat g ON g.id = h.regio
-         LEFT JOIN rovat pg ON pg.id = g.parent
+         LEFT JOIN regio g ON g.id = h.regio
+         LEFT JOIN regio pg ON pg.id = g.parent
          ORDER BY `feladas` DESC"
     )) {
         $total_items = $result->num_rows;
