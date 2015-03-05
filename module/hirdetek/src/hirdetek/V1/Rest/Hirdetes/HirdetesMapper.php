@@ -36,6 +36,8 @@ class HirdetesMapper
 
         $where = (new Where());
 
+		$where->nest->equalTo('h.aktiv', 1);
+		
         if ($params->get('userid')) {
             $where->nest->equalTo('h.user_id', $params['userid']);
         }
@@ -70,17 +72,17 @@ class HirdetesMapper
             }
         }
 
-        $ords = array( 'feladas', 'ar');
+        $ords = array( 'h.lastmodified', 'h.ar');
         $ordirs = array ('DESC', 'ASC');
 
         //print "ord: " . $params->get('ord');
         //print "ordir: " . $params->get('ordir');
 
-        $ord = in_array($params->get('ord'), $ords) ? $params->get('ord') : 'feladas';
+        $ord = in_array($params->get('ord'), $ords) ? $params->get('ord') : 'h.lastmodified';
         $ordir = in_array($params->get('ordir'), $ordirs) ? $params->get('ordir') : 'DESC';
 
         $select->order("$ord $ordir");
-
+		
         //print $select->getSqlString();
         //exit;
 

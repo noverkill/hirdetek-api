@@ -17,7 +17,12 @@ function showTime() {
     oldTime = newTime;
 }
 
-var siteurl = 'http://hirdetek-api.com';
+var siteurl = 'http://dev.hirdetek.net';
+
+var uploadDir = 'http://hirdetek.net/upload';	// upload dir with the images
+var thumbDir = 'thumb';		// thumbnail subfolder
+var kepDir = 'kep';			// kep subfolder
+
 
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
 
@@ -586,17 +591,18 @@ $rootScope.resetRegio = function() {
 
   $rootScope.createPath = function (dt, name) {
     if(dt == null || name == null) return;
+
     //console.log('createPath');
     //console.log(dt);
     //console.log(name);
-    var uploadDir = '/upload';
+
     var date = new Date(dt);
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
     if(month < 10) month = '0' + month;
     var day = date.getDate();
     if(day < 10) day = '0' + day;
-    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + name;
+    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + kepDir + '/' + name;
     //console.log(path);
     return path;
   }
@@ -787,7 +793,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   });
 }]);
 
-hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, $state, $stateParams, $filter, HirdetesService) {
+hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, $state, $stateParams, $filter, $anchorScroll, HirdetesService) {
 
   /*
   $scope.hirdetesService = HirdetesService.get({
@@ -798,6 +804,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
   }).$promise;
   */
 
+   $anchorScroll();
    var found = $filter('filter')($rootScope.hirdetesek, {id: $stateParams.id}, true);
 
    if (angular.isDefined(found) && found.length) {

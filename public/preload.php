@@ -5,6 +5,17 @@
 	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
 
     $mysqli->set_charset("utf8");
+
+//-----------------------
+// update images table
+
+    $result = $mysqli->query("SELECT MAX(ad_id) FROM images");
+    $row = $result->fetch_array();
+	$result->close();
+	
+	$mysqli->query("INSERT INTO images SELECT '0',id,user_id,feladas,kep,1 FROM hirdetes WHERE kep!='' AND id>" . $row[0] );
+	
+//----------------------
 	
     $regiok = array();
 
@@ -49,7 +60,8 @@
          LEFT JOIN rovat pr ON pr.id = r.parent
          LEFT JOIN regio g ON g.id = h.regio
          LEFT JOIN regio pg ON pg.id = g.parent
-         ORDER BY h.feladas DESC"
+		 WHERE h.aktiv = 1
+         ORDER BY h.lastmodified DESC"
     )) {
         $total_items = $result->num_rows;
         $page_count = (int) ceil($total_items / $page_size);
@@ -65,7 +77,7 @@
     $hirdetesek = array("_embedded" => array("hirdetes" => $hirdetesek), "page_count" => $page_count, "page_size" => $page_size, "total_items" => $total_items);
 
     $mysqli->close();
-
+	
 ?>
 
 <div ng-cloak preload-resource='{"regiok": <?php echo json_encode($regiok) ?>, "rovatok": <?php echo json_encode($rovatok) ?>, "hirdetesek": <?php echo json_encode($hirdetesek) ?>}'></div>
