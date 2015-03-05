@@ -1,9 +1,11 @@
 <?php
 
-    $mysqli = new mysqli('localhost','root','','hirdetek');
+    $config = include('../config/autoload/user.global.php');	
+	
+	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
 
     $mysqli->set_charset("utf8");
-
+	
     $regiok = array();
 
     $total_items = 0;
@@ -47,7 +49,7 @@
          LEFT JOIN rovat pr ON pr.id = r.parent
          LEFT JOIN regio g ON g.id = h.regio
          LEFT JOIN regio pg ON pg.id = g.parent
-         ORDER BY `feladas` DESC"
+         ORDER BY h.feladas DESC"
     )) {
         $total_items = $result->num_rows;
         $page_count = (int) ceil($total_items / $page_size);
