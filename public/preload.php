@@ -8,6 +8,7 @@
 
 /*
  * import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
+ * (this script also can create and populate the users2 table /see comments in the script/)
  */
     // set debug to 1 and uncomment the exit line to monitor the output of this user sync
     //$debug = 0;

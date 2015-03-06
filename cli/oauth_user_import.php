@@ -5,7 +5,70 @@
  */
 
 // if set debug is true then the script prints out some useful info
+// $debug = true;
+
+
+$config = include('../config/autoload/user.global.php');
+
+$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
+
+$mysqli->set_charset("utf8");
+
+/*
+ * create users2 table (if does not exists) and import users from users table filtering out duplicate emails
+ */
+
+// normally it needs to be run once in a while (not too often )
+// !!! WARNING !!!! IT TRUNCATRES THE USERS2 TABLE !!!!
+// $create_users2 = true;
+
+if(isset($create_users2) && $create_users2) {
+
+    $sql = "CREATE TABLE IF NOT EXISTS `users2` (
+        `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+        `nev` VARCHAR(50) NOT NULL DEFAULT '',
+        `bejnev` VARCHAR(10) NOT NULL DEFAULT '',
+        `email` VARCHAR(100) NOT NULL DEFAULT '',
+        `telefon` VARCHAR(100) NOT NULL DEFAULT '',
+        `varos` VARCHAR(100) NOT NULL DEFAULT '',
+        `regio` VARCHAR(100) NOT NULL DEFAULT '',
+        `altkategoria` VARCHAR(100) NOT NULL DEFAULT '',
+        `weblap` VARCHAR(100) NOT NULL DEFAULT '',
+        `felvetel` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+        `jelszo` VARCHAR(10) NOT NULL DEFAULT '',
+        `privilege` TINYINT(4) NOT NULL DEFAULT '0',
+        `aktivkod` VARCHAR(100) NOT NULL DEFAULT '',
+        `aktiv` INT(11) NOT NULL DEFAULT '0',
+        `ipaddr` VARCHAR(20) NOT NULL COLLATE 'utf8_general_ci',
+        PRIMARY KEY (`id`),
+        INDEX `email` (`email`),
+        INDEX `nev` (`nev`),
+        INDEX `bejnev` (`bejnev`),
+        INDEX `jelszo` (`jelszo`),
+        INDEX `aktiv` (`aktiv`)
+    )
+    COLLATE='utf8_general_ci'
+    ENGINE=InnoDB;";
+
+    $result = $mysqli->query($sql);
+
+    $sql = "TRUNCATE users2";
+
+    $result = $mysqli->query($sql);
+
+    $sql = "INSERT INTO users2
+            SELECT *
+            FROM users u
+            GROUP BY email
+            ORDER BY id";
+
+    $result = $mysqli->query($sql);
+
+}
+
+// if set debug is true then the script prints out some useful info
 // $debug = false;
+
 
 $autoload = realpath(__DIR__ . '/../vendor/autoload.php');
 if (! $autoload) {
@@ -31,13 +94,6 @@ if (!class_exists('Zend\Loader\AutoloaderFactory')) {
 }
 
 $bcrypt = new Zend\Crypt\Password\Bcrypt;
-
-
-$config = include('../config/autoload/user.global.php');
-
-$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
-
-$mysqli->set_charset("utf8");
 
 
 $result = $mysqli->query("SELECT MAX(u.id)
