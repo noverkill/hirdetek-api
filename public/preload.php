@@ -1,22 +1,30 @@
 <?php
 
-    $config = include('../config/autoload/user.global.php');	
-	
+    $config = include('../config/autoload/user.global.php');
+
 	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
 
     $mysqli->set_charset("utf8");
 
-//-----------------------
-// update images table
+/*
+ * import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
+ */
+    // set debug to 1 and uncomment the exit line to monitor the output of this user sync
+    //$debug = 0;
+    //include('../cli/oauth_user_import.php');
+    //exit;
+/*----------------------*/
 
+/*
+ * import kepek from the old hirdetes table into the images table
+ */
     $result = $mysqli->query("SELECT MAX(ad_id) FROM images");
     $row = $result->fetch_array();
 	$result->close();
-	
+
 	$mysqli->query("INSERT INTO images SELECT '0',id,user_id,feladas,kep,1 FROM hirdetes WHERE kep!='' AND id>" . $row[0] );
-	
-//----------------------
-	
+/*----------------------*/
+
     $regiok = array();
 
     $total_items = 0;
@@ -77,7 +85,7 @@
     $hirdetesek = array("_embedded" => array("hirdetes" => $hirdetesek), "page_count" => $page_count, "page_size" => $page_size, "total_items" => $total_items);
 
     $mysqli->close();
-	
+
 ?>
 
 <div ng-cloak preload-resource='{"regiok": <?php echo json_encode($regiok) ?>, "rovatok": <?php echo json_encode($rovatok) ?>, "hirdetesek": <?php echo json_encode($hirdetesek) ?>}'></div>

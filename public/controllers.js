@@ -17,13 +17,6 @@ function showTime() {
     oldTime = newTime;
 }
 
-var siteurl = 'http://dev.hirdetek.net';
-
-var uploadDir = 'http://hirdetek.net/upload';	// upload dir with the images
-var thumbDir = 'thumb';		// thumbnail subfolder
-var kepDir = 'kep';			// kep subfolder
-
-
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
 
 //https://robots.thoughtbot.com/preload-resource-data-into-angularjs
@@ -602,7 +595,7 @@ $rootScope.resetRegio = function() {
     if(month < 10) month = '0' + month;
     var day = date.getDate();
     if(day < 10) day = '0' + day;
-    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + kepDir + '/' + name;
+    var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + (kepDir != '' ? (kepDir + '/') : '') + name;
     //console.log(path);
     return path;
   }
