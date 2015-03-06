@@ -1,12 +1,18 @@
 <?php
 
 /*
- * import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
+ * step1: create users2 table (if does not exists) and import users from users table filtering out duplicate emails
+ * step2: import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
  */
 
-// if set debug is true then the script prints out some useful info
-// $debug = true;
+// this script only needed when the application was first deployed
+// be very careful before run it again as it can truncate tables!!!
+// (although this script can be safely used if there are new users in the users table) 
+// /however it is not the most efficient to do so/
+exit("\nWARNING !!! Only run this script if you know exactly what you are doing !!!! Look into the script to enable the execution !!!\n\n");
 
+// if debug is true then the script in step2 prints out some useful info
+// $debug = true;
 
 $config = include('../config/autoload/user.global.php');
 
@@ -15,11 +21,12 @@ $mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['pass
 $mysqli->set_charset("utf8");
 
 /*
- * create users2 table (if does not exists) and import users from users table filtering out duplicate emails
+ * step1: create users2 table (if does not exists) and import users from users table filtering out duplicate emails
  */
 
-// normally it needs to be run once in a while (not too often )
-// !!! WARNING !!!! IT TRUNCATRES THE USERS2 TABLE !!!!
+// if create_users2 is true the it truncates the users2 table 
+// and re-load the users from the users table
+// !!! WARNING !!!! THE USERS2 TABLE WILL BE TRUNCATED !!!!
 // $create_users2 = true;
 
 if(isset($create_users2) && $create_users2) {
@@ -66,9 +73,11 @@ if(isset($create_users2) && $create_users2) {
 
 }
 
-// if set debug is true then the script prints out some useful info
-// $debug = false;
-
+/*
+ * step2: import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
+ */
+ 
+// We need ZF auto loading to load the Bcrypt class
 
 $autoload = realpath(__DIR__ . '/../vendor/autoload.php');
 if (! $autoload) {
