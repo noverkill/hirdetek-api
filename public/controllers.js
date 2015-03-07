@@ -315,13 +315,15 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
           $rootScope.userBusy = $http.post('/oauth', this.credentials).
             success(function(data, status, headers, config) {
+              $rootScope.login_error = 0;
               $rootScope.user.logged = 1;
               $cookieStore.put('tk', data.access_token);
               $state.go('hirdetesek');
             }).
             error(function(data, status, headers, config) {
-              console.log('login error');
-              console.log(data, status, headers, config);
+              //console.log('login error');
+              //console.log(data, status, headers, config);
+              $rootScope.login_error = 1;
             });
 
         },
@@ -1112,7 +1114,7 @@ hirdetekApp.controller('LoginController', function ($scope, $rootScope, $state, 
 });
 
 hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state) {
-  console.log('logoutController');
+  //console.log('logoutController');
   $rootScope.user.logout();
   $state.go('login');
 });
