@@ -7,12 +7,12 @@
 
 // this script only needed when the application was first deployed
 // be very careful before run it again as it can truncate tables!!!
-// (although this script can be safely used if there are new users in the users table) 
+// (although this script can be safely used if there are new users in the users table)
 // /however it is not the most efficient to do so/
 exit("\nWARNING !!! Only run this script if you know exactly what you are doing !!!! Look into the script to enable the execution !!!\n\n");
 
 // if debug is true then the script in step2 prints out some useful info
-// $debug = true;
+//    $debug = true;
 
 $config = include('../config/autoload/user.global.php');
 
@@ -24,10 +24,10 @@ $mysqli->set_charset("utf8");
  * step1: create users2 table (if does not exists) and import users from users table filtering out duplicate emails
  */
 
-// if create_users2 is true the it truncates the users2 table 
+// if create_users2 is true the it truncates the users2 table
 // and re-load the users from the users table
 // !!! WARNING !!!! THE USERS2 TABLE WILL BE TRUNCATED !!!!
-// $create_users2 = true;
+//    $create_users2 = true;
 
 if(isset($create_users2) && $create_users2) {
 
@@ -76,7 +76,7 @@ if(isset($create_users2) && $create_users2) {
 /*
  * step2: import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth
  */
- 
+
 // We need ZF auto loading to load the Bcrypt class
 
 $autoload = realpath(__DIR__ . '/../vendor/autoload.php');

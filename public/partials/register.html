@@ -19,11 +19,11 @@
                         <p>A regisztráció aktiváláshoz szükséges tudnivalókat elküldtük Önnek a megadott email címre.</p>
                     </div>
 
-                    <div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
+                    <!--div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
                         {{err.message}}: {{err.field}}
-                    </div>
+                    </div-->
 
-                    <form class="form-vertical" ng-submit="addUser()" ng-show="! registered">
+                    <form name="regForm" role="form" ng-show="! registered" class="form-vertical" ng-submit="addUser(regForm.$valid)" novalidate>
 
                         <fieldset>
 
@@ -56,22 +56,40 @@
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Név</label>
-                                            <input type="text" class="form-control " id="nev" ng-model="user.nev" placeholder="Név">
+                                            <input type="text" name="nev" id="nev" ng-model="user.nev" class="form-control " placeholder="Név" required ng-minlength="4" ng-maxlength="255">
+                                            <span style="color:red" ng-show="regForm.nev.$dirty && regForm.nev.$invalid">
+                                                <span ng-show="regForm.nev.$error.required">Kérjük adja meg a nevét!</span>
+                                                <span ng-show="regForm.nev.$error.minlength">A név minimum 4 karakter!</span>
+                                                <span ng-show="regForm.nev.$error.maxlength">A név maximum 255 karakter lehet!</span>
+                                            </span>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email</label>
-                                            <input type="text" class="form-control " id="email" ng-model="user.email" placeholder="Email cím">
+                                            <input type="email" id="email" name="email" ng-model="user.email" class="form-control " placeholder="Email cím" required valid-email>
+                                            <span style="color:red" ng-show="regForm.email.$dirty && regForm.email.$invalid">
+                                                <span ng-show="regForm.email.$error.required">Kérjük adja meg az email címét!</span>
+                                                <span ng-show="! regForm.email.$error.required && regForm.email.$error.validEmail">Hibás email cím!</span>
+                                            </span>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Jelszó</label>
-                                            <input type="password" class="form-control" id="password" ng-model="user.jelszo" placeholder="Jelszó, minimum 6 karakter">
+                                            <label for="password">Jelszó</label>
+                                            <input type="password" id="password" name="password" ng-model="user.jelszo" class="form-control" placeholder="Jelszó, minimum 6 karakter" required ng-minlength="6" ng-maxlength="20">
+                                            <span style="color:red" ng-show="regForm.password.$dirty && regForm.password.$invalid">
+                                                <span ng-show="regForm.password.$error.required">Kérjük adja meg a jelszavát!</span>
+                                                <span ng-show="regForm.password.$error.minlength">A jelszo minimum 6 karakter!</span>
+                                                <span ng-show="regForm.password.$error.maxlength">A jelszo maximum 20 karakter lehet!</span>
+                                            </span>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Jelszó mégegyszer</label>
-                                            <input type="password" class="form-control" id="confirm-password" placeholder="Jelszó mégegyszer">
+                                            <label for="confirm_password">Jelszó mégegyszer</label>
+                                            <input type="password" id="confirm_password" name="confirm_password" ng-model="user.jelszo_megegyszer" class="form-control" placeholder="Jelszó, minimum 6 karakter" required ng-minlength="6" ng-maxlength="20" valid-password-c required>
+                                            <span style="color:red" ng-show="regForm.confirm_password.$dirty && regForm.confirm_password.$invalid">
+                                                <span ng-show="regForm.confirm_password.$error.required">Kérjük adja meg a jelszavát mégegyszer!</span>
+                                                <span ng-show="! regForm.confirm_password.$error.required && regForm.confirm_password.$error.noMatch">A két jelszó nem egyezik!</span>
+                                            </span>
                                         </div>
 
                                         <div class="checkbox">
@@ -85,7 +103,7 @@
 
                                         <!--a href="#" class="btn btn-primary">Elküldés</a-->
 
-                                        <button type="submit" class="btn btn-primary">Elküldés</button>
+                                        <button type="submit" class="btn btn-primary" ng-disabled="regForm.$invalid">Elküldés</button>
 
                                     </div>
                                 </div>

@@ -10,6 +10,8 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\Input;
 use Zend\Validator;
 
+use Zend\Crypt\Password\Bcrypt;
+
 class UsersMapper
 {
     protected $adapter;
@@ -100,11 +102,51 @@ class UsersMapper
 
         }
 
+        $bcrypt = new Bcrypt;
+
+        $pass = $bcrypt->create($data->jelszo);
+
+        $sql = 'INSERT INTO oauth_users (username, password, first_name, last_name) values(?, ?, ?, ?)';
+
+        $resultset = $this->adapter->query($sql, array($data->email, $pass, $data->nev, ''));
+
+        $aktivkod  = md5(uniqid(rand(), true));
+
         $sql = 'INSERT INTO users (nev, email, jelszo, felvetel, aktivkod, aktiv) values(?, ?, ?, NOW(), ?, 0)';
 
-        $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->jelszo, 'abcd123456'));
+        $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->jelszo, $aktivkod));
 
         $data->id = $resultset->getGeneratedValue();
+
+        $site = "hirdetek.net";
+        $url = "http://hirdetek.net";
+        $noreply = "noreply@hirdetek.net";
+
+        // aktivacios email kuldese
+        $message = "
+
+Tisztelt felhasználónk!
+
+Ön regisztrálta magát a ".$url." oldalon.
+
+A regisztráció aktiválását az alábbi link segítségével teheti meg:
+".$url."/regisztracio.php?email=" . $data->email . "&kod=$aktivkod
+
+Az aktiválása után a bejelentkezéshez használja az email címét
+valamint a következő jelszót: " . $data->jelszo . "
+
+Üdvözlettel: a $site csapata";
+
+/*
+Akció!
+Ha szeretné, hogy hirdetéseit ezerszer többen lássák, akkor most ezt könnyen elérheti ingyenes
+hirdetés kiemeléssel, ráadásul ha kiemeli hirdetését akkor most még egy ingyenes webtárhelyhez is hozzájut.
+Részletekért kattinson az alábbi linkre:
+
+$url/kiemeles.php
+*/
+
+        //sendmail ($data->email, "Regisztracio", $message, "From: ".$noreply);
 
         return array("success" => true, "id" => $data->id);
 

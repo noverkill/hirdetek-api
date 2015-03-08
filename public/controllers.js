@@ -19,6 +19,43 @@ function showTime() {
 
 var hirdetekApp = angular.module('hirdetekApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngCookies', 'cgBusy']);
 
+// this is shit !!! but this is the best i found so far!!!
+// so stupiu and typical !!!! these little shits can't programm !!!
+// i need to find or write a better one!!!
+hirdetekApp.directive('validPasswordC', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function (viewValue, $scope) {
+                var noMatch = viewValue != scope.regForm.password.$viewValue
+                ctrl.$setValidity('noMatch', !noMatch)
+            })
+        }
+    }
+})
+
+var EMAIL_REGEXP = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+
+hirdetekApp.directive('validEmail', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$parsers.unshift(function(viewValue) {
+        if (EMAIL_REGEXP.test(viewValue)) {
+          // it is valid
+          ctrl.$setValidity('validEmail', true);
+          return viewValue;
+        } else {
+          // it is invalid, return undefined (no model update)
+          ctrl.$setValidity('validEmail', false);
+          return undefined;
+        }
+      });
+    }
+  };
+});
+
+
 //https://robots.thoughtbot.com/preload-resource-data-into-angularjs
 hirdetekApp.directive("preloadResource", function() {
     return {
@@ -296,12 +333,15 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
           nev: '',
           email: '',
           jelszo: '',
+          jelszo_megegyszer: '',
           remember: 1,
           grant_type: 'password',
           client_id: 'testclient'
         },
         logged: 0,
-        login: function (credentials) {
+        login: function (credentials, formValid) {
+
+          if(! formValid) return;
 
           this.credentials.username = credentials.username;
           this.credentials.password = credentials.password;
@@ -1186,19 +1226,22 @@ hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $sta
 
   $scope.error = 0;
 
-  $scope.addUser = function() {
-     $scope.userBusy = $scope.user.$save(function(response) {
+  $scope.addUser = function(formValid) {
+
+    if(! formValid) return;
+
+    $scope.userBusy = $scope.user.$save(function(response) {
       $scope.response = response;
-        if(response.success) {
-          $scope.user = {};
-          $scope.registered = 1;
-          $anchorScroll();
-        } else {
-          //console.log("not response.success");
-          $scope.error = 1;
-          //$scope.user = response.data;
-          $anchorScroll();
-        }
+      if(response.success) {
+        $scope.user = {};
+        $scope.registered = 1;
+        $anchorScroll();
+      } /*else {
+        //console.log("not response.success");
+        $scope.error = 1;
+        //$scope.user = response.data;
+        $anchorScroll();
+      }*/
       //$state.go('users');
     });
   };

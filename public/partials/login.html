@@ -21,7 +21,7 @@
                                     Sikertelen bejelentkezés, hibás email cím és jelszó kombináció!
                                 </div>
 
-                                <form name="loginForm" role="form" ng-submit="user.login(credentials)" novalidate>
+                                <form name="loginForm" role="form" ng-submit="user.login(credentials, loginForm.$valid)" novalidate>
                                     <div class="form-group">
                                         <label>Email</label>
                                         <input type="email" name="email" ng-model="credentials.username" class="form-control " placeholder="Email cím" required>
@@ -33,7 +33,7 @@
                                     <div class="form-group">
                                         <label>Jelszó</label>
                                         <input type="password" name="password" ng-model="credentials.password" class="form-control" placeholder="Jelszó" required>
-                                            <span style="color:red" ng-show="loginForm.password.$dirty && loginForm.password.$invalid">
+                                        <span style="color:red" ng-show="loginForm.password.$dirty && loginForm.password.$invalid">
                                             <span ng-show="loginForm.password.$error.required">Kérjük adja meg a jelszavát!</span>
                                         </span>
                                     </div>
