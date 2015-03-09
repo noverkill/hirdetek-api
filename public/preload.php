@@ -52,7 +52,7 @@
 
     $hirdetesek = array();
 
-    $page_size   = 25;
+    $page_size   = 50;
     $total_items =  0;
     $page_count  =  0;
 
@@ -75,7 +75,7 @@
         $total_items = $result->num_rows;
         $page_count = (int) ceil($total_items / $page_size);
         $i = 0;
-        while(($row = $result->fetch_array(MYSQL_ASSOC)) && ($i < 25)) {
+        while(($row = $result->fetch_array(MYSQL_ASSOC)) && ($i < $page_size)) {
             $hirdetesek[] = $row;
             $i++;
         }
