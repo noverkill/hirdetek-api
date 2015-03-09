@@ -24,7 +24,7 @@ class UsersResource extends AbstractResourceListener
 
         $user = $this->getIdentity()->getAuthenticationIdentity();
 
-        return $this->mapper->fetchOne($id, $user['user_id']);
+        return $this->mapper->fetchOne($user['user_id']);
         //return new ApiProblem(405, 'The GET method has not been defined for individual resources');
     }
 
@@ -88,8 +88,13 @@ class UsersResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
+        $request = $this->getEvent()->getRequest();
+
+        $email = $request->getQuery('email');
+
         //return $this->mapper->fetchAll();
-        return new ApiProblem(405, 'The GET method has not been defined for collections');
+        if(! $email) return new ApiProblem(405, 'The GET method has not been defined for collections');
+        else return $this->mapper->fetchByEmail($email);
     }
 
     /**

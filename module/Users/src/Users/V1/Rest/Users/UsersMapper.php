@@ -21,6 +21,28 @@ class UsersMapper
         $this->adapter = $adapter;
     }
 
+    public function fetchByEmail($email)
+    {
+
+        $inputFilter = new InputFilter();
+
+        $emailInput = new Input('email');
+
+        $emailInput->getValidatorChain()
+              ->attach(new Validator\EmailAddress());
+
+        $inputFilter->add($emailInput);
+
+        $inputFilter->setData(array('email' => $email));
+
+        $select = new Select('users');
+        if ($inputFilter->isValid()) $select->where(array('email' => $email));
+        $select->limit(2);
+        $paginatorAdapter = new DbSelect($select, $this->adapter);
+        $collection = new UsersCollection($paginatorAdapter);
+        return $collection;
+    }
+
     public function fetchAll()
     {
         $select = new Select('users');
@@ -29,7 +51,7 @@ class UsersMapper
         return $collection;
     }
 
-    public function fetchOne($id, $email)
+    public function fetchOne($email)
     {
         $sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
         $resultset = $this->adapter->query($sql, array($email));
@@ -52,7 +74,6 @@ class UsersMapper
 
         $factory = new InputFactory();
 
-
         $inputFilter->add($factory->createInput(array(
             'name'     => 'nev',
             'required' => true,
@@ -70,7 +91,7 @@ class UsersMapper
                         'max'      => 255,
                     ),
                 ),
-            ),
+            )
         )));
 
         $email = new Input('email');
@@ -99,7 +120,6 @@ class UsersMapper
             }
 
             return array("success" => false, "errors" => $errors, "data" => $data);
-
         }
 
         $bcrypt = new Bcrypt;

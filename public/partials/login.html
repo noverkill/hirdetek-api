@@ -24,10 +24,10 @@
                                 <form name="loginForm" role="form" ng-submit="user.login(credentials, loginForm.$valid)" novalidate>
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input type="email" name="email" ng-model="credentials.username" class="form-control " placeholder="Email cím" required>
+                                        <input type="email" name="email" ng-model="credentials.username" class="form-control " placeholder="Email cím" required valid-email>
                                         <span style="color:red" ng-show="loginForm.email.$dirty && loginForm.email.$invalid">
                                             <span ng-show="loginForm.email.$error.required">Kérjük adja meg az email címét!</span>
-                                            <span ng-show="loginForm.email.$error.email">Hibás email cím!</span>
+                                            <span ng-show="! loginForm.email.$error.required && loginForm.email.$error.validEmail">Hibás email cím!</span>
                                         </span>
                                     </div>
                                     <div class="form-group">

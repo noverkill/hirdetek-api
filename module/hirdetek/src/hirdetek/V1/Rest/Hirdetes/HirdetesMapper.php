@@ -37,7 +37,7 @@ class HirdetesMapper
         $where = (new Where());
 
 		$where->nest->equalTo('h.aktiv', 1);
-		
+
         if ($params->get('userid')) {
             $where->nest->equalTo('h.user_id', $params['userid']);
         }
@@ -82,7 +82,7 @@ class HirdetesMapper
         $ordir = in_array($params->get('ordir'), $ordirs) ? $params->get('ordir') : 'DESC';
 
         $select->order("$ord $ordir");
-		
+
         //print $select->getSqlString();
         //exit;
 
@@ -525,6 +525,12 @@ class HirdetesMapper
         //feladas es lejarat
         $values['feladas'] = new Expression('NOW()');
         $values['lejarat'] = new Expression('DATE_ADD(NOW(), INTERVAL ' . $data->lejarat . ' DAY)');
+
+        //temporarily
+        $values['aktiv'] = 1;
+        $values['aktivkod'] = md5(uniqid(rand(), true));
+        $values['aktivedon'] = new Expression('NOW()');
+        $values['lastmodified'] = new Expression('NOW()');
 
         $sql = new Sql($this->adapter);
 

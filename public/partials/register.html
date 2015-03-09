@@ -19,9 +19,9 @@
                         <p>A regisztráció aktiváláshoz szükséges tudnivalókat elküldtük Önnek a megadott email címre.</p>
                     </div>
 
-                    <!--div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
-                        {{err.message}}: {{err.field}}
-                    </div-->
+                    <div class="alert alert-danger" role="alert" ng-show="error">
+                        Sikertelen regisztracio! Kerjuk probalja meg ujra!
+                    </div>
 
                     <form name="regForm" role="form" ng-show="! registered" class="form-vertical" ng-submit="addUser(regForm.$valid)" novalidate>
 
@@ -66,11 +66,14 @@
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email</label>
-                                            <input type="email" id="email" name="email" ng-model="user.email" class="form-control " placeholder="Email cím" required valid-email>
+                                            <input type="email" id="email" name="email" ng-model="user.email" class="form-control " placeholder="Email cím" required unique-email valid-email>
                                             <span style="color:red" ng-show="regForm.email.$dirty && regForm.email.$invalid">
                                                 <span ng-show="regForm.email.$error.required">Kérjük adja meg az email címét!</span>
                                                 <span ng-show="! regForm.email.$error.required && regForm.email.$error.validEmail">Hibás email cím!</span>
+                                                <span ng-show="! regForm.email.$error.required && ! regForm.email.$error.validEmail && regForm.email.$error.uniqueEmail">Ezzel az email címmel már regisztráltak!</span>
                                             </span>
+                                            <div style="color:green" ng-show="emailChecking">Email cím foglaltság ellenőrzése...</div>
+                                            <div style="color:green" ng-show="! emailChecking && regForm.email.$valid">Email cím szabad!</div>
                                         </div>
 
                                         <div class="form-group">
@@ -103,7 +106,7 @@
 
                                         <!--a href="#" class="btn btn-primary">Elküldés</a-->
 
-                                        <button type="submit" class="btn btn-primary" ng-disabled="regForm.$invalid">Elküldés</button>
+                                        <button type="submit" class="btn btn-primary" ng-disabled="regForm.$invalid || emailChecking">Elküldés</button>
 
                                     </div>
                                 </div>

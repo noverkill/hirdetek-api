@@ -55,6 +55,59 @@ hirdetekApp.directive('validEmail', function() {
   };
 });
 
+hirdetekApp.directive('uniqueEmail', ["UserService", function (UserService) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      scope.emailChecking = false;
+      ctrl.$parsers.push(function (viewValue) {
+        if (viewValue) {
+          scope.emailChecking = true;
+          ctrl.$setValidity('uniqueEmail', true);
+          UserService.get({'email':viewValue}, function (users) {
+            if (users.total_items > 0) {
+              ctrl.$setValidity('uniqueEmail', false);
+            } else {
+              ctrl.$setValidity('uniqueEmail', true);
+            }
+          }).$promise.then(function(){
+            scope.emailChecking = false;
+          });
+          return viewValue;
+        }
+      });
+    }
+  };
+}]);
+/*
+hirdetekApp.directive('uniqueEmail', ["Users", function (Users) {
+  return {
+    require:'ngModel',
+    restrict:'A',
+    link:function (scope, el, attrs, ctrl) {
+
+      console.log('fuck');
+
+      //TODO: We need to check that the value is different to the original
+
+      //using push() here to run it as the last parser, after we are sure that other validators were run
+      ctrl.$parsers.push(function (viewValue) {
+
+        if (viewValue) {
+          Users.query({email:viewValue}, function (users) {
+            if (users.length === 0) {
+              ctrl.$setValidity('uniqueEmail', true);
+            } else {
+              ctrl.$setValidity('uniqueEmail', false);
+            }
+          });
+          return viewValue;
+        }
+      });
+    }
+  };
+}]);
+*/
 
 //https://robots.thoughtbot.com/preload-resource-data-into-angularjs
 hirdetekApp.directive("preloadResource", function() {
@@ -238,7 +291,7 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
 
   }).state('profile', {
 
-    url: '/profile/:id',
+    url: '/profile',
     templateUrl: 'partials/profile.html',
     controller: 'UserEditController',
     data: {requireLogin: true}
@@ -283,7 +336,7 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
 
 });
 
-hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', 'RovatService', 'RegioService', function($http, $state, $injector, $rootScope, $cookieStore, RovatService, RegioService) {
+hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '$anchorScroll', 'UserService', 'RovatService', 'RegioService', function($http, $state, $injector, $rootScope, $cookieStore, $anchorScroll, UserService, RovatService, RegioService) {
 
   //showTime();
 
@@ -329,6 +382,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
   $rootScope.user = {
 
+        id: 0,
         credentials: {
           nev: '',
           email: '',
@@ -338,8 +392,11 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
           grant_type: 'password',
           client_id: 'testclient'
         },
+        details: {},
         logged: 0,
         login: function (credentials, formValid) {
+
+          $anchorScroll();
 
           if(! formValid) return;
 
@@ -355,10 +412,14 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 
           $rootScope.userBusy = $http.post('/oauth', this.credentials).
             success(function(data, status, headers, config) {
-              $rootScope.login_error = 0;
-              $rootScope.user.logged = 1;
               $cookieStore.put('tk', data.access_token);
-              $state.go('hirdetesek');
+              $rootScope.userBusy = UserService.get({ id: 100 }, function(response) {
+                $rootScope.user.id = response.id;
+                $rootScope.user.details = response;
+                $rootScope.login_error = 0;
+                $rootScope.user.logged = 1;
+                $state.go('profile');
+              }).$promise;
             }).
             error(function(data, status, headers, config) {
               //console.log('login error');
@@ -867,6 +928,8 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
 
 hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, $stateParams, HirdetesService, popupService) {
 
+  $scope.hirdetesek = {};
+
   $scope.pageChanged = function() {
       $scope.hirdetesBusy = HirdetesService.query({
         userid:   $stateParams.id,
@@ -913,6 +976,7 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
       }).$promise;
     }
   };
+
 });
 
 hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, KepService) {
@@ -1188,7 +1252,7 @@ hirdetekApp.controller('UserViewController', function($scope, $stateParams, User
 
 });
 
-hirdetekApp.controller('UserEditController', function($scope, $state, $stateParams, UserService, popupService) {
+hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state, $stateParams, UserService, popupService) {
 
   $scope.updateUser = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
     $scope.userBusy = $scope.user.$update(function() {
@@ -1204,13 +1268,17 @@ hirdetekApp.controller('UserEditController', function($scope, $state, $statePara
     }
   };
 
+  /*
   $scope.loadUser = function() {
-    $scope.userBusy = UserService.get({ id: $stateParams.id }, function(response) {
+    $scope.userBusy = UserService.get({ id: 100 }, function(response) {
         $scope.user = response;
     }).$promise;
   };
 
   $scope.loadUser();
+  */
+
+  $scope.user = $rootScope.user.details;
 });
 
 
@@ -1233,15 +1301,16 @@ hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $sta
     $scope.userBusy = $scope.user.$save(function(response) {
       $scope.response = response;
       if(response.success) {
+        $scope.error = 0;
         $scope.user = {};
         $scope.registered = 1;
         $anchorScroll();
-      } /*else {
+      } else {
         //console.log("not response.success");
         $scope.error = 1;
         //$scope.user = response.data;
         $anchorScroll();
-      }*/
+      }
       //$state.go('users');
     });
   };
