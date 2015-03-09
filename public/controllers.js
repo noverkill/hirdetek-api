@@ -598,7 +598,7 @@ $rootScope.resetRegio = function() {
   $rootScope.listing = {
     server: {
       hirdetesek: [],
-      itemsPerPage: 25,
+      itemsPerPage: 50,
       totalPages: 0,
       currentPage: 0,
       direction: 1, //upward
@@ -608,7 +608,7 @@ $rootScope.resetRegio = function() {
       }
     },
     currentPage: 0,
-    itemsPerPage: 5,    //server.itemsPerpage should be divisible by this (server.itemsPerpage-nek oszthatonak kell lenni ezzel az ertekkel)
+    itemsPerPage: 10,    //server.itemsPerpage should be divisible by this (server.itemsPerpage-nek oszthatonak kell lenni ezzel az ertekkel)
     totalItems: 0,
     totalPages: 0,
     maxPagerSize: 4,
@@ -1226,8 +1226,8 @@ hirdetekApp.controller('LogoutController', function ($scope, $rootScope, $state)
 /*
 hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($scope, UserService) {
 
-  $scope.maxSize = 5;
-  $scope.itemsPerPage = 25;
+  $scope.maxSize = 10;
+  $scope.itemsPerPage = 50;
   $scope.currentPage = 1;
 
   $scope.setPage = function (pageNo) {

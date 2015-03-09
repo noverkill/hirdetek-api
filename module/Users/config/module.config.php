@@ -40,7 +40,7 @@ return array(
                 1 => 'POST',
             ),
             'collection_query_whitelist' => array(),
-            'page_size' => 25,
+            'page_size' => 50,
             'page_size_param' => null,
             'entity_class' => 'Users\\V1\\Rest\\Users\\UsersEntity',
             'collection_class' => 'Users\\V1\\Rest\\Users\\UsersCollection',
