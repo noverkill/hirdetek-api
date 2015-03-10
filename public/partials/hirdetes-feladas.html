@@ -54,7 +54,7 @@
                 {{err.message}}: {{err.field}}
             </div>
 
-			<form ng-submit="createHirdetes()" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" >
+			<form name="hirdForm" role="form"  ng-submit="createHirdetes(hirdForm.$valid)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
 
 				<div class="panel panel-default">
 
@@ -67,14 +67,22 @@
 							<div class="row">
 
 								<div class="col-sm-12">
-									<label>Tárgy </label>
-									<input type="text" class="form-control required" ng-model="hirdetes.targy">
+									<label class="required">Tárgy </label>
+									<input name="targy" type="text" class="form-control" ng-model="hirdetes.targy" required ng-minlength="0" ng-maxlength="70">
+                                    <span style="color:red" ng-show="hirdForm.targy.$dirty && hirdForm.targy.$invalid">
+                                        <span ng-show="hirdForm.targy.$error.required || hirdForm.targy.$error.minlength">Kérjük adja meg a a hirdetes tárgyát!</span>
+                                        <span ng-show="hirdForm.targy.$error.maxlength">A tárgy maximum 255 karakter lehet!</span>
+                                    </span>
 								</div>
 
 								<div class="col-sm-12">
 									<br />
-									<label>Szöveg </label>
-									<textarea class="form-control col-sm-8 expand required" rows="16" style="width: 99%" ng-model="hirdetes.szoveg"></textarea>
+									<label class="required">Szöveg </label>
+									<textarea name="szoveg" class="form-control col-sm-8 expand" rows="16" style="width: 99%" ng-model="hirdetes.szoveg" required ng-minlength="0" ng-maxlength="10000"></textarea>
+                                    <span style="color:red" ng-show="hirdForm.szoveg.$dirty && hirdForm.szoveg.$invalid">
+                                        <span ng-show="hirdForm.szoveg.$error.required || hirdForm.szoveg.$error.minlength">Kérjük adja meg a a hirdetes szövegét!</span>
+                                        <span ng-show="hirdForm.szoveg.$error.maxlength">A szöveg maximum 10000 karakter lehet!</span>
+                                    </span>
 								</div>
 
 								<!--div class="col-sm-12"><br />
@@ -84,16 +92,19 @@
 
 								<div class="col-sm-12">
 									<br />
-									<label>Kategória </label>
-									<select ng-model="hirdetes.forovat" ng-options="forovat.nev for forovat in forovatok track by forovat.id" class="form-control required">
+									<label class="required">Kategória </label>
+									<select name="forovat" ng-model="hirdetes.forovat" ng-options="forovat.nev for forovat in forovatok track by forovat.id" class="form-control" required>
 										<option value=''>Kérjük válasszon kategóriát</option>
 									</select>
+									<span style="color:red" ng-show="hirdForm.forovat.$dirty && hirdForm.forovat.$invalid">
+                                        <span ng-show="hirdForm.forovat.$error.required">Kérjük válasszon kategóriát!</span>
+                                    </span>
 								</div>
 
 								<div class="col-sm-12">
 									<br />
 									<label>Alkategória </label>
-									<select ng-disabled="hirdetes.forovat == undefined" ng-model="hirdetes.alrovat" ng-options="alrovat.nev for alrovat in alrovatok | filter: {parent: hirdetes.forovat.id}" class="form-control required">
+									<select ng-disabled="hirdetes.forovat == undefined" ng-model="hirdetes.alrovat" ng-options="alrovat.nev for alrovat in alrovatok | filter: {parent: hirdetes.forovat.id}" class="form-control">
 										<option value=''>Kérjük válasszon alkategóriát</option>
 									</select>
 								</div>
@@ -101,10 +112,13 @@
 
 								<div class="col-sm-12">
 									<br />
-									<label>Régió</label>
-									<select ng-model="hirdetes.foregio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control required">
+									<label class="required">Régió</label>
+									<select name="foregio" ng-model="hirdetes.foregio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control" required>
 										<option value=''>Kérjük válasszon régiót</option>
 									</select>
+									<span style="color:red" ng-show="hirdForm.foregio.$dirty && hirdForm.foregio.$invalid">
+                                        <span ng-show="hirdForm.foregio.$error.required">Kérjük válasszon régiót!</span>
+                                    </span>
 								</div>
 
 								<div class="col-sm-12">
@@ -119,25 +133,36 @@
 								<div class="col-sm-6">
 									<br />
 									<label>Település</label>
-									<input type="text" class="form-control " ng-model="hirdetes.telepules">
+									<input name="telepules" type="text" class="form-control " ng-model="hirdetes.telepules" ng-minlength="0" ng-maxlength="50">
+                                    <span style="color:red" ng-show="hirdForm.telepules.$dirty && hirdForm.telepules.$invalid">
+                                        <span ng-show="hirdForm.telepules.$error.minlength">A település név minimum 2 karakter!</span>
+                                        <span ng-show="hirdForm.telepules.$error.maxlength">A település név maximum 255 karakter lehet!</span>
+                                    </span>
 								</div>
 
 								<div class="col-sm-12">
 									<br />
 									<label>Ár </label>
-									<input type="text" class="form-control " ng-model="hirdetes.ar">
+									<input name="ar" type="number" class="form-control " ng-model="hirdetes.ar" min="1" max="3000000000">
+									<span style="color:red" ng-show="hirdForm.ar.$dirty && hirdForm.ar.$invalid">
+                                        <span ng-show="hirdForm.ar.$error.number">Az ár mezőben számot adjon meg!</span>
+                                        <span ng-show="hirdForm.ar.$error.max">Az ár max. 3.000.000.000 lehet!</span>
+                                        <span ng-show="!hirdForm.ar.$error.number && !hirdForm.ar.$error.max && hirdForm.ar.$error">Hagyja üresen ha ingyenes!</span>
+                                    </span>
 								</div>
-
 								<div class="col-sm-6">
 									<br />
 									<label>Telefonszám</label>
-									<input type="text" class="form-control " ng-model="hirdetes.telefon">
+									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-minlength="0" ng-maxlength="50">
+                                    <span style="color:red" ng-show="hirdForm.telefon.$dirty && hirdForm.telefon.$invalid">
+                                        <span ng-show="hirdForm.telefon.$error.minlength">A telefonszám minimum 2 karakter!</span>
+                                        <span ng-show="hirdForm.telefon.$error.maxlength">A telefonszám maximum 255 karakter lehet!</span>
 								</div>
 
 								<div class="col-sm-12">
 									<br />
-									<label>Lejarat </label>
-									<select id="lejarat" class="form-control required" name="lejarat" ng-model="hirdetes.lejarat">
+									<label class="required">Lejarat </label>
+									<select name="lejarat" id="lejarat" class="form-control required" name="lejarat" ng-model="hirdetes.lejarat" required>
 										<option value="365">1 év</option>
 										<option value="183">1/2 év</option>
 										<option value="122">1/4 év</option>
@@ -148,6 +173,9 @@
 										<option value="14">2 hét</option>
 										<option value="7">1 hét</option>
 									</select>
+									<span style="color:red" ng-show="hirdForm.lejarat.$dirty && hirdForm.lejarat.$invalid">
+                                        <span ng-show="hirdForm.lejarat.$error.required">Kérjük válasszon lejáratot!</span>
+                                    </span>
 								</div>
 
 							</div>
@@ -206,16 +234,23 @@
 					<div class="panel-body">
 
 						<div class="checkbox">
-							<label>
-								<input type="checkbox" ng-model="hirdetes.szabalyzat"> A hirdetési szabályzatot elfogadom
+							<label class="required">
+								<input name="terms" type="checkbox" ng-model="hirdetes.szabalyzat" required> A hirdetési szabályzatot elfogadom
 							</label>
+							<div style="color:red" ng-show="hirdForm.terms.$invalid">
+                                <span ng-show="hirdForm.terms.$error.required">Kérjük fogadja el a hirdetési szabályzatot!</span>
+                            </div>
 						</div>
 
 						<br />
 
 						<!--a href="account_credits.html" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</a-->
 
-						<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>  Feladás</button>
+						<button type="submit" class="btn btn-primary" ng-disabled="hirdForm.$invalid"><i class="icon-ok"></i>  Feladás</button>
+
+						<div style="color:red;padding-top:10px" ng-show="hirdForm.$invalid">
+                        	A <label class="required"></label>-al jelölt mezők kitöltése kötelező
+                        </div>
 
 					</div>
 

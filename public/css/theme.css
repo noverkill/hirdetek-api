@@ -650,3 +650,8 @@ p.muted {
   left: 10px;
   position: fixed;
 }
+
+label.required:after {
+   content:"*";
+   color:red;
+}

@@ -1180,14 +1180,22 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
   });
 });
 
-hirdetekApp.controller('HirdetesCreateController', function($scope, $state, $stateParams, $anchorScroll, HirdetesService) {
+hirdetekApp.controller('HirdetesCreateController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, HirdetesService) {
+
+  $rootScope.loadRovatok();
+  $rootScope.loadRegiok();
 
   $scope.error = 0;
 
   $scope.hirdetes = new HirdetesService();
   $scope.hirdetes.lejarat = 365;
 
-  $scope.createHirdetes = function() {
+  $scope.createHirdetes = function(formValid) {
+
+    if(! formValid) return;
+
+    $anchorScroll();
+
     $scope.hirdetesBusy = $scope.hirdetes.$save(function(response) {
         //console.log(response);
         $scope.response = response;

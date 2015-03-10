@@ -261,8 +261,8 @@ class HirdetesMapper
                     'name'    => 'StringLength',
                     'options' => array(
                         'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 255,
+                        'min'      => 0,
+                        'max'      => 70,
                     ),
                 ),
             ),
@@ -280,8 +280,8 @@ class HirdetesMapper
                     'name'    => 'StringLength',
                     'options' => array(
                         'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 1500,
+                        'min'      => 0,
+                        'max'      => 10000,
                     ),
                 ),
             ),
@@ -373,7 +373,7 @@ class HirdetesMapper
                     'options' => array(
                         'encoding' => 'UTF-8',
                         'min'      => 0,
-                        'max'      => 255,
+                        'max'      => 50,
                     ),
                 ),
             ),
@@ -389,8 +389,8 @@ class HirdetesMapper
                 array(
                     'name'    => 'Between',
                     'options' => array(
-                        'min' => 1,
-                        'max' => 2000000000,  //2 billion
+                        'min' => 0,
+                        'max' => 3000000000,  //3 billion
                         'inclusive' => true,
                     ),
                 ),
@@ -411,7 +411,7 @@ class HirdetesMapper
                     'options' => array(
                         'encoding' => 'UTF-8',
                         'min'      => 0,
-                        'max'      => 255,
+                        'max'      => 50,
                     ),
                 ),
             ),
