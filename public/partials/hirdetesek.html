@@ -268,13 +268,14 @@
             </div>
 
             <div class="row" style="margin-top:10px" ng-show="hirdetesek.length==0">
-                <h3>Hirdetés nem található</h3>
+                <h3>Hirdetések nem találhatók</h3>
             </div>
 
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
 
                 <div class="col-sm-2">
-                    <a class="thumbnail " href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
+                    <!--a class="thumbnail " href="#" ui-sref='detailHirdetes({id: hirdetes.id})'-->
+                    <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
                         <!--img alt="176 * 120" src="css/images/listings/3.jpg"-->
                         <img ng-src="{{hirdetes.image_created == null && './css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
                     </a>

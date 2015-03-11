@@ -51,8 +51,12 @@
 		<div class="col-sm-9">
 
             <div class="alert alert-info" role="alert">
-                <p>Hirdetését rögzítettök!</p>
-				<a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>Ugrás a hirdetéshez</a>
+                <p ng-show="! user.isLogged()">Hirdetését rögzítettök!</p>
+				<p ng-show="! user.isLogged()">A hirdetés aktiválásához szükséges tudnivalókat elküldtük a megadott email címre.</p>
+                <p ng-show="user.isLogged()">A hirdetését sikeresen feladta!</p>
+                <p>Töltsön fel fényképeket hirdetéséhez a lentebb található boxban</p>
+                <p ng-show="user.isLogged()">A hirdetést megtalálja ha a Hirdetéseim menüpontra kattint.</p>
+				<!--a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>Ugrás a hirdetéshez</a-->
             </div>
 
 		</div>
@@ -60,7 +64,7 @@
 		<div class="col-sm-9">
 
 			<div class="panel panel-default">
-				<div class="panel-heading">Fényképek feltöltése</div>
+				<div class="panel-heading">Fényképek (max 6 fotó)</div>
 				<div class="panel-body">
 					<div id="myDropzone" class="dropzone"></div>
 					<br />

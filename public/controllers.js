@@ -227,26 +227,26 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     controller: 'HirdetesEditController',
     data: {requireLogin: true}
 
-  }).state('newHirdetes', {
+  })/*.state('newHirdetes', {
 
     url: '/hirdetes/new',
     templateUrl: 'partials/hirdetes-add.html',
     controller: 'HirdetesCreateController',
-    data: {requireLogin: true}
+    data: {requireLogin: false}
 
-  }).state('hirdetes-feladas', {
+  })*/.state('hirdetes-feladas', {
 
     url: '/hirdetes/feladas',
     templateUrl: 'partials/hirdetes-feladas.html',
     controller: 'HirdetesCreateController',
-    data: {requireLogin: true}
+    data: {requireLogin: false}
 
   }).state('hirdetes-feladva', {
 
     url: '/hirdetes/:id/feladas',
     templateUrl: 'partials/hirdetes-feladva.html',
     controller: 'HirdetesFeladvaController',
-    data: {requireLogin: true}
+    data: {requireLogin: false}
 
   }).state('hirdeteseim', {
 
@@ -276,7 +276,7 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     controller: 'UserListCtrl',
     data: {requireLogin: true}
 
-  }).state('viewUser', {
+  })/*.state('viewUser', {
     url: '/user/:id/view',
     templateUrl: 'partials/user-view.html',
     controller: 'UserViewController',
@@ -289,7 +289,7 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     controller: 'UserEditController',
     data: {requireLogin: true}
 
-  }).state('profile', {
+  })*/.state('profile', {
 
     url: '/profile',
     templateUrl: 'partials/profile.html',
@@ -378,6 +378,18 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
       event.preventDefault();
       $state.go('login');
     }
+
+    //console.log(toState);
+    //console.log(toParams);
+
+    if(toState.controller == "HirdetesFeladvaController") {
+      if ($rootScope.feladasId != toParams.id) {
+        event.preventDefault();
+        $state.go('login');
+      }
+      $rootScope.feladasId = 0;
+    }
+
   });
 
   $rootScope.user = {
@@ -414,10 +426,11 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
             success(function(data, status, headers, config) {
               $cookieStore.put('tk', data.access_token);
               $rootScope.userBusy = UserService.get({ id: 100 }, function(response) {
-                $rootScope.user.id = response.id;
-                $rootScope.user.details = response;
+                //$rootScope.user.id = response.id;
+                //$rootScope.user.details = response;
+                $cookieStore.put('user', {'id': response.id, details: response});
                 $rootScope.login_error = 0;
-                $rootScope.user.logged = 1;
+                //$rootScope.user.logged = 1;
                 $state.go('profile');
               }).$promise;
             }).
@@ -430,10 +443,17 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
         },
         logout: function () {
             $cookieStore.remove('tk');
+            $cookieStore.remove('user');
             $rootScope.user.logged = 0;
         },
         getTk: function() {
             return $cookieStore.get('tk');
+        },
+        getUser: function() {
+            return $cookieStore.get('user');
+        },
+        setUser: function(id, details) {
+            $cookieStore.put('user', {'id': id, 'details': details});
         },
         isLogged: function() {
             return ($rootScope.user.logged = angular.isDefined($cookieStore.get('tk')));
@@ -1190,6 +1210,12 @@ hirdetekApp.controller('HirdetesCreateController', function($rootScope, $scope, 
   $scope.hirdetes = new HirdetesService();
   $scope.hirdetes.lejarat = 365;
 
+  if($rootScope.user.isLogged()) {
+    var user = $rootScope.user.getUser().details;
+    $scope.hirdetes.nev = user.nev;
+    $scope.hirdetes.email = user.email;
+  }
+
   $scope.createHirdetes = function(formValid) {
 
     if(! formValid) return;
@@ -1200,6 +1226,7 @@ hirdetekApp.controller('HirdetesCreateController', function($rootScope, $scope, 
         //console.log(response);
         $scope.response = response;
         if(response.success) {
+          $rootScope.feladasId = response.id;
           $state.go('hirdetes-feladva',{id:response.id});
           //$scope.hirdetes = {};
         } else {
@@ -1254,27 +1281,35 @@ hirdetekApp.controller('UserListCtrl', [ '$scope', 'UserService', function ($sco
 }]);
 */
 
+/*
 hirdetekApp.controller('UserViewController', function($scope, $stateParams, UserService) {
 
   $scope.user = UserService.get({ id: $stateParams.id });
 
 });
+*/
 
-hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state, $stateParams, UserService, popupService) {
+hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService, popupService) {
 
   $scope.updateUser = function() { //Update the edited movie. Issues a PUT to /api/movies/:id
-    $scope.userBusy = $scope.user.$update(function() {
+    $anchorScroll();
+    //$scope.userBusy = $rootScope.user.$update(function() {
+    $scope.userBusy = UserService.update($scope.user, function(response) {
+    $rootScope.user.setUser(response.id, response);
+    $scope.user = response;
       //$state.go('users'); // on success go back to home i.e. movies state.
-    });
+    }).$promise;
   };
 
-  $scope.deleteUser = function() { // Delete a movie. Issues a DELETE to /api/movies/:id
+  /*
+  $scope.deleteUser = function() {
     if (popupService.showPopup('Really delete this?')) {
       $scope.user.$delete(function() {
-        $state.go('users'); // on success go back to home i.e. movies state.
+        $state.go('users');
       });
     }
   };
+  */
 
   /*
   $scope.loadUser = function() {
@@ -1286,7 +1321,8 @@ hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state
   $scope.loadUser();
   */
 
-  $scope.user = $rootScope.user.details;
+  $scope.user = $rootScope.user.getUser().details;
+
 });
 
 

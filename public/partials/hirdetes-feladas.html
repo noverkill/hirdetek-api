@@ -50,8 +50,12 @@
 
 		<div class="col-sm-9">
 
-            <div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
+            <!--div class="alert alert-danger" role="alert" ng-repeat="err in response.errors">
                 {{err.message}}: {{err.field}}
+            </div-->
+
+            <div class="alert alert-danger" role="alert" ng-show="response.errors">
+                Egy vagy tobb adat hibas volt! Kerjuk toltse ki ujra az urlapot es adjon meg helyes adatokat!
             </div>
 
 			<form name="hirdForm" role="form"  ng-submit="createHirdetes(hirdForm.$valid)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
@@ -68,9 +72,9 @@
 
 								<div class="col-sm-12">
 									<label class="required">Tárgy </label>
-									<input name="targy" type="text" class="form-control" ng-model="hirdetes.targy" required ng-minlength="0" ng-maxlength="70">
+									<input name="targy" type="text" class="form-control" ng-model="hirdetes.targy" required ng-maxlength="70">
                                     <span style="color:red" ng-show="hirdForm.targy.$dirty && hirdForm.targy.$invalid">
-                                        <span ng-show="hirdForm.targy.$error.required || hirdForm.targy.$error.minlength">Kérjük adja meg a a hirdetes tárgyát!</span>
+                                        <span ng-show="hirdForm.targy.$error.required">Kérjük adja meg a a hirdetes tárgyát!</span>
                                         <span ng-show="hirdForm.targy.$error.maxlength">A tárgy maximum 255 karakter lehet!</span>
                                     </span>
 								</div>
@@ -78,9 +82,9 @@
 								<div class="col-sm-12">
 									<br />
 									<label class="required">Szöveg </label>
-									<textarea name="szoveg" class="form-control col-sm-8 expand" rows="16" style="width: 99%" ng-model="hirdetes.szoveg" required ng-minlength="0" ng-maxlength="10000"></textarea>
+									<textarea name="szoveg" class="form-control col-sm-8 expand" rows="16" style="width: 99%" ng-model="hirdetes.szoveg" required ng-maxlength="10000"></textarea>
                                     <span style="color:red" ng-show="hirdForm.szoveg.$dirty && hirdForm.szoveg.$invalid">
-                                        <span ng-show="hirdForm.szoveg.$error.required || hirdForm.szoveg.$error.minlength">Kérjük adja meg a a hirdetes szövegét!</span>
+                                        <span ng-show="hirdForm.szoveg.$error.required">Kérjük adja meg a a hirdetes szövegét!</span>
                                         <span ng-show="hirdForm.szoveg.$error.maxlength">A szöveg maximum 10000 karakter lehet!</span>
                                     </span>
 								</div>
@@ -133,9 +137,8 @@
 								<div class="col-sm-6">
 									<br />
 									<label>Település</label>
-									<input name="telepules" type="text" class="form-control " ng-model="hirdetes.telepules" ng-minlength="0" ng-maxlength="50">
+									<input name="telepules" type="text" class="form-control " ng-model="hirdetes.telepules" ng-maxlength="50">
                                     <span style="color:red" ng-show="hirdForm.telepules.$dirty && hirdForm.telepules.$invalid">
-                                        <span ng-show="hirdForm.telepules.$error.minlength">A település név minimum 2 karakter!</span>
                                         <span ng-show="hirdForm.telepules.$error.maxlength">A település név maximum 255 karakter lehet!</span>
                                     </span>
 								</div>
@@ -153,9 +156,8 @@
 								<div class="col-sm-6">
 									<br />
 									<label>Telefonszám</label>
-									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-minlength="0" ng-maxlength="50">
+									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-maxlength="50">
                                     <span style="color:red" ng-show="hirdForm.telefon.$dirty && hirdForm.telefon.$invalid">
-                                        <span ng-show="hirdForm.telefon.$error.minlength">A telefonszám minimum 2 karakter!</span>
                                         <span ng-show="hirdForm.telefon.$error.maxlength">A telefonszám maximum 255 karakter lehet!</span>
 								</div>
 
@@ -185,8 +187,8 @@
 					</div>
 				</div>
 
-				<div class="panel panel-default" ng-show="! user.isLogged()">
-					<div class="panel-heading">Felhasználó adatai</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">Hirdető adatai</div>
 					<div class="panel-body">
 
 						<div class="form-group">
@@ -194,26 +196,24 @@
 								<div class="col-sm-12" >
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Név</label>
-                                        <input type="text" class="form-control " id="nev" ng-model="user.nev" placeholder="Név">
+                                        <label for="nev" class="required">Név</label>
+                                        <input name="nev" type="text" class="form-control " id="nev" ng-model="hirdetes.nev" placeholder="Név" required ng-maxlength="70">
+                                        <span style="color:red" ng-show="hirdForm.nev.$dirty && hirdForm.nev.$invalid">
+                                            <span ng-show="hirdForm.nev.$error.required">Kérjük adja meg a nevét!</span>
+                                            <span ng-show="hirdForm.nev.$error.maxlength">A név maximum 70 karakter lehet!</span>
+                                        </span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Email</label>
-                                        <input type="email" class="form-control " id="email" ng-model="user.email" placeholder="Email cím">
+                                        <label for="email" class="required">Email</label>
+                                        <input name="email" type="email" class="form-control " id="email" ng-model="hirdetes.email" placeholder="Email cím" ng-disabled="user.isLogged()" required valid-email>
+                                    	<span style="color:red" ng-show="hirdForm.email.$dirty && hirdForm.email.$invalid">
+                                            <span ng-show="hirdForm.email.$error.required">Kérjük adja meg az email címét!</span>
+                                            <span ng-show="! hirdForm.email.$error.required && hirdForm.email.$error.validEmail">Hibás email cím!</span>
+                                        </span>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Jelszó</label>
-                                        <input type="password" class="form-control" id="password" ng-model="user.jelszo" placeholder="Jelszó, minimum 6 karakter">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Jelszó mégegyszer</label>
-                                        <input type="password" class="form-control" id="confirm-password" placeholder="Jelszó mégegyszer">
-                                    </div>
-
-                                    <div class="checkbox">
+                                    <div class="checkbox" ng-show="! user.isLogged()">
                                         <label>
                                             <input type="checkbox" checked="true"> Hírlevél
                                         </label>

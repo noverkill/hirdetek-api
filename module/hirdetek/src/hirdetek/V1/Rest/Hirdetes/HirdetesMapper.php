@@ -151,33 +151,20 @@ class HirdetesMapper
         // print_r($user);
         // print "filename:" . $filename;
 
-        if($filename && $id && $user) {
+        // kepfeltoltes
+        if($filename && $id) {
 
-            //check if user exists
-            $sql = new Sql($this->adapter);
+            $user_id = 0;
 
-            $select = $sql->select('users')
-                          ->columns(array('id'))
-                          ->where(array('email' => $user['user_id']))
-                          ->order('id')
-                          ->limit(1);
-
-            $sqlString = $sql->getSqlStringForSqlObject($select);
-
-            $statement = $sql->prepareStatementForSqlObject($select);
-
-            $resultset = $statement->execute()->current();
-
-            if(is_array($resultset) && isset($resultset['id'])) {
-
-                $user_id = $resultset['id'];
-
-                //check if hirdetes exists and owned by the user
+            // todo: elvileg barki fel tud tolteni kepet olyan hirdeteshez amit nem regisztralt felhasznalo csinalt!!!
+            //       meg azt lehetne csinalni hogy ha nincs user akkor keljen a hirdetes aktivalo kodja es azt lehetne ellenorizni
+            if($user) {
+                //check if user exists
                 $sql = new Sql($this->adapter);
 
-                $select = $sql->select('hirdetes')
+                $select = $sql->select('users')
                               ->columns(array('id'))
-                              ->where(array('id' => $id,'user_id' => $user_id))
+                              ->where(array('email' => $user['user_id']))
                               ->order('id')
                               ->limit(1);
 
@@ -189,50 +176,70 @@ class HirdetesMapper
 
                 if(is_array($resultset) && isset($resultset['id'])) {
 
-                    $id = $resultset['id'];
-
-                    //save image to file system
-                    if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
-
-                    move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);
-
-                    //calculate sorrend
-
-                    $sql = new Sql($this->adapter);
-
-                    $select = $sql->select('images')
-                                  ->columns(array(new Expression('MAX(sorrend) as max')))
-                                  ->where(array('ad_id' => $id));
-
-                    $sqlString = $sql->getSqlStringForSqlObject($select);
-
-                    $statement = $sql->prepareStatementForSqlObject($select);
-
-                    $resultset = $statement->execute()->current();
-
-                    $values['sorrend'] = ++$resultset['max'];
-
-                    //svae image to database
-
-                    $values['ad_id'] = $id;
-                    $values['user_id'] = $user_id;
-                    $values['name'] = $filename;
-                    $values['created'] = new Expression('NOW()');
-
-                    $sql = new Sql($this->adapter);
-
-                    $insert = $sql->insert('images')
-                                    ->values($values);
-
-                    $sqlString = $sql->getSqlStringForSqlObject($insert);
-
-                    $statement = $sql->prepareStatementForSqlObject($insert);
-                    $resultset = $statement->execute();
-
-                    $image_id = $resultset->getGeneratedValue();
-
-                    return array('success' => true, 'id' => $id, 'image_id' => $image_id, 'message' => 'Kép feltöltve!');
+                    $user_id = $resultset['id'];
                 }
+            }
+
+            //check if hirdetes exists and owned by the user !!! lasd figyelmeztetes feljebb !!!*/
+            $sql = new Sql($this->adapter);
+
+            $select = $sql->select('hirdetes')
+                          ->columns(array('id'))
+                          ->where(array('id' => $id,'user_id' => $user_id))
+                          ->order('id')
+                          ->limit(1);
+
+            $sqlString = $sql->getSqlStringForSqlObject($select);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+
+            $resultset = $statement->execute()->current();
+
+            if(is_array($resultset) && isset($resultset['id'])) {
+
+                $id = $resultset['id'];
+
+                //save image to file system
+                if(! is_dir($upload_dir . $folder_name)) mkdir($upload_dir . $folder_name, 0755, true);
+
+                move_uploaded_file($files['tmp_name'], $upload_dir . $folder_name . $filename);
+
+                //calculate sorrend
+
+                $sql = new Sql($this->adapter);
+
+                $select = $sql->select('images')
+                              ->columns(array(new Expression('MAX(sorrend) as max')))
+                              ->where(array('ad_id' => $id));
+
+                $sqlString = $sql->getSqlStringForSqlObject($select);
+
+                $statement = $sql->prepareStatementForSqlObject($select);
+
+                $resultset = $statement->execute()->current();
+
+                $values['sorrend'] = ++$resultset['max'];
+
+                //svae image to database
+
+                $values['ad_id'] = $id;
+                $values['user_id'] = $user_id;
+                $values['name'] = $filename;
+                $values['created'] = new Expression('NOW()');
+
+                $sql = new Sql($this->adapter);
+
+                $insert = $sql->insert('images')
+                                ->values($values);
+
+                $sqlString = $sql->getSqlStringForSqlObject($insert);
+
+                $statement = $sql->prepareStatementForSqlObject($insert);
+                $resultset = $statement->execute();
+
+                $image_id = $resultset->getGeneratedValue();
+
+                return array('success' => true, 'id' => $id, 'image_id' => $image_id, 'message' => 'Kép feltöltve!');
             }
 
             return array("success" => false, 'id' => $id, 'message' => "A kép feltöltése sikertelen volt!");
@@ -444,6 +451,26 @@ class HirdetesMapper
         )));
 
 
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'nev',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 70,
+                    ),
+                ),
+            ),
+        )));
+
         if(! isset($user)) {
 
             $email = new Input('email');
@@ -451,12 +478,12 @@ class HirdetesMapper
             $email->getValidatorChain()
                   ->attach(new Validator\EmailAddress());
 
-            $password = new Input('jelszo');
-            $password->getValidatorChain()
-                    ->attach(new Validator\StringLength(6));
+            //$password = new Input('jelszo');
+            //$password->getValidatorChain()
+            //        ->attach(new Validator\StringLength(6));
 
-            $inputFilter->add($email)
-                        ->add($password);
+            $inputFilter->add($email);
+            //            ->add($password);
         }
 
         $inputFilter->setData((array)$data);
@@ -479,12 +506,20 @@ class HirdetesMapper
 
         //print_r($data);
 
+        $values = array(
+            'user_id' => 0,
+            'nev' => $data->nev,
+            'email' => $data->email,
+            'targy' => $data->targy,
+            'szoveg' => $data->szoveg,
+        );
+
         if(isset($user)) {
 
             $sql = new Sql($this->adapter);
 
             $select = $sql->select('users')
-                          ->columns(array('id'))
+                          ->columns(array('id', 'email'))
                           ->where(array('email' => $user['user_id']))
                           ->order('id')
                           ->limit(1);
@@ -496,13 +531,12 @@ class HirdetesMapper
             $resultset = $statement->execute()->current();
 
             $user_id = $resultset['id'];
+            $email   = $resultset['email'];
 
-        } else {
+            $values['user_id'] = $resultset['id'];
+            $values['email']   = $resultset['email'];
 
-            $user_id = 0;
         }
-
-        $values = array('user_id' => $user_id, 'targy' => $data->targy, 'szoveg' => $data->szoveg);
 
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
         else $values['rovat'] = $data->forovat;

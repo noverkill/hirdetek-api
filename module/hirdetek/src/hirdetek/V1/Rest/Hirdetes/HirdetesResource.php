@@ -38,7 +38,9 @@ class HirdetesResource extends AbstractResourceListener
 
         $folder_name = date('Y', $time) . '/' . date('m', $time) . '/' . date('d', $time) . '/';
 
-        if($files->count() > 0  && $id && $user) {
+        // todo: elvileg barki fel tud tolteni kepet olyan hirdeteshez amit nem regisztralt felhasznalo csinalt!!!
+        //       meg azt lehetne csinalni hogy ha nincs user akkor keljen a hirdetes aktivalo kodja es azt lehetne ellenorizni
+        if($files->count() > 0  && $id /*&& $user*/) {
 
             foreach ($files as $files) {
 
