@@ -88,7 +88,7 @@ class UsersMapper
                     'options' => array(
                         'encoding' => 'UTF-8',
                         'min'      => 1,
-                        'max'      => 255,
+                        'max'      => 70,
                     ),
                 ),
             )
@@ -179,9 +179,149 @@ $url/kiemeles.php
 
     public function update($data, $email)
     {
-        $sql = 'UPDATE users SET nev = ?, weblap = ?, telefon = ?, varos = ?, regio = ?, altkategoria = ? WHERE id = ? AND email = ?';
 
-        $this->adapter->query($sql, array($data->nev, $data->weblap, $data->telefon, $data->varos, $data->regio, $data->altkategoria, $data->id, $email));
+        $inputFilter = new InputFilter();
+
+        $factory = new InputFactory();
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'nev',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 70,
+                    ),
+                ),
+            )
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'telefon',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 50,
+                    ),
+                ),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'weblap',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 50,
+                    ),
+                ),
+            )
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'varos',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 50,
+                    ),
+                ),
+            ),
+        )));
+
+        if(isset($data->password)) {
+
+            $password = new Input('password');
+            $password->getValidatorChain()
+                     ->attach(new Validator\StringLength(6,20));
+
+            $inputFilter->add($password);
+        }
+
+        $inputFilter->setData((array)$data);
+
+        if (! $inputFilter->isValid()) {
+            //echo "The form is not valid\n";
+            $errors = array();
+            foreach ($inputFilter->getInvalidInput() as $error) {
+                //print_r($error);//->getMessages());
+                $errors[] = array(
+                    "field" => $error->getName(),
+                    "message" => $error->getMessages()
+                );
+            }
+
+            return array("success" => false, "errors" => $errors, "data" => $data);
+        }
+
+        $sql = 'UPDATE users
+                SET nev = ?, weblap = ?, telefon = ?, varos = ?, regio = ?, altkategoria = ?
+                WHERE id = ? AND email = ?';
+
+        $data->email = $email;
+
+        $this->adapter->query($sql,
+            array(
+                $data->nev,
+                $data->weblap,
+                $data->telefon,
+                $data->varos,
+                $data->regio,
+                $data->altkategoria,
+                $data->id,
+                $data->email
+            )
+        );
+
+        if(isset($data->password)) {
+
+            $sql = 'UPDATE users SET jelszo = ? WHERE id = ? AND email = ?';
+
+            $this->adapter->query($sql, array($data->password, $data->id, $data->email));
+
+            $bcrypt = new Bcrypt;
+
+            $pass = $bcrypt->create($data->password);
+
+            $sql = 'UPDATE oauth_users SET password = ? WHERE username = ?';
+
+            $this->adapter->query($sql, array($pass, $data->email));
+        }
 
         $entity = new UsersEntity();
         $entity->exchangeArray((array)$data);

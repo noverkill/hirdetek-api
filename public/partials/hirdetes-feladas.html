@@ -75,7 +75,7 @@
 									<input name="targy" type="text" class="form-control" ng-model="hirdetes.targy" required ng-maxlength="70">
                                     <span style="color:red" ng-show="hirdForm.targy.$dirty && hirdForm.targy.$invalid">
                                         <span ng-show="hirdForm.targy.$error.required">Kérjük adja meg a a hirdetes tárgyát!</span>
-                                        <span ng-show="hirdForm.targy.$error.maxlength">A tárgy maximum 255 karakter lehet!</span>
+                                        <span ng-show="hirdForm.targy.$error.maxlength">A tárgy maximum 70 karakter lehet!</span>
                                     </span>
 								</div>
 
@@ -139,7 +139,9 @@
 									<label>Település</label>
 									<input name="telepules" type="text" class="form-control " ng-model="hirdetes.telepules" ng-maxlength="50">
                                     <span style="color:red" ng-show="hirdForm.telepules.$dirty && hirdForm.telepules.$invalid">
-                                        <span ng-show="hirdForm.telepules.$error.maxlength">A település név maximum 255 karakter lehet!</span>
+                                        <span ng-show="hirdForm.telepules.$error.maxlength">
+                                        	A település név maximum 50 karakter lehet!
+                                        </span>
                                     </span>
 								</div>
 
@@ -155,10 +157,11 @@
 								</div>
 								<div class="col-sm-6">
 									<br />
-									<label>Telefonszám</label>
+									<label>Telefon</label>
 									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-maxlength="50">
                                     <span style="color:red" ng-show="hirdForm.telefon.$dirty && hirdForm.telefon.$invalid">
-                                        <span ng-show="hirdForm.telefon.$error.maxlength">A telefonszám maximum 255 karakter lehet!</span>
+                                        <span ng-show="hirdForm.telefon.$error.maxlength">A telefon maximum 50 karakter lehet!
+                                    </span>
 								</div>
 
 								<div class="col-sm-12">
@@ -249,7 +252,7 @@
 						<button type="submit" class="btn btn-primary" ng-disabled="hirdForm.$invalid"><i class="icon-ok"></i>  Feladás</button>
 
 						<div style="color:red;padding-top:10px" ng-show="hirdForm.$invalid">
-                        	A <label class="required"></label>-al jelölt mezők kitöltése kötelező
+                        	A <label class="required"></label>-al jelölt mezők kitöltése kötelező!
                         </div>
 
 					</div>

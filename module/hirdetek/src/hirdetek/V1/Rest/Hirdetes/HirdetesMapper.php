@@ -500,7 +500,6 @@ class HirdetesMapper
             }
 
             return array("success" => false, "errors" => $errors, "data" => $data);
-
         }
 
 

@@ -1295,9 +1295,16 @@ hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state
     $anchorScroll();
     //$scope.userBusy = $rootScope.user.$update(function() {
     $scope.userBusy = UserService.update($scope.user, function(response) {
-    $rootScope.user.setUser(response.id, response);
-    $scope.user = response;
-      //$state.go('users'); // on success go back to home i.e. movies state.
+      $scope.response = response;
+      if(! response.errors) {
+        $rootScope.user.setUser(response.id, response);
+        $scope.user = response;
+        $.notify(
+            "Sikeres adatmódosítás!",
+            "success",
+            {clickToHide: false, autoHide: true, autoHideDelay: 1}
+          );
+      }
     }).$promise;
   };
 
