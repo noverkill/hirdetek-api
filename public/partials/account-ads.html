@@ -71,7 +71,9 @@
                                             <tr ng-repeat="hirdetes in hirdetesek" ng-attr-id="{{ 'ad-' + hirdetes.id }}">
 
                                                 <td align="center">
-                                                    <img ng-src="{{hirdetes.image_created == null && '/css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
+                                                    <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
+                                                        <img ng-src="{{hirdetes.image_created == null && '/css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
+                                                    </a>
                                                 </td>
 
                                                 <td align="left">

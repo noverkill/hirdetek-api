@@ -53,14 +53,14 @@
 
                         <li class="active" ng-click="goHome()"><a href="#">Főoldal</a></li>
 
-                        <span ng-show="user.logged == 0">
+                        <span ng-show="! user.isLogged()">
                             <li><a href="#" ui-sref="login">Bejelentkezés</a></li>
                             <li><a href="#" ui-sref="register">Regisztráció</a></li>
                         </span>
 
-                        <span ng-show="user.logged">
+                        <span ng-show="user.isLogged()">
                             <li><a href="#" ui-sref="profile">Profilom</a></li>
-                            <li><a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Lofasz</a></li>
+                            <li><a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a></li>
                             <li><a href="#" ui-sref="logout">Kilépés</a></li>
                         </span>
 
@@ -75,16 +75,14 @@
 
                                 <a href="#" ng-click="goHome()">Főoldal</a> |
 
-                                <!--a data-toggle="modal" data-target="#modalLogin" ng-click="login()" href="#">Login</a> | -->
-
-                                <span ng-show="user.logged == 0">
+                                <span ng-show="! user.isLogged()">
                                     <a href="#" ui-sref="login">Bejelentkezés</a> |
                                     <a href="#" ui-sref="register">Regisztráció</a> |
                                 </span>
 
-                                <span ng-show="user.logged">
+                                <span ng-show="user.isLogged()">
                                     <a href="#" ui-sref="profile({id: 100})">Profilom</a> |
-                                    <a href="#" ui-sref="hirdeteseim({id: user.id})">Hirdetéseim</a> |
+                                    <a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a> |
                                     <a href="#" ui-sref="logout">Kilépés</a> |
                                 </span>
 
@@ -103,159 +101,6 @@
 
         <div ui-view id="ui-view" cg-busy="viewBusy"></div>
 
-        <div class="modal fade" id="modalShare" tabindex="-1" role="dialog" aria-labelledby="modalShare" aria-hidden="true">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Hirdetés küldése emailben</h4>
-                    </div>
-                    <div class="modal-body" cg-busy="megosztasWait">
-
-                        <b ng-show="share.success">A hirdetést sikeresen elküldtük!</b>
-
-                        <form id="share-form" ng-submit="shareHirdetes(this)" class="form ajax" accept-charset="UTF-8" data-replace=".error-message p">
-
-                            <p>Feladó</p>
-
-                            <div class="form-group">
-                                <input placeholder="Ön neve" class="form-control" ng-model="share.sender.name" type="text">
-                            </div>
-
-                            <div class="form-group">
-                                <input placeholder="Ön email címe" class="form-control" ng-model="share.sender.email" type="text">
-                            </div>
-
-                            <p>Címzett</p>
-
-                            <div class="form-group">
-                                <input placeholder="Címzett neve" class="form-control" ng-model="share.recipient.name" type="text">
-                            </div>
-
-                            <div class="form-group">
-                                <input placeholder="Címzett email címe" class="form-control" ng-model="share.recipient.email" type="text">
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary pull-right">Elküldés</button>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-        <div class="modal fade" id="modalSave" tabindex="-1" role="dialog" aria-labelledby="modalSave" aria-hidden="true">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Hirdetés mentése kedvencekhez</h4>
-                    </div>
-                    <div class="modal-body" cg-busy="saveWait">
-
-                        <b ng-show="saveSuccess == 1">A hirdetést sikeresen elmentette!</b>
-                        <b ng-show="saveSuccess == 2">A hirdetést nem sikerült elmenteni!</b>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Bezárás</button>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-
-        <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLogin" aria-hidden="true">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Sign in to your account</h4>
-                    </div>
-                    <div class="modal-body">
-
-                        <b ng-show="mustLoginMessage">A funnkció használatához be kell jelentkezni!</b>
-
-                        <p>Amenyiben már regisztrált kérjük adja meg az adatait</p>
-
-                        <!--form method="POST" action="account_dashboard.html" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p"-->
-                        <form method="POST" accept-charset="UTF-8" id="user-login-form" class="form ajax" data-replace=".error-message p">
-
-                            <div class="form-group">
-                                <input placeholder="Felhasználó név / email" class="form-control" name="username" type="text">
-                            </div>
-
-                            <div class="form-group">
-                                <input placeholder="Jelszó" class="form-control" name="password" type="password" value="">
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary pull-right">Bejelentkezés</button>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a data-toggle="modal" href="#modalForgot">Elfelejtette a jeszavét?</a>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-
-                    <div class="modal-footer" style="text-align: center">
-                        <div class="error-message"><p style="color: #000; font-weight: normal;">Még nincs jelszava? <a class="link-info" href="register.html">Regisztráljon most!</a></p></div>
-                    </div>
-
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalForgot" tabindex="-1" role="dialog" aria-labelledby="modalForgot" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Forgot your password?</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Enter your email to continue</p>
-
-                        <form role="form">
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Your email address">
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-
-                                </div><div class="col-md-6">
-                                <a href="my_account.html" class="btn btn-primary pull-right">Continue</a>
-                                </div>
-                            </div>
-                        </form>
-
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
         <div class="footer">
             <div class="container">
 
@@ -268,10 +113,8 @@
 
                     <div class="col-sm-8 col-xs-12">
                         <p class="footer-links">
-                            <a href="index.html" class="active">Home</a>
-                            <a href="typography.html">Typography</a>
-                            <a href="terms.html">Terms and Conditions</a>
-                            <a href="contact.html">Contact Us</a>
+                            <a href="index.html" class="active">Főoldal</a>
+                            <a href="contact.html">Kapcsolat</a>
                         </p>
                     </div>
                 </div>
