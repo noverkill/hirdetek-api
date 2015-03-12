@@ -73,8 +73,6 @@
 
 <div class="container" cg-busy="hirdetesBusy">
 
-    <br />
-
     <div class="row">
 
         <div class="col-sm-12">
@@ -95,7 +93,7 @@
 
     <div class="row">
 
-        <div class="col-sm-4 hidden-xs">
+        <div class="col-sm-3 hidden-xs">
 
             <div class="sidebar ">
 
@@ -255,7 +253,7 @@
 
         </div>
 
-        <div class="col-sm-8 pull-right listings">
+        <div class="col-sm-9 pull-right listings">
 
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
@@ -273,15 +271,15 @@
 
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
 
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <!--a class="thumbnail " href="#" ui-sref='detailHirdetes({id: hirdetes.id})'-->
                     <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
                         <!--img alt="176 * 120" src="css/images/listings/3.jpg"-->
-                        <img ng-src="{{hirdetes.image_created == null && './css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
+                        <img ng-src="{{hirdetes.image_created == null && './css/images/no-image.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:100%" />
                     </a>
                 </div>
 
-                <div class="col-sm-10">
+                <div class="col-sm-8">
                     <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
                     <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
                     <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>

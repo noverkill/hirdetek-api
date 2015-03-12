@@ -2,12 +2,9 @@
     <div class="row">
         <div class="col-sm-12 listing-wrapper listings-top listings-bottom">
 
-            <br />
-            <br />
-
             <div class="row">
 
-                <div class="col-sm-7">
+                <div class="col-sm-12">
 
                     <ol class="breadcrumb">
                         <li ng-show="HirdetesekLoaded"><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza</a></li>
@@ -15,31 +12,28 @@
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" class="link-info" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
                         <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
+                        <li ng-if="hirdetes.g_regio_id > 0"><a href="#" ng-click="setRegio({id: hirdetes.p_regio_id, nev: hirdetes.p_regio_nev}, {id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch();" class="link-info">{{hirdetes.g_regio_nev}}</a></li>
+                        <li ng-if="hirdetes.telepules">{{hirdetes.telepules}}</li>
                     </ol>
 
                 </div>
 
             </div>
 
-            <div class="row">
+            <div class="row" style="border-bottom:1px solid #cccccc">
 
                 <div class="col-sm-7">
                     <h1>{{hirdetes.targy}}</h1>
-                    <p><span ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </span><a ng-if="hirdetes.g_regio_id > 0" href="#" ng-click="setRegio({id: hirdetes.p_regio_id, nev: hirdetes.p_regio_nev}, {id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch();" class="link-info">{{hirdetes.g_regio_nev}}</a></p>
                 </div>
 
 
                 <div class="col-sm-5">
-
                     <p class="price" ng-if="hirdetes.ar">{{hirdetes.ar}} Ft</p>
-
                 </div>
 
             </div>
 
-            <hr />
-
-            <div class="row">
+            <div class="row" style="padding-top:10px">
 
                 <div class="col-sm-7">
 
@@ -67,7 +61,7 @@
                         <div class="col-sm-12">
 
                             <a class="fancybox" rel="group" href="{{createPath(hirdetes.image_created, hirdetes.image_name)}}">
-                                <img id="img_01" alt="" class="raised" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" />
+                                <img id="img_01" alt="" class="raised" width="100%" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" />
                             </a>
 
                             <br />
@@ -86,7 +80,6 @@
                         </div>
                     </div>
 
-                    <br />
                     <br />
 
                     <div class="col-sm-12" style="text-align: center; margin: 0 auto">
