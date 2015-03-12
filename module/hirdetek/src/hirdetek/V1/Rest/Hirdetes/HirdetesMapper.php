@@ -587,7 +587,7 @@ class HirdetesMapper
         // return $entity;
     }
 
-    public function update($data)
+    public function update($data, $email)
     {
 
         //hosszabbitas 30 nappal
@@ -595,17 +595,24 @@ class HirdetesMapper
 
             $sql = 'UPDATE hirdetes
                     SET lejarat = ADDDATE(lejarat, INTERVAL 30 DAY)
-                    WHERE id = ?';
+                    WHERE id = ?
+                    AND email = ?';
 
             $this->adapter->query(
                 $sql,
                 array(
                     (int) $data->id,
+                    $email
                 )
             );
 
             return $this->fetchOne($data->id);
         }
+
+        $data->forovat = isset( $data->forovat) ? (int) $data->forovat : 0;
+        $data->alrovat = isset( $data->alrovat) ? (int) $data->alrovat : 0;
+        $data->foregio = isset( $data->foregio) ? (int) $data->foregio : 0;
+        $data->alregio = isset( $data->alregio) ? (int) $data->alregio : 0;
 
         $inputFilter = new InputFilter();
 
@@ -680,7 +687,7 @@ class HirdetesMapper
                     'options' => array(
                         'min' => -1,
                         'max' => 100,
-                        'inclusive' => false,
+                        'inclusive' => true,
                     ),
                 ),
             ),
@@ -716,7 +723,7 @@ class HirdetesMapper
                     'options' => array(
                         'min' => -1,
                         'max' => 100,
-                        'inclusive' => false,
+                        'inclusive' => true,
                     ),
                 ),
             ),
@@ -753,7 +760,7 @@ class HirdetesMapper
                     'name'    => 'Between',
                     'options' => array(
                         'min' => 1,
-                        'max' => 2000000000,  //2 billion
+                        'max' => 3000000000,  //2 billion
                         'inclusive' => true,
                     ),
                 ),
@@ -784,9 +791,11 @@ class HirdetesMapper
 
         if ($inputFilter->isValid()) {
 
-            $rovat = (int) $data->alrovat < 1 ? (int) $data->forovat : (int) $data->alrovat;
+            if($data->alrovat > 0) $data->rovat = $data->alrovat;
+            else $data->rovat = $data->forovat;
 
-            $regio = (int) $data->alregio < 1 ? (int) $data->foregio : (int) $data->alregio;
+            if($data->alregio > 0) $data->regio = $data->alregio;
+            else $data->regio = $data->foregio;
 
             $sql = 'UPDATE hirdetes
                     SET telepules = ?,
@@ -797,7 +806,8 @@ class HirdetesMapper
                         rovat = ?,
                         regio = ?,
                         lejarat = ?
-                    WHERE id = ?';
+                    WHERE id = ?
+                    AND email = ?';
 
             $this->adapter->query(
                 $sql,
@@ -807,10 +817,11 @@ class HirdetesMapper
                     $data->szoveg,
                     $data->ar,
                     $data->telefon,
-                    $rovat,
-                    $regio,
+                    $data->rovat,
+                    $data->regio,
+                    $data->lejarat,
                     $data->id,
-                    $data->lejarat
+                    $email
                 )
             );
         }
@@ -832,16 +843,15 @@ class HirdetesMapper
             $entity->success = false;
             $entity->errors = $errors;
         }
-
         //print_r($entity);
 
         return $entity;
     }
 
-    public function delete($id)
+    public function delete($id, $email)
     {
-        $sql = 'DELETE FROM hirdetes WHERE id = ?';
-        $this->adapter->query($sql, array($id));
+        $sql = 'DELETE FROM hirdetes WHERE id = ? AND email = ?';
+        $this->adapter->query($sql, array($id), $email);
         return true;
     }
 

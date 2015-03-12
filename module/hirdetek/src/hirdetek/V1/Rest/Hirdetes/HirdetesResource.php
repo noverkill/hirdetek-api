@@ -61,7 +61,16 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function delete($id)
     {
-        return $this->mapper->delete($id);
+
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
+        //print_r($user);
+
+        if(! $user) return ApiProblem(401, 'Unauthorized');
+
+        $email = $user['user_id'];
+
+        return $this->mapper->delete($id, $email);
         //return new ApiProblem(405, 'The DELETE method has not been defined for individual resources');
     }
 
@@ -132,7 +141,16 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function update($id, $data)
     {
-        return $this->mapper->update($data);
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
+        //print_r($user);
+
+        if(! $user) return ApiProblem(401, 'Unauthorized');
+
+        $email = $user['user_id'];
+
+        return $this->mapper->update($data, $email);
+
         //return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 }

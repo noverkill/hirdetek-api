@@ -18,7 +18,7 @@
 										<a class="active" href="#" ui-sref="profile({id: 100})">Profilom</a>
 									</li>
 									<li>
-										<a class="active" href="#" ui-sref="hirdeteseim({id: 10})">Hirdetéseim</a>
+										<a class="active" href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a>
 									</li>
 								</ul>
 							</div>
@@ -58,7 +58,7 @@
                 Egy vagy tobb adat hibas volt! Kerjuk toltse ki ujra az urlapot es adjon meg helyes adatokat!
             </div>
 
-			<form name="hirdForm" role="form"  ng-submit="createHirdetes(hirdForm.$valid)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
+			<form name="hirdForm" role="form" ng-submit="createHirdetes(hirdForm.$valid)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
 
 				<div class="panel panel-default">
 
@@ -88,11 +88,6 @@
                                         <span ng-show="hirdForm.szoveg.$error.maxlength">A szöveg maximum 10000 karakter lehet!</span>
                                     </span>
 								</div>
-
-								<!--div class="col-sm-12"><br />
-									<label>Kulcs szavak</label>
-									<input type="text" class="form-control " >
-								</div-->
 
 								<div class="col-sm-12">
 									<br />
@@ -145,7 +140,7 @@
                                     </span>
 								</div>
 
-								<div class="col-sm-12">
+								<div class="col-sm-6">
 									<br />
 									<label>Ár </label>
 									<input name="ar" type="number" class="form-control " ng-model="hirdetes.ar" min="1" max="3000000000">
@@ -155,16 +150,8 @@
                                         <span ng-show="!hirdForm.ar.$error.number && !hirdForm.ar.$error.max && hirdForm.ar.$error">Hagyja üresen ha ingyenes!</span>
                                     </span>
 								</div>
-								<div class="col-sm-6">
-									<br />
-									<label>Telefon</label>
-									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-maxlength="50">
-                                    <span style="color:red" ng-show="hirdForm.telefon.$dirty && hirdForm.telefon.$invalid">
-                                        <span ng-show="hirdForm.telefon.$error.maxlength">A telefon maximum 50 karakter lehet!
-                                    </span>
-								</div>
 
-								<div class="col-sm-12">
+								<div class="col-sm-6">
 									<br />
 									<label class="required">Lejarat </label>
 									<select name="lejarat" id="lejarat" class="form-control required" name="lejarat" ng-model="hirdetes.lejarat" required>
@@ -180,6 +167,15 @@
 									</select>
 									<span style="color:red" ng-show="hirdForm.lejarat.$dirty && hirdForm.lejarat.$invalid">
                                         <span ng-show="hirdForm.lejarat.$error.required">Kérjük válasszon lejáratot!</span>
+                                    </span>
+								</div>
+
+								<div class="col-sm-6">
+									<br />
+									<label>Telefon</label>
+									<input name="telefon" type="text" class="form-control " ng-model="hirdetes.telefon" ng-maxlength="50">
+                                    <span style="color:red" ng-show="hirdForm.telefon.$dirty && hirdForm.telefon.$invalid">
+                                        <span ng-show="hirdForm.telefon.$error.maxlength">A telefon maximum 50 karakter lehet!
                                     </span>
 								</div>
 

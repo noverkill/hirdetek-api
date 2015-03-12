@@ -329,6 +329,7 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
           },
           function (response) {
               $injector.get('$rootScope').user.logout();
+              $injector.get('$state').go('login');
               return $q.reject(response);
           });
       }
@@ -431,7 +432,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
                 $cookieStore.put('user', {'id': response.id, details: response});
                 $rootScope.login_error = 0;
                 //$rootScope.user.logged = 1;
-                $state.go('profile');
+                $state.go('hirdetesek');
               }).$promise;
             }).
             error(function(data, status, headers, config) {
@@ -999,17 +1000,26 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
 
 });
 
-hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, HirdetesService, KepService) {
+hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $http, $state, $stateParams, $anchorScroll, HirdetesService, KepService) {
+
+  $rootScope.loadRovatok();
+  $rootScope.loadRegiok();
 
   $scope.updateHirdetes = function() {
     //console.log($scope.hirdetes);
     $scope.hirdetesService = $scope.hirdetes.$update(function(response) {
         //console.log(response);
         $scope.response = response;
+        $anchorScroll();
         if(response.success) {
           //$state.go('hirdetes-feladva',{id:response.id});
-          $state.go('hirdeteseim');
+          //$state.go('hirdeteseim', {id: $rootScope.user.getUser().id});
           //$scope.hirdetes = {};
+          $.notify(
+              "Sikeres hirdetés módosítás!",
+              "success",
+              {clickToHide: false, autoHide: true, autoHideDelay: 1}
+            );
         } else {
           //console.log("not response.success");
           $scope.error = 1;
@@ -1109,6 +1119,8 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
       }, function(response) {
         //console.log(response);
 
+        response.ar = parseFloat(response.ar);
+
         $scope.hirdetes = response;
 
         var images = response.images;
@@ -1151,6 +1163,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
         });
       }
   });
+
 });
 
 hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope, $state, $stateParams, HirdetesService, KepService) {
