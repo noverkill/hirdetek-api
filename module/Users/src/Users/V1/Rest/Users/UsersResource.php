@@ -92,9 +92,14 @@ class UsersResource extends AbstractResourceListener
 
         $email = $request->getQuery('email');
 
+        $remind = $request->getQuery('remind');     //ask for password reminder by email
+
         //return $this->mapper->fetchAll();
-        if(! $email) return new ApiProblem(405, 'The GET method has not been defined for collections');
-        else return $this->mapper->fetchByEmail($email);
+        if(! $email) {
+            return new ApiProblem(405, 'The GET method has not been defined for collections');
+        } else {
+            return $this->mapper->fetchByEmail($email, $remind);
+        }
     }
 
     /**

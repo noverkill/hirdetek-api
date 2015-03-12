@@ -310,6 +310,12 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     controller: 'UserCreateController',
     data: {requireLogin: false}
 
+  }).state('jelszo', {
+
+    url: '/jelszo',
+    templateUrl: 'partials/password.html',
+    controller: 'PasswordController',
+    data: {requireLogin: false}
   });
 
   //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
@@ -1345,7 +1351,6 @@ hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state
 
 });
 
-
 hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService) {
 
   if($rootScope.user.isLogged()) {
@@ -1378,4 +1383,21 @@ hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $sta
       //$state.go('users');
     });
   };
+});
+
+hirdetekApp.controller('PasswordController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService) {
+
+  $scope.remind = function(email, formValid) {
+
+    $scope.succes = 0;
+
+    if(! formValid) return;
+
+    $scope.userBusy = UserService.get({'email': email, 'remind': "1"},
+      function (response) {
+        console.log(response);
+        $scope.success = 1;
+    }).$promise
+  }
+
 });

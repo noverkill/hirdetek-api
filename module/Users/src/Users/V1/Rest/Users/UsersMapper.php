@@ -21,7 +21,7 @@ class UsersMapper
         $this->adapter = $adapter;
     }
 
-    public function fetchByEmail($email)
+    public function fetchByEmail($email, $remind)
     {
 
         $inputFilter = new InputFilter();
@@ -35,12 +35,51 @@ class UsersMapper
 
         $inputFilter->setData(array('email' => $email));
 
+        //if password reminder then return from here
+        if($remind) {
+            if($inputFilter->isValid()) {
+                $sql = 'SELECT jelszo FROM users WHERE email = ? LIMIT 1';
+                $resultset = $this->adapter->query($sql, array($email));
+                $result = $resultset->toArray();
+            }
+            //print_r($result);
+            if(count($result) > 0) {
+
+                $site = "hirdetek.net";
+                $url = "http://hirdetek.net";
+                $noreply = "noreply@hirdetek.net";
+
+                // jelszo emlekezteto email kuldese
+                $subject = "Jelszó emlékeztető";
+
+                $message = "
+
+Tisztelt regisztrált felhasználónk!
+
+A bejelentkezéshez használja az email címét valamint a következő jelszót: " . $result[0]['jelszo'] . "
+
+Üdvözlettel: a $site csapata
+
+$url
+
+";
+                //sendmail($email, $subject, $message, "From: ".$noreply);
+
+            }
+
+            return array();
+        }
+
         $select = new Select('users');
+
         if ($inputFilter->isValid()) $select->where(array('email' => $email));
+
         $select->limit(2);
+
         $paginatorAdapter = new DbSelect($select, $this->adapter);
         $collection = new UsersCollection($paginatorAdapter);
         return $collection;
+
     }
 
     public function fetchAll()

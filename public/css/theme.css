@@ -659,3 +659,13 @@ label.required:after {
 .ng-invalid {
   border-color: red !important;
 }
+
+#loginEmail.ng-pristine.ng-invalid,
+#loginPassword.ng-pristine.ng-invalid,
+#passwordEmail.ng-pristine.ng-invalid,
+#regNev.ng-pristine.ng-invalid,
+#regEmail.ng-pristine.ng-invalid,
+#regPwd.ng-pristine.ng-invalid,
+#regConfPwd.ng-pristine.ng-invalid {
+  border-color: #cccccc !important;
+}
