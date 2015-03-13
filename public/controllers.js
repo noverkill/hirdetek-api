@@ -316,6 +316,14 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     templateUrl: 'partials/password.html',
     controller: 'PasswordController',
     data: {requireLogin: false}
+
+  }).state('kapcsolat', {
+
+    url: '/kapcsolat',
+    templateUrl: 'partials/kapcsolat.html',
+    controller: 'ContactController',
+    data: {requireLogin: false}
+
   });
 
   //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
@@ -710,6 +718,8 @@ hirdetekApp.controller('MainpageCtrl', [ '$scope', '$rootScope', '$state', funct
 */
 
 hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '$anchorScroll', 'HirdetesService', function ($scope, $rootScope, $state, $anchorScroll, HirdetesService) {
+
+  $anchorScroll();
 
   $scope.loadHirdetesek = function() {
     return HirdetesService.query({
@@ -1371,15 +1381,48 @@ hirdetekApp.controller('UserCreateController', function($rootScope, $scope, $sta
 
 hirdetekApp.controller('PasswordController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService) {
 
+  $anchorScroll();
+
   $scope.remind = function(email, formValid) {
 
-    $scope.succes = 0;
+    $anchorScroll();
+
+    $scope.success = 0;
 
     if(! formValid) return;
 
     $scope.userBusy = UserService.get({'email': email, 'remind': "1"},
       function (response) {
-        console.log(response);
+        $scope.success = 1;
+    }).$promise
+  }
+
+});
+
+hirdetekApp.controller('ContactController', function($rootScope, $scope, $state, $stateParams, $anchorScroll, UserService) {
+
+  $anchorScroll();
+
+  $scope.contact = {contact: 1};
+
+  if($rootScope.user.isLogged()) {
+    $scope.contact.userid = $rootScope.user.getUser().id;
+    $scope.contact.nev = $rootScope.user.getUser().details.nev;
+    $scope.contact.email = $rootScope.user.getUser().details.email;
+  } else {
+    $scope.contact.userid = 0;
+  }
+
+  $scope.sendContact = function(form) {
+
+    $anchorScroll();
+
+    $scope.success = 0;
+
+    if(! form.$valid) return;
+
+    $scope.contactBusy = UserService.save($scope.contact,
+      function (response) {
         $scope.success = 1;
     }).$promise
   }

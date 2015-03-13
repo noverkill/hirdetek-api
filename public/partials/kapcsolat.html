@@ -1,0 +1,108 @@
+
+<hr class="topbar"/>
+
+<div class="container" cg-busy="contactBusy">
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Kapcsolatfelvétel</h1>
+            <hr />
+        </div>
+
+    </div>
+
+    <div class="row" ng-show="success">
+
+        <div class="col-md-8 col-md-offset-2">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="alert alert-info" role="alert">
+                            Az üzenetét megkaptuk.<br />Megpróbálunk a lehető leghamarabb visszajelezni.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row" ng-show="! success">
+
+        <div class="col-md-8 col-md-offset-2">
+
+            <form name="contactForm" role="form" ng-submit="sendContact(contactForm)" enctype="multipart/form-data" novalidate>
+
+            <div class="row" ng-show="! user.isLogged()">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nev" class="required">Név</label>
+                        <input class="form-control" name="nev" id="contactNev" type="text" ng-model="contact.nev" placeholder="Név" required ng-maxlength="70">
+                        <span style="color:red" ng-show="contactForm.nev.$dirty && contactForm.nev.$invalid">
+                            <span ng-show="contactForm.nev.$error.required">Kérjük adja meg a nevét!</span>
+                            <span ng-show="contactForm.nev.$error.maxlength">A név maximum 70 karakter lehet!</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="email" class="required">Email</label>
+                        <input class="form-control" name="email" id="contactEmail" type="text" ng-model="contact.email" placeholder="Email cím" required valid-email>
+                        <span style="color:red" ng-show="contactForm.email.$dirty && contactForm.email.$invalid">
+                            <span ng-show="contactForm.email.$error.required">Kérjük adja meg az email címét!</span>
+                            <span ng-show="! contactForm.email.$error.required && contactForm.email.$error.validEmail">Hibás email cím!</span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="targy" class="required">Tárgy</label>
+                        <select class="form-control" name="targy" id="contactTargy" ng-model="contact.targy" required>
+                            <option value="">Kérjük válasszon</option>
+                            <option>Technikai probléma</option>
+                            <option>Javaslat, vélemény</option>
+                            <option>Reklámozás vagy üzleti ajánlat</option>
+                            <option>Egyéb</option>
+                        </select>
+                        <span style="color:red" ng-show="contactForm.targy.$dirty && contactForm.targy.$invalid">
+                            <span ng-show="contactForm.targy.$error.required">Kérjük válasszon tárgyat!</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="szoveg" class="required">Üzenet szövege</label>
+                        <textarea class="form-control" name="szoveg" id="contactSzoveg" cols="50" rows="10" ng-model="contact.szoveg" required ng-minlength="20" ng-maxlength="500"></textarea>
+                        <span style="color:red" ng-show="contactForm.szoveg.$dirty && contactForm.szoveg.$invalid">
+                            <span ng-show="contactForm.szoveg.$error.required">Kérjük adja meg az üzenete szövegét!</span>
+                            <span ng-show="contactForm.szoveg.$error.minlength">Az üzenet minimum 20 karakter!</span>
+                            <span ng-show="contactForm.szoveg.$error.maxlength">Az üzenet maximum 500 karakter lehet!</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-disabled="contactForm.$invalid">Elküldés</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

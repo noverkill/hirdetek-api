@@ -683,7 +683,11 @@ label.required:after {
 #regConfPwd.ng-pristine.ng-invalid,
 #messageText.ng-pristine.ng-invalid,
 #messageText.ng-invalid-minlength,
-#messageEmail.ng-pristine.ng-invalid {
+#messageEmail.ng-pristine.ng-invalid,
+#contactNev.ng-pristine.ng-invalid,
+#contactEmail.ng-pristine.ng-invalid,
+#contactTargy.ng-pristine.ng-invalid,
+#contactSzoveg.ng-pristine.ng-invalid {
   border-color: #cccccc !important;
 }
 

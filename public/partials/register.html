@@ -2,11 +2,11 @@
 <hr class="topbar"/>
 
 <div class="container">
-    <br />
+
     <div class="row">
 
         <div class="col-sm-12">
-            <h1>Create an account</h1>
+            <h1>Regisztráció</h1>
 
             <hr />
 
@@ -55,7 +55,7 @@
 
 
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Név</label>
+                                            <label for="nev">Név</label>
                                             <input type="text" name="nev" id="regNev" ng-model="user.nev" class="form-control " placeholder="Név" required ng-maxlength="70">
                                             <span style="color:red" ng-show="regForm.nev.$dirty && regForm.nev.$invalid">
                                                 <span ng-show="regForm.nev.$error.required">Kérjük adja meg a nevét!</span>
@@ -64,7 +64,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Email</label>
+                                            <label for="email">Email</label>
                                             <input type="email" name="email" id="regEmail" ng-model="user.email" class="form-control " placeholder="Email cím" required unique-email valid-email>
                                             <span style="color:red" ng-show="regForm.email.$dirty && regForm.email.$invalid">
                                                 <span ng-show="regForm.email.$error.required">Kérjük adja meg az email címét!</span>

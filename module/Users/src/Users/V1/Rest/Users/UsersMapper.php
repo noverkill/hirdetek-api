@@ -148,7 +148,7 @@ $url
         $inputFilter->setData((array)$data);
 
         if (! $inputFilter->isValid()) {
-            //echo "The form is not valid\n";
+
             $errors = array();
             foreach ($inputFilter->getInvalidInput() as $error) {
                 //print_r($error);//->getMessages());
@@ -156,6 +156,33 @@ $url
                     "field" => $error->getName(),
                     "message" => $error->getMessages()
                 );
+            }
+
+            if($data->contact && (! isset($errors['field']['nev'])) && (! isset($errors['field']['email']))) {
+                // record contact form details
+
+                $ipaddr = $_SERVER['REMOTE_ADDR'];
+
+                $sql = 'INSERT INTO bug (createdon, nev, mail, jelleg, rovleir, leiras, userid, ipaddr) values(NOW(), ?, ?, ?, ?, ?, ?, ?)';
+
+                $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->targy, $data->targy, $data->szoveg, $data->userid, $ipaddr));
+
+                $subject = "Kapcsolat felvetel";
+
+                $message = "
+
+userid: " . $data->userid . "
+nev:    " . $data->nev . "
+email:  " . $data->email . "
+targy:  " . $data->targy . "
+uzenet: " . $data->szoveg . "
+ip cim: $ipaddr
+
+";
+
+                //mail( $admin_mail, $subject, $message, "From: ".$noreply);
+
+                return array("success" => true, "message" => "contact sent", "errors" => $errors, "data" => $data);
             }
 
             return array("success" => false, "errors" => $errors, "data" => $data);
@@ -315,6 +342,7 @@ $url/kiemeles.php
         $inputFilter->setData((array)$data);
 
         if (! $inputFilter->isValid()) {
+
             //echo "The form is not valid\n";
             $errors = array();
             foreach ($inputFilter->getInvalidInput() as $error) {
