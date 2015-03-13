@@ -283,7 +283,7 @@
                     <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
                     <p class="muted"><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
                     <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
-                    <p>{{hirdetes.szoveg}}</p>
+                    <p>{{hirdetes.szoveg | limitTo: 500}}{{hirdetes.szoveg.length > 500 ? '...' : ''}}</p>
                     <p>
                         <span class="classified_links pull-right">
                             <!--a class="link-info underline" ng-click="shareHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#">Megosztás</a>&nbsp;

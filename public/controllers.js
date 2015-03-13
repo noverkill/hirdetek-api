@@ -532,58 +532,6 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
     $rootScope.regiokLoaded = 1;
   }
 
-/*
-  $rootScope.viewBusy = RegioService.query({ps: 1000}, function(response) {
-
-   $rootScope.regiok = response._embedded.regio;
-
-   $rootScope.foregiok = [];
-   $rootScope.alregiok = [];
-   $rootScope._alregiok = [];
-
-   for(var i = 0; i < $rootScope.regiok.length; i++) {
-     if($rootScope.regiok[i].parent == 0) {
-       $rootScope.foregiok.push($rootScope.regiok[i]);
-     } else {
-       $rootScope.alregiok.push($rootScope.regiok[i]);
-
-       if(angular.isUndefined($rootScope._alregiok[$rootScope.regiok[i].parent])) {
-           $rootScope._alregiok[$rootScope.regiok[i].parent] = [];
-       }
-
-       $rootScope._alregiok[$rootScope.regiok[i].parent].push($rootScope.regiok[i]);
-     }
-   }
-
-    $rootScope.regiok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-  }).$promise;
-*/
-
-/*
-$rootScope.rovatBusy = RovatService.query({ps: 1000}, function(response) {
-
-   $rootScope.rovatok = response._embedded.rovatok;
-
-   $rootScope.forovatok = [];
-   $rootScope.alrovatok = [];
-
-   for(var i = 0; i < $rootScope.rovatok.length; i++) {
-     if($rootScope.rovatok[i].parent == 0) {
-       $rootScope.forovatok.push($rootScope.rovatok[i]);
-     } else {
-       $rootScope.alrovatok.push($rootScope.rovatok[i]);
-     }
-   }
-
-   $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
-
-   // console.log($rootScope.forovatok);
-
-   // console.log($rootScope.alrovatok);
-
- }).$promise;
-}*/
-
 /* for the regio chooser control */
  $rootScope.setRegio2  = function (foregio) {
    $rootScope.foregio2 = foregio;
@@ -739,6 +687,13 @@ $rootScope.resetRegio = function() {
   $rootScope.resetRovat();
 
   //$rootScope.shareReset();
+
+  // 0 = the hirdetes details will not be refreshed from the server
+  // if it is already loaded with the page of hirdetes list
+  // it can set to 1 to make sure that the details always reloads from the server
+  // it is useful for example when the user modified his ad, so he would like to see
+  // the effect when he goes back to the ad's detail page
+  $rootScope.detailRefresh = 0;
 
   $rootScope.HirdetesekLoaded = 0;
 
@@ -929,10 +884,19 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
 
    $anchorScroll();
 
+  $scope.message = {};
+
+  if($rootScope.user.isLogged()) $scope.message.email = $rootScope.user.getUser().details.email;
+
+  $scope.submitted = 0;
+  $scope.success = 0;
+  $scope.hideTelNum = 1;
+
    var found = $filter('filter')($rootScope.hirdetesek, {id: $stateParams.id}, true);
 
-   if (angular.isDefined(found) && found.length) {
+   if (angular.isDefined(found) && found.length && ! $rootScope.detailRefresh) {
       $scope.hirdetes = found[0];
+      $scope.telNum = $scope.hirdetes.telefon.substring(1,3);
       if (! angular.isDefined($scope.hirdetes.images)) {
         $scope.imagesBusy = HirdetesService.get({
           id: $stateParams.id
@@ -945,6 +909,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
         id: $stateParams.id
       }, function(response) {
         $scope.hirdetes = response;
+        $scope.telNum = $scope.hirdetes.telefon.substring(1,3);
       }).$promise;
    }
 
@@ -952,17 +917,15 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
      $state.go('hirdetesek');
   }
 
-  $scope.message = {};
-
-  if($rootScope.user.isLogged()) $scope.message.email = $rootScope.user.getUser().details.email;
-
-  $scope.submitted = 0;
-  $scope.success = 0;
-
   $scope.sendMessage = function(form) {
       $scope.submitted = 1;
       if(! form.$valid) return;
       $scope.success = 1;
+  };
+
+  $scope.showTelNum = function() {
+      $scope.telNum = $scope.hirdetes.telefon;
+      $scope.hideTelNum = 0;
   };
 
 });
@@ -1025,12 +988,19 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
   $rootScope.loadRovatok();
   $rootScope.loadRegiok();
 
+  $anchorScroll();
+
   $scope.updateHirdetes = function() {
-    //console.log($scope.hirdetes);
+    // set to 1 here, so from now on the hirdetes' details will be always refreshed from the server
+    // this is to make sure that the user will see the effect of his modifica\tion when he goes back to
+    // the hirdetes detail's page
+    $rootScope.detailRefresh = 1;
+    $scope.error = 0;
+    $anchorScroll();
     $scope.hirdetesService = $scope.hirdetes.$update(function(response) {
         //console.log(response);
         $scope.response = response;
-        $anchorScroll();
+
         if(response.success) {
           //$state.go('hirdetes-feladva',{id:response.id});
           //$state.go('hirdeteseim', {id: $rootScope.user.getUser().id});

@@ -33,15 +33,19 @@
 
             </div>
 
-            <div class="row" style="padding-top:10px">
+            <div class="row" style="padding-top:3px">
 
                 <div class="col-sm-7">
 
-                    <p>
+                    <p style="white-space: pre-line;">
                         {{hirdetes.szoveg}}
                     </p>
 
                     <p>Azonosito: {{hirdetes.id}} | Feladva {{hirdetes.days_active ? hirdetes.days_active : 0}} napja ({{hirdetes.feladas}})</p>
+
+                    <h3 ng-show="hirdetes.telefon!=''">
+                        Telefonszám: {{telNum}}<span ng-show="hideTelNum">xxx xxx <a href="" ng-click="showTelNum()" class="link-info"> Megjelenít</a></span>
+                    </h3>
 
                     <!--p>
                         <span class="classified_links ">
@@ -52,15 +56,10 @@
                         </span>
                     </p-->
 
-                    <br />
-
                     <!--div>
                         <button data-toggle="modal" data-target="#myModal" class="btn btn-warning" type="button">Üzenet küldése</button>
                         <br />
-                        <p ng-show="hirdetes.telefon!=''">telefonszám: {{hirdetes.telefon}}</p>
                     </div-->
-
-                    <br />
 
                     <div>
 
