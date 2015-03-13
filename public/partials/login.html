@@ -29,11 +29,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="password">Jelszó</label>
-                                        <input type="password" name="password" id="loginPassword" ng-model="credentials.password" class="form-control" placeholder="Jelszó" ng-minlength="6" ng-maxlength="20"required>
+                                        <input type="password" name="password" id="loginPassword" ng-model="credentials.password" class="form-control" placeholder="Jelszó" required>
                                         <span style="color:red" ng-show="loginForm.password.$dirty && loginForm.password.$invalid">
                                             <span ng-show="loginForm.password.$error.required">Kérjük adja meg az új jelszavát!</span>
-                                            <span ng-show="loginForm.password.$error.minlength">A jelszo minimum 6 karakter!</span>
-                                            <span ng-show="loginForm.password.$error.maxlength">A jelszo maximum 20 karakter lehet!</span>
                                         </span>
                                     </div>
                                     <div class="checkbox">

@@ -680,7 +680,10 @@ label.required:after {
 #regNev.ng-pristine.ng-invalid,
 #regEmail.ng-pristine.ng-invalid,
 #regPwd.ng-pristine.ng-invalid,
-#regConfPwd.ng-pristine.ng-invalid {
+#regConfPwd.ng-pristine.ng-invalid,
+#messageText.ng-pristine.ng-invalid,
+#messageText.ng-invalid-minlength,
+#messageEmail.ng-pristine.ng-invalid {
   border-color: #cccccc !important;
 }
 

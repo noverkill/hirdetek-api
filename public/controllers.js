@@ -928,6 +928,7 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
   */
 
    $anchorScroll();
+
    var found = $filter('filter')($rootScope.hirdetesek, {id: $stateParams.id}, true);
 
    if (angular.isDefined(found) && found.length) {
@@ -949,6 +950,19 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
 
   $scope.doSearch = function() {
      $state.go('hirdetesek');
+  }
+
+  $scope.message = {};
+
+  if($rootScope.user.isLogged()) $scope.message.email = $rootScope.user.getUser().details.email;
+
+  $scope.submitted = 0;
+  $scope.success = 0;
+
+  $scope.sendMessage = function(form) {
+      $scope.submitted = 1;
+      if(! form.$valid) return;
+      $scope.success = 1;
   };
 
 });

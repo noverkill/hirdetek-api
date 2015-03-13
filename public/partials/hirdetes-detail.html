@@ -43,18 +43,89 @@
 
                     <p>Azonosito: {{hirdetes.id}} | Feladva {{hirdetes.days_active ? hirdetes.days_active : 0}} napja ({{hirdetes.feladas}})</p>
 
-                    <p>
+                    <!--p>
                         <span class="classified_links ">
-                            <!--a class="link-info" ng-click="shareHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
+                            <a class="link-info" ng-click="shareHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#"><i class="fa fa-share"></i> Megosztas</a>&nbsp;
                             <a class="link-info" ng-click="saveHirdetes(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#"><i class="fa fa-star"></i> Kedvencekhez</a>&nbsp;
-                            <a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a>&nbsp;-->
+                            <a class="link-info fancybox-media" href="http://maps.google.com/?ll=48.85796,2.295231&spn=0.003833,0.010568&t=h&z=17"><i class="fa fa-map-marker"></i> Terkep</a>&nbsp;>
                             <a class="link-info" href="#"><i class="fa fa-envelope-o"></i> Kapcsolat</a>
                         </span>
-                    </p>
+                    </p-->
+
+                    <br />
+
+                    <!--div>
+                        <button data-toggle="modal" data-target="#myModal" class="btn btn-warning" type="button">Üzenet küldése</button>
+                        <br />
+                        <p ng-show="hirdetes.telefon!=''">telefonszám: {{hirdetes.telefon}}</p>
+                    </div-->
+
+                    <br />
+
+                    <div>
+
+                        <div class="alert alert-info" role="alert" ng-show="success">
+                            Az üzenetét továbbítottuk a hírdetőnek
+                        </div>
+
+                        <div class="panel panel-default" ng-show="! success">
+
+                            <div class="panel-heading">Üzenet küldése a hirdetőnek</div>
+
+                            <div class="panel-body">
+
+                                <div class="row">
+
+                                     <form name="messageForm" role="form" ng-submit="sendMessage(messageForm)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
+
+                                        <div class="col-sm-10 form-group" ng-show="! user.isLogged()">
+                                            <input name="email"  id="messageEmail" type="email" class="form-control " ng-model="message.email" placeholder="Az Ön email címe" required valid-email>
+                                            <span style="color:red" ng-show="submitted && messageForm.email.$invalid">
+                                                <span ng-show="messageForm.email.$error.required">Kérjük adja meg az email címét!</span>
+                                                <span ng-show="! messageForm.email.$error.required && messageForm.email.$error.validEmail">Hibás email cím!</span>
+                                            </span>
+                                        </div>
+
+                                        <div class="col-sm-12 form-group">
+                                            <textarea name="szoveg" id="messageText" class="form-control" rows="10" ng-model="message.text" placeholder="Üzenet szövege" required ng-minlength="20" ng-maxlength="5000"></textarea>
+                                            <span style="color:red" ng-show="submitted && messageForm.szoveg.$invalid">
+                                                <span ng-show="messageForm.szoveg.$error.required">Kérjük adja meg az üzenete szövegét!</span>
+                                                <span ng-show="messageForm.szoveg.$error.minlength">Kérjük, legalább 20 karaktert adjon meg!</span>
+                                                <span ng-show="messageForm.szoveg.$error.maxlength">Az üzenet maximum 5000 karakter lehet!</span>
+                                            </span>
+                                        </div>
+
+                                        <div class="col-sm-12 form-group">
+                                            <button type="submit" class="btn btn-primary"><i class="icon-ok"></i>  Küldés</button>
+
+                                            <!--span style="color:red;" ng-show="messageForm.$invalid">
+                                                Kérjük töltse ki az ürlapot.
+                                            </span-->
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
                 <div class="col-sm-5 center zoom-gallery">
+
+                    <div class="col-sm-12">
+
+                        <div class="row center" ng-show="hirdetes.image_created==null">
+
+                            <img alt="no image" class="raised" width="100%" src="./css/images/no-image.png" />
+
+                        </div>
+
+                    </div>
 
                     <div class="row center" ng-show="hirdetes.image_created!=null">
 
@@ -82,13 +153,13 @@
 
                     <br />
 
-                    <div class="col-sm-12" style="text-align: center; margin: 0 auto">
+                    <!--div class="col-sm-12" style="text-align: center; margin: 0 auto">
                         <button data-toggle="modal" data-target="#myModal" class="btn btn-warning" style="text-align: center;width: 180px; " type="button">Kapcsolat</button>
                         <br />
                         <p ng-show="hirdetes.telefon!=''">telefonszám: {{hirdetes.telefon}}</p>
                     </div>
 
-                    <br />
+                    <br /-->
 
                 </div>
 
