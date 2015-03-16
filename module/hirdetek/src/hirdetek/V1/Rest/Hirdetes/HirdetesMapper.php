@@ -15,6 +15,8 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\Input;
 use Zend\Validator;
 
+use Zend\Crypt\Password\Bcrypt;
+
 class HirdetesMapper
 {
     protected $adapter;
@@ -232,7 +234,7 @@ class HirdetesMapper
                 $insert = $sql->insert('images')
                                 ->values($values);
 
-                $sqlString = $sql->getSqlStringForSqlObject($insert);
+                //$sqlString = $sql->getSqlStringForSqlObject($insert);
 
                 $statement = $sql->prepareStatementForSqlObject($insert);
                 $resultset = $statement->execute();
@@ -502,6 +504,7 @@ class HirdetesMapper
             return array("success" => false, "errors" => $errors, "data" => $data);
         }
 
+        $aktivkod = md5(uniqid(rand(), true));
 
         //print_r($data);
 
@@ -511,10 +514,14 @@ class HirdetesMapper
             'email' => $data->email,
             'targy' => $data->targy,
             'szoveg' => $data->szoveg,
+            'aktivkod' => $aktivkod
         );
+
+        $user_message = '';
 
         if(isset($user)) {
 
+            // bejelentkezett user
             $sql = new Sql($this->adapter);
 
             $select = $sql->select('users')
@@ -523,7 +530,7 @@ class HirdetesMapper
                           ->order('id')
                           ->limit(1);
 
-            $sqlString = $sql->getSqlStringForSqlObject($select);
+            //$sqlString = $sql->getSqlStringForSqlObject($select);
 
             $statement = $sql->prepareStatementForSqlObject($select);
 
@@ -534,7 +541,81 @@ class HirdetesMapper
 
             $values['user_id'] = $resultset['id'];
             $values['email']   = $resultset['email'];
+            $values['aktiv']   = 1;
 
+        } else {
+
+            // check if existing user but not logged in
+            // or we need to create a new user
+            $sql = new Sql($this->adapter);
+
+            $select = $sql->select('users')
+                          ->columns(array('id', 'email'))
+                          ->where(array('email' => $data->email))
+                          ->order('id')
+                          ->limit(1);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+
+            $resultset = $statement->execute()->current();
+
+            if(is_array($resultset)) {
+
+                //existing user but not logged in
+                $user_id = $resultset['id'];
+                $email   = $resultset['email'];
+
+                $values['user_id'] = $resultset['id'];
+                $values['email']   = $resultset['email'];
+                $values['aktiv']   = 1;// 0 !!!!!!!!
+
+            } else {
+
+                // create a new user
+
+                $jelszo = substr($aktivkod, 0, 6);
+
+                $new_user = array (
+                    'nev' => $data->nev,
+                    'email' => $data->email,
+                    'aktivkod' => $aktivkod,
+                    'aktiv' => 1, // 0 !!!!
+                    'jelszo' => $jelszo,
+                    'felvetel' => new Expression('NOW()')
+                );
+
+                $insert = $sql->insert('users')
+                              ->values($new_user);
+
+                //$sqlString = $sql->getSqlStringForSqlObject($insert);
+
+                $statement = $sql->prepareStatementForSqlObject($insert);
+                $resultset = $statement->execute();
+
+                $user_id = $resultset->getGeneratedValue();
+                $email   = $data->email;
+
+                $values['user_id'] = $user_id;
+                $values['email']   = $email;
+                $values['aktiv'] = 1; // 0 !!!!!!!!
+
+                $bcrypt = new Bcrypt;
+                $pass = $bcrypt->create($jelszo);
+                $sql = 'INSERT INTO oauth_users (username, password, first_name, last_name) values(?, ?, ?, ?)';
+                $resultset = $this->adapter->query($sql, array($email, $pass, $data->nev, ''));
+
+                $user_message = '
+
+A hirdetés aktiválása után a hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+
+és a következő jelszó segítségével: ' . $jelszo . '
+
+A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+
+A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+
+';
+            }
         }
 
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
@@ -560,8 +641,6 @@ class HirdetesMapper
         $values['lejarat'] = new Expression('DATE_ADD(NOW(), INTERVAL ' . $data->lejarat . ' DAY)');
 
         //temporarily
-        $values['aktiv'] = 1;
-        $values['aktivkod'] = md5(uniqid(rand(), true));
         $values['aktivedon'] = new Expression('NOW()');
         $values['lastmodified'] = new Expression('NOW()');
 
@@ -579,6 +658,28 @@ class HirdetesMapper
         $resultset = $statement->execute();
 
         $data->id = $resultset->getGeneratedValue();
+
+        $site = "hirdetek.net";
+        $url = "http://hirdetek.net";
+        $noreply = "noreply@hirdetek.net";
+
+        $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
+
+        $message = "
+
+Tisztelt címzett!
+
+Ön hirdetést adott fel a $url oldalon.
+
+Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
+
+$url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
+
+$user_message
+
+Üdvözlettel: a $site csapata";
+
+        //sendmail($email, $subject, $message, "From: ".$noreply);
 
         return array("success" => true, "id" => $data->id);
 
