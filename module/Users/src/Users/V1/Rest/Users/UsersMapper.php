@@ -192,15 +192,11 @@ ip cim: $ipaddr
 
         $pass = $bcrypt->create($data->jelszo);
 
-        $sql = 'INSERT INTO oauth_users (username, password, first_name, last_name) values(?, ?, ?, ?)';
-
-        $resultset = $this->adapter->query($sql, array($data->email, $pass, $data->nev, ''));
-
         $aktivkod  = md5(uniqid(rand(), true));
 
-        $sql = 'INSERT INTO users (nev, email, jelszo, felvetel, aktivkod, aktiv) values(?, ?, ?, NOW(), ?, 0)';
+        $sql = 'INSERT INTO users (nev, email, jelszo, felvetel, aktivkod, weblap, aktiv) values(?, ?, ?, NOW(), ?, ?, 0)';
 
-        $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->jelszo, $aktivkod));
+        $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->jelszo, $aktivkod, $pass));
 
         $data->id = $resultset->getGeneratedValue();
 
@@ -216,7 +212,7 @@ Tisztelt felhasználónk!
 Ön regisztrálta magát a ".$url." oldalon.
 
 A regisztráció aktiválását az alábbi link segítségével teheti meg:
-".$url."/regisztracio.php?email=" . $data->email . "&kod=$aktivkod
+".$url."/felhasznalo-aktivalas.php?email=" . $data->email . "&kod=$aktivkod
 
 Az aktiválása után a bejelentkezéshez használja az email címét
 valamint a következő jelszót: " . $data->jelszo . "

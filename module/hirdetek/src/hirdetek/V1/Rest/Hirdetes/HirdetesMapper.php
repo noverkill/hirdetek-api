@@ -113,7 +113,7 @@ class HirdetesMapper
                 LEFT JOIN regio g ON g.id = h.regio
                 LEFT JOIN regio pg ON pg.id = g.parent
                 LEFT JOIN images i ON i.ad_id = h.id AND i.sorrend = 1
-                WHERE h.id = ?";
+                WHERE h.id = ? AND h.aktiv = 1";
 
         $resultset = $this->adapter->query($sql, array($id));
 
@@ -452,7 +452,6 @@ class HirdetesMapper
             ),
         )));
 
-
         $inputFilter->add($factory->createInput(array(
             'name'     => 'nev',
             'required' => true,
@@ -567,7 +566,7 @@ class HirdetesMapper
 
                 $values['user_id'] = $resultset['id'];
                 $values['email']   = $resultset['email'];
-                $values['aktiv']   = 1;// 0 !!!!!!!!
+                $values['aktiv']   = 0;
 
             } else {
 
@@ -575,12 +574,16 @@ class HirdetesMapper
 
                 $jelszo = substr($aktivkod, 0, 6);
 
+                $bcrypt = new Bcrypt;
+                $pass = $bcrypt->create($jelszo);
+
                 $new_user = array (
                     'nev' => $data->nev,
                     'email' => $data->email,
                     'aktivkod' => $aktivkod,
-                    'aktiv' => 1, // 0 !!!!
+                    'aktiv' => 0,
                     'jelszo' => $jelszo,
+                    'weblap' => $pass,
                     'felvetel' => new Expression('NOW()')
                 );
 
@@ -597,12 +600,7 @@ class HirdetesMapper
 
                 $values['user_id'] = $user_id;
                 $values['email']   = $email;
-                $values['aktiv'] = 1; // 0 !!!!!!!!
-
-                $bcrypt = new Bcrypt;
-                $pass = $bcrypt->create($jelszo);
-                $sql = 'INSERT INTO oauth_users (username, password, first_name, last_name) values(?, ?, ?, ?)';
-                $resultset = $this->adapter->query($sql, array($email, $pass, $data->nev, ''));
+                $values['aktiv'] = 0;
 
                 $user_message = '
 
