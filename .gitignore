@@ -8,6 +8,7 @@ nbproject
 .settings
 composer.lock
 vendor/
+old-config.php
 public/vendor/
 public/config.js
 config/development.config.php

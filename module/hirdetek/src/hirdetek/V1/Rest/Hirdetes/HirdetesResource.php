@@ -28,6 +28,8 @@ class HirdetesResource extends AbstractResourceListener
 
         $id = $request->getQuery('id');
 
+        $kod = $request->getQuery('kod');
+
         $files = $request->getfiles();
 
         $filename = '';
@@ -48,7 +50,7 @@ class HirdetesResource extends AbstractResourceListener
             }
         }
 
-        return $this->mapper->create($data, $user, $id, $filename, $folder_name, $upload_dir, $files);
+        return $this->mapper->create($data, $user, $id, $filename, $folder_name, $upload_dir, $files, $kod);
 
         //return new ApiProblem(405, 'The POST method has not been defined');
     }

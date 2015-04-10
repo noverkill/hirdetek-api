@@ -44,7 +44,7 @@ if ($success) {
 	?>
 
 		<h3>Sikeresen aktiválta a felhasznaloi fiokjat!</h3>
-		<p><a href="<?php echo $url; ?>">Kattintson ide a bejelentkezeshez</a></p>
+		<p><a href="<?php echo $url; ?>/#/login">Kattintson ide a bejelentkezeshez</a></p>
 
 	<?php
 

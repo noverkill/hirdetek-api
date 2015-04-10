@@ -194,6 +194,19 @@ hirdetekApp.service( 'UserService', [ '$resource', function( $resource ) {
   );
 }]);
 
+hirdetekApp.service( 'MegosztasService', [ '$resource', function( $resource ) {
+  return $resource( siteurl + '/megosztas/:id', { id: '@id'}, {
+      'query': {
+        method: 'GET',
+        isArray: false
+      },
+      'update': {
+        method: 'PUT'
+      }
+    }
+  );
+}]);
+
 hirdetekApp.config(function($httpProvider, $stateProvider) {
 
   $stateProvider.state('mainpage', {
@@ -881,7 +894,7 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
   });
 }]);
 
-hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, $state, $stateParams, $filter, $anchorScroll, HirdetesService) {
+hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, $state, $stateParams, $filter, $anchorScroll, HirdetesService, MegosztasService) {
 
   /*
   $scope.hirdetesService = HirdetesService.get({
@@ -928,9 +941,30 @@ hirdetekApp.controller('HirdetesDetailController', function($scope, $rootScope, 
   }
 
   $scope.sendMessage = function(form) {
+
       $scope.submitted = 1;
+
       if(! form.$valid) return;
-      $scope.success = 1;
+
+      $scope.megosztas = new MegosztasService();
+      $scope.megosztas.adid = $stateParams.id;
+      $scope.megosztas.func = "reply";
+      $scope.megosztas.email = $scope.message.email;
+      $scope.megosztas.text = $scope.message.text;
+
+      $scope.hirdetesBusy = $scope.megosztas.$save(function(response) {
+          console.log(response);
+          $scope.response = response;
+          if(response.success) {
+            $scope.megosztas = {};
+            $scope.success = 1;
+          } else {
+            //console.log("not response.success");
+            $scope.error = 1;
+            //$scope.hirdetes = response.data;
+            $anchorScroll();
+          }
+        });
   };
 
   $scope.showTelNum = function() {
@@ -1174,7 +1208,7 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
   $scope.hirdetes = {id: $stateParams.id};
 
   var myDropzone = new Dropzone("div#myDropzone", {
-    url: "/hirdetes?id=" + $stateParams.id,
+    url: "/hirdetes?id=" + $stateParams.id + "&kod=" + $rootScope.kod,
     maxFiles: 6,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
@@ -1240,6 +1274,7 @@ hirdetekApp.controller('HirdetesCreateController', function($rootScope, $scope, 
         $scope.response = response;
         if(response.success) {
           $rootScope.feladasId = response.id;
+          $rootScope.kod = response.kod;
           $state.go('hirdetes-feladva',{id:response.id});
           //$scope.hirdetes = {};
         } else {

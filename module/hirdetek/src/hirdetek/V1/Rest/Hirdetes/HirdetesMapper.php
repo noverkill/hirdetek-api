@@ -142,7 +142,7 @@ class HirdetesMapper
         return $entity;
     }
 
-    public function create($data, $user, $id, $filename, $folder_name, $upload_dir, $files)
+    public function create($data, $user, $id, $filename, $folder_name, $upload_dir, $files, $kod)
     {
         //print_r($data);
         //print_r($this->adapter);
@@ -158,36 +158,39 @@ class HirdetesMapper
 
             $user_id = 0;
 
-            // todo: elvileg barki fel tud tolteni kepet olyan hirdeteshez amit nem regisztralt felhasznalo csinalt!!!
-            //       meg azt lehetne csinalni hogy ha nincs user akkor keljen a hirdetes aktivalo kodja es azt lehetne ellenorizni
-            if($user) {
-                //check if user exists
-                $sql = new Sql($this->adapter);
+            $where = array('id' => '-1');  // just for security set some default
+            if ($user) $where = array('email' => $user['user_id']);
+            else $where = array('aktivkod' => $kod);
 
-                $select = $sql->select('users')
-                              ->columns(array('id'))
-                              ->where(array('email' => $user['user_id']))
-                              ->order('id')
-                              ->limit(1);
+            //check if user exists
+            $sql = new Sql($this->adapter);
 
-                $sqlString = $sql->getSqlStringForSqlObject($select);
+            $select = $sql->select('users')
+                          ->columns(array('id'))
+                          ->where($where)
+                          ->order('id')
+                          ->limit(1);
 
-                $statement = $sql->prepareStatementForSqlObject($select);
+            $sqlString = $sql->getSqlStringForSqlObject($select);
 
-                $resultset = $statement->execute()->current();
+            $statement = $sql->prepareStatementForSqlObject($select);
 
-                if(is_array($resultset) && isset($resultset['id'])) {
+            $resultset = $statement->execute()->current();
 
-                    $user_id = $resultset['id'];
-                }
+            if(is_array($resultset) && isset($resultset['id'])) {
+
+                $user_id = $resultset['id'];
             }
 
-            //check if hirdetes exists and owned by the user !!! lasd figyelmeztetes feljebb !!!*/
             $sql = new Sql($this->adapter);
+
+            $where = array('id' => '-1');   // just for security set some default
+            if ($user) $where = array('id' => $id, 'user_id' => $user_id);
+            else $where = array('id' => $id, 'aktivkod' => $kod);
 
             $select = $sql->select('hirdetes')
                           ->columns(array('id'))
-                          ->where(array('id' => $id,'user_id' => $user_id))
+                          ->where($where)
                           ->order('id')
                           ->limit(1);
 
@@ -549,7 +552,7 @@ class HirdetesMapper
             $sql = new Sql($this->adapter);
 
             $select = $sql->select('users')
-                          ->columns(array('id', 'email'))
+                          ->columns(array('id', 'email', 'aktiv', 'aktivkod'))
                           ->where(array('email' => $data->email))
                           ->order('id')
                           ->limit(1);
@@ -562,11 +565,39 @@ class HirdetesMapper
 
                 //existing user but not logged in
                 $user_id = $resultset['id'];
+                $user_aktiv = $resultset['aktiv'];
+                $user_aktivkod = $resultset['aktivkod'];
                 $email   = $resultset['email'];
 
                 $values['user_id'] = $resultset['id'];
                 $values['email']   = $resultset['email'];
                 $values['aktiv']   = 0;
+
+                if($user_aktiv) {
+
+                    $user_message = '
+
+Mivel Ön regisztrált felhasználónk, a hirdetése szerkesztéséhez jelentkezzen be az oldalra, és kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+
+(Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
+
+';
+                } else {
+
+                    include_once('old-config.php');
+
+                    $user_message = "
+
+A hirdetése szerkesztéséhez kérjük aktiválja a felhasználói fiókját az alábbi link segítségével
+
+".$url."/felhasznalo-aktivalas.php?email=" . $email . "&kod=" . $user_aktivkod . "
+
+majd jelentkezzen be az oldalra, és kattintson a \"Hirdeteseim\" menüpontra a bal felső csikban.
+
+(Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
+
+";
+                }
 
             } else {
 
@@ -657,29 +688,75 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
 
         $data->id = $resultset->getGeneratedValue();
 
-        $site = "hirdetek.net";
-        $url = "http://hirdetek.net";
-        $noreply = "noreply@hirdetek.net";
+        if(! isset($user)) {
 
-        $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
+            include_once('old-config.php');
 
-        $message = "
+            $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
 
-Tisztelt címzett!
+            $message = "
 
-Ön hirdetést adott fel a $url oldalon.
+    Tisztelt címzett!
 
-Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
+    Ön hirdetést adott fel a $url oldalon.
 
-$url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
+    Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
 
-$user_message
+    $url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
 
-Üdvözlettel: a $site csapata";
+    $user_message
 
-        //sendmail($email, $subject, $message, "From: ".$noreply);
+    Üdvözlettel: a $site csapata";
 
-        return array("success" => true, "id" => $data->id);
+            //sendmail($email, $subject, $message, "From: ".$noreply);
+
+            // utf-8 multipart email sending w/ or w/out attachment:
+            // http://akrabat.com/sending-attachments-in-multipart-emails-with-zendmail/
+
+    		$mmessage = new \Zend\Mail\Message();
+            $mmessage->setFrom($noreply);
+            $mmessage->addTo($email);
+    		$mmessage->setSubject($subject);
+
+            //$mmessage->setEncoding("UTF-8");
+    		//$mmessage->setBody($message);
+
+            $body = new \Zend\Mime\Message();
+
+            //$htmlPart = new \Zend\Mime\Part($message);
+            //$htmlPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+            //$htmlPart->type = "text/html; charset=UTF-8";
+
+            $textPart = new \Zend\Mime\Part($message);
+            $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+            $textPart->type = "text/plain; charset=UTF-8";
+
+            $body->setParts(array($textPart/*, $htmlPart*/));
+
+            $mmessage->setBody($body);
+
+            //$messageType = 'multipart/alternative';
+            //$mmessage->getHeaders()->get('content-type')->setType($messageType);
+
+            $mmessage->setEncoding('UTF-8');
+
+            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+            $smtpOptions->setHost($smtp_host)
+                        ->setConnectionClass('login')
+                        ->setName($smtp_host)
+                        ->setConnectionConfig(array(
+                                           'username' => $smtp_user,
+                                           'password' => $smtp_password,
+                                           'ssl' => $smtp_ssl,
+                                           'port' => $smtp_port
+                                         )
+                              );
+
+    		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+    		$transport->send($mmessage);
+        }
+
+        return array("success" => true, "id" => $data->id, "kod" => $aktivkod);
 
         // $entity = new HirdetesEntity();
         // $entity->exchangeArray((array)$data);

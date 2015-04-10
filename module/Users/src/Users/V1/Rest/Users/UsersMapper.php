@@ -38,19 +38,38 @@ class UsersMapper
         //if password reminder then return from here
         if($remind) {
             if($inputFilter->isValid()) {
-                $sql = 'SELECT jelszo FROM users WHERE email = ? LIMIT 1';
+                $sql = 'SELECT jelszo,aktiv,aktivkod FROM users WHERE email = ? LIMIT 1';
                 $resultset = $this->adapter->query($sql, array($email));
                 $result = $resultset->toArray();
             }
             //print_r($result);
             if(count($result) > 0) {
 
-                $site = "hirdetek.net";
-                $url = "http://hirdetek.net";
-                $noreply = "noreply@hirdetek.net";
-
                 // jelszo emlekezteto email kuldese
+
+                include('old-config.php');
+
                 $subject = "Jelszó emlékeztető";
+
+                if(! $result[0]['aktiv']) {
+
+                $message = "
+
+Tisztelt regisztrált felhasználónk!
+
+A bejelentkezés elött kérjük aktiválja a felhasználói fiókját az alábbi link segítségével:
+
+".$url."/felhasznalo-aktivalas.php?email=" . $email . "&kod=" . $result[0]['aktivkod'] . "
+
+Az aktiválás után a bejelentkezéshez használja az email címét valamint a következő jelszót: " . $result[0]['jelszo'] . "
+
+Üdvözlettel: a $site csapata
+
+$url
+
+";
+                } else {
+
 
                 $message = "
 
@@ -63,8 +82,41 @@ A bejelentkezéshez használja az email címét valamint a következő jelszót:
 $url
 
 ";
+                }
+
                 //sendmail($email, $subject, $message, "From: ".$noreply);
 
+                $mmessage = new \Zend\Mail\Message();
+                $mmessage->setFrom($noreply);
+                $mmessage->addTo($email);
+                $mmessage->setSubject($subject);
+
+                $body = new \Zend\Mime\Message();
+
+                $textPart = new \Zend\Mime\Part($message);
+                $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+                $textPart->type = "text/plain; charset=UTF-8";
+
+                $body->setParts(array($textPart));
+
+                $mmessage->setBody($body);
+
+                $mmessage->setEncoding('UTF-8');
+
+                $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+                $smtpOptions->setHost($smtp_host)
+                            ->setConnectionClass('login')
+                            ->setName($smtp_host)
+                            ->setConnectionConfig(array(
+                                               'username' => $smtp_user,
+                                               'password' => $smtp_password,
+                                               'ssl' => $smtp_ssl,
+                                               'port' => $smtp_port
+                                             )
+                                  );
+
+                $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+                $transport->send($mmessage);
             }
 
             return array();
@@ -200,11 +252,12 @@ ip cim: $ipaddr
 
         $data->id = $resultset->getGeneratedValue();
 
-        $site = "hirdetek.net";
-        $url = "http://hirdetek.net";
-        $noreply = "noreply@hirdetek.net";
+        include('old-config.php');
 
         // aktivacios email kuldese
+
+        $subject = "$site - regisztráció";
+
         $message = "
 
 Tisztelt felhasználónk!
@@ -229,6 +282,38 @@ $url/kiemeles.php
 */
 
         //sendmail ($data->email, "Regisztracio", $message, "From: ".$noreply);
+
+        $mmessage = new \Zend\Mail\Message();
+        $mmessage->setFrom($noreply);
+        $mmessage->addTo($data->email);
+        $mmessage->setSubject($subject);
+
+        $body = new \Zend\Mime\Message();
+
+        $textPart = new \Zend\Mime\Part($message);
+        $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+        $textPart->type = "text/plain; charset=UTF-8";
+
+        $body->setParts(array($textPart));
+
+        $mmessage->setBody($body);
+
+        $mmessage->setEncoding('UTF-8');
+
+        $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+        $smtpOptions->setHost($smtp_host)
+                    ->setConnectionClass('login')
+                    ->setName($smtp_host)
+                    ->setConnectionConfig(array(
+                                       'username' => $smtp_user,
+                                       'password' => $smtp_password,
+                                       'ssl' => $smtp_ssl,
+                                       'port' => $smtp_port
+                                     )
+                          );
+
+        $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+        $transport->send($mmessage);
 
         return array("success" => true, "id" => $data->id);
 

@@ -12,7 +12,7 @@ class MegosztasResource extends AbstractResourceListener
     {
         $this->mapper = $mapper;
     }
-    
+
     /**
      * Create a resource
      *
@@ -21,7 +21,11 @@ class MegosztasResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        return $this->mapper->create($data);
+
+        $user = $this->getIdentity()->getAuthenticationIdentity();
+
+        return $this->mapper->create($data, $user);
+
         //return new ApiProblem(405, 'The POST method has not been defined');
     }
 
