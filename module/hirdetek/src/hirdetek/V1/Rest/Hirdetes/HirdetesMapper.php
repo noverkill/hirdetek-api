@@ -1027,7 +1027,7 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
     public function delete($id, $email)
     {
         $sql = 'DELETE FROM hirdetes WHERE id = ? AND email = ?';
-        $this->adapter->query($sql, array($id), $email);
+        $this->adapter->query($sql, array($id, $email));
         return true;
     }
 
