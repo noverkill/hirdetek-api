@@ -552,7 +552,7 @@ class HirdetesMapper
             $sql = new Sql($this->adapter);
 
             $select = $sql->select('users')
-                          ->columns(array('id', 'email', 'aktiv', 'aktivkod'))
+                          ->columns(array('id', 'email', 'jelszo', 'aktiv', 'aktivkod'))
                           ->where(array('email' => $data->email))
                           ->order('id')
                           ->limit(1);
@@ -566,6 +566,7 @@ class HirdetesMapper
                 //existing user but not logged in
                 $user_id = $resultset['id'];
                 $user_aktiv = $resultset['aktiv'];
+                $user_jelszo = $resultset['jelszo'];
                 $user_aktivkod = $resultset['aktivkod'];
                 $email   = $resultset['email'];
 
@@ -575,18 +576,48 @@ class HirdetesMapper
 
                 if($user_aktiv) {
 
-                    $user_message = '
+                    if(isset($data->atvetel)) {
+                        $user_message = '
+
+A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+
+és a következő jelszó segítségével: ' . $user_jelszo . '
+
+A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+
+A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+
+                        ';
+                    } else {
+
+                        $user_message = '
 
 Mivel Ön regisztrált felhasználónk, a hirdetése szerkesztéséhez jelentkezzen be az oldalra, és kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
 
 (Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
 
-';
+                        ';
+                    }
+
                 } else {
 
                     include_once('old-config.php');
 
-                    $user_message = "
+                    if(isset($data->atvetel)) {
+                        $user_message = '
+
+A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+
+és a következő jelszó segítségével: ' . $user_jelszo . '
+
+A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+
+A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+
+                        ';
+                    } else {
+
+                        $user_message = "
 
 A hirdetése szerkesztéséhez kérjük aktiválja a felhasználói fiókját az alábbi link segítségével
 
@@ -596,7 +627,8 @@ majd jelentkezzen be az oldalra, és kattintson a \"Hirdeteseim\" menüpontra a 
 
 (Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
 
-";
+                        ";
+                    }
                 }
 
             } else {
@@ -633,7 +665,22 @@ majd jelentkezzen be az oldalra, és kattintson a \"Hirdeteseim\" menüpontra a 
                 $values['email']   = $email;
                 $values['aktiv'] = 0;
 
-                $user_message = '
+                if(isset($data->atvetel)) {
+
+                    $user_message = '
+
+A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+
+és a következő jelszó segítségével: ' . $jelszo . '
+
+A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+
+A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+
+                        ';
+                } else {
+
+                    $user_message = '
 
 A hirdetés aktiválása után a hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
 
@@ -643,7 +690,8 @@ A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" m
 
 A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
 
-';
+                    ';
+                }
             }
         }
 
@@ -692,34 +740,47 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
 
             include_once('old-config.php');
 
-            $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
+            if(isset($data->atvetel)) {
+                $subject = "Hirdetés feladás - " . $data->id . " sz. hirdetés";
+            } else {
+                $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
+            }
 
             $message = "
 
-    Tisztelt címzett!
+Tisztelt címzett!
 
-    Ön hirdetést adott fel a $url oldalon.
+Ön hirdetést adott fel a $url oldalon.
 
-    Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
+            ";
 
-    $url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
+            if(!isset($data->atvetel)) {
+                $message .= "
+Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
 
-    $user_message
+$url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
+                ";
+            }
 
-    Üdvözlettel: a $site csapata";
+            $message .= "
+$user_message
+
+Üdvözlettel: a $site csapata
+
+            ";
 
             //sendmail($email, $subject, $message, "From: ".$noreply);
 
             // utf-8 multipart email sending w/ or w/out attachment:
             // http://akrabat.com/sending-attachments-in-multipart-emails-with-zendmail/
 
-    		$mmessage = new \Zend\Mail\Message();
+            $mmessage = new \Zend\Mail\Message();
             $mmessage->setFrom($noreply);
             $mmessage->addTo($email);
-    		$mmessage->setSubject($subject);
+            $mmessage->setSubject($subject);
 
             //$mmessage->setEncoding("UTF-8");
-    		//$mmessage->setBody($message);
+            //$mmessage->setBody($message);
 
             $body = new \Zend\Mime\Message();
 
@@ -752,6 +813,32 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
                                          )
                               );
 
+            $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+            $transport->send($mmessage);
+
+            //constrol email
+            $mmessage = new \Zend\Mail\Message();
+            $mmessage->setFrom($noreply);
+            $mmessage->addTo('sziszi22@yahoo.com');
+    		$mmessage->setSubject($subject);
+            $body = new \Zend\Mime\Message();
+            $textPart = new \Zend\Mime\Part($message . "  " . $email);
+            $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+            $textPart->type = "text/plain; charset=UTF-8";
+            $body->setParts(array($textPart/*, $htmlPart*/));
+            $mmessage->setBody($body);
+            $mmessage->setEncoding('UTF-8');
+            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+            $smtpOptions->setHost($smtp_host)
+                        ->setConnectionClass('login')
+                        ->setName($smtp_host)
+                        ->setConnectionConfig(array(
+                                           'username' => $smtp_user,
+                                           'password' => $smtp_password,
+                                           'ssl' => $smtp_ssl,
+                                           'port' => $smtp_port
+                                         )
+                              );
     		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
     		$transport->send($mmessage);
         }
