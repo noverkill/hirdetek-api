@@ -2,7 +2,7 @@
 
     $config = include('../config/autoload/user.global.php');
 
-	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
+	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'aprohirdeto');
 
     $mysqli->set_charset("utf8");
 

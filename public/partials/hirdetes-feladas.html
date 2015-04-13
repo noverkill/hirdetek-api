@@ -109,7 +109,7 @@
 								</div>
 									<!--track by alrovat.id-->
 
-								<div class="col-sm-12">
+								<!--div class="col-sm-12">
 									<br />
 									<label class="required">Régió</label>
 									<select name="foregio" ng-model="hirdetes.foregio" ng-options="foregio.nev for foregio in foregiok track by foregio.id" class="form-control" required>
@@ -126,7 +126,7 @@
 									<select ng-disabled="hirdetes.foregio == undefined" ng-model="hirdetes.alregio" ng-options="alregio.nev for alregio in regiok | filter: {parent: hirdetes.foregio.id}" class="form-control">
 										<option value=''>Kérjük válasszon alrégiót</option>
 									</select>
-								</div>
+								</div-->
 									<!--track by foregio.id-->
 
 								<div class="col-sm-6">

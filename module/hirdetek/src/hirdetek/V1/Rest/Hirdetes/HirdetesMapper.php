@@ -253,8 +253,8 @@ class HirdetesMapper
         // buzi angular submit buzi object from select hogy baszna szajba a retkes kurva anyjat
         if(isset($data->forovat)) $data->forovat = $data->forovat['id'];
         if(isset($data->alrovat)) $data->alrovat = $data->alrovat['id'];
-        if(isset($data->foregio)) $data->foregio = $data->foregio['id'];
-        if(isset($data->alregio)) $data->alregio = $data->alregio['id'];
+        //if(isset($data->foregio)) $data->foregio = $data->foregio['id'];
+        //if(isset($data->alregio)) $data->alregio = $data->alregio['id'];
 
         $inputFilter = new InputFilter();
 
@@ -335,6 +335,7 @@ class HirdetesMapper
             ),
         )));
 
+        /*
         $inputFilter->add($factory->createInput(array(
             'name'     => 'foregio',
             'required' => true,
@@ -370,6 +371,7 @@ class HirdetesMapper
                 ),
             ),
         )));
+        */
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'telepules',
@@ -698,8 +700,10 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
         else $values['rovat'] = $data->forovat;
 
-        if(isset($data->alregio)) $values['regio'] = $data->alregio;
-        else $values['regio'] = $data->foregio;
+        //if(isset($data->alregio)) $values['regio'] = $data->alregio;
+        //else $values['regio'] = $data->foregio;
+
+        $values['regio'] = 0;
 
         if(isset($data->telepules)) {
             $values['telepules'] = $data->telepules;
@@ -874,8 +878,8 @@ $user_message
 
         $data->forovat = isset( $data->forovat) ? (int) $data->forovat : 0;
         $data->alrovat = isset( $data->alrovat) ? (int) $data->alrovat : 0;
-        $data->foregio = isset( $data->foregio) ? (int) $data->foregio : 0;
-        $data->alregio = isset( $data->alregio) ? (int) $data->alregio : 0;
+        //$data->foregio = isset( $data->foregio) ? (int) $data->foregio : 0;
+        //$data->alregio = isset( $data->alregio) ? (int) $data->alregio : 0;
 
         $inputFilter = new InputFilter();
 
@@ -956,6 +960,7 @@ $user_message
             ),
         )));
 
+        /*
         $inputFilter->add($factory->createInput(array(
             'name'     => 'foregio',
             'required' => true,
@@ -991,6 +996,7 @@ $user_message
                 ),
             ),
         )));
+        */
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'telepules',
@@ -1057,8 +1063,10 @@ $user_message
             if($data->alrovat > 0) $data->rovat = $data->alrovat;
             else $data->rovat = $data->forovat;
 
-            if($data->alregio > 0) $data->regio = $data->alregio;
-            else $data->regio = $data->foregio;
+            //if($data->alregio > 0) $data->regio = $data->alregio;
+            //else $data->regio = $data->foregio;
+
+            $data->regio = 0;
 
             $sql = 'UPDATE hirdetes
                     SET telepules = ?,
