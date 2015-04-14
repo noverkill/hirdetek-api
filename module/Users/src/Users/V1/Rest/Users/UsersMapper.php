@@ -21,6 +21,52 @@ class UsersMapper
         $this->adapter = $adapter;
     }
 
+    public function checkPostcode($postcode)
+    {
+
+        $inputFilter = new InputFilter();
+
+        $factory = new InputFactory();
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'postcode',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                array('name' => 'StringToUpper'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 10,
+                    ),
+                ),
+            )
+        )));
+
+        $select = new Select('postcodes');
+
+        $inputFilter->setData(array('postcode' => $postcode));
+
+        if($inputFilter->isValid()) {
+            $postcode = str_replace(' ', '', $postcode);
+            $select->where(array('postcode' => $postcode));
+        } else {
+            $select->where(array('postcode' => 'fuckoff'));
+        }
+
+        $select->limit(2);
+
+        $paginatorAdapter = new DbSelect($select, $this->adapter);
+        $collection = new UsersCollection($paginatorAdapter);
+        return $collection;
+    }
+
     public function fetchByEmail($email, $remind)
     {
 

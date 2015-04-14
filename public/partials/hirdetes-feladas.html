@@ -129,6 +129,27 @@
 								</div-->
 									<!--track by foregio.id-->
 
+                                <div class="col-sm-6">
+                                	<br />
+                                    <label for="postcode" class="required">Postcode / Irányítószám</label>
+                                    <input name="postcode" type="postcode" class="form-control " id="postcode" ng-model="hirdetes.postcode" placeholder="Postcode / Irányítószám" required valid-postcode>
+                                	<span style="color:red" ng-show="hirdForm.postcode.$dirty && hirdForm.postcode.$invalid">
+                                        <span ng-show="hirdForm.postcode.$error.required">Kérjük adja meg az postcode-ot!</span>
+                                        <span ng-show="! hirdForm.postcode.$error.required && hirdForm.postcode.$error.validPostcode">Hibás postcode!</span>
+                                    </span>
+                                </div>
+
+								<div class="col-sm-12">
+									<br />
+									<label>Cím</label>
+									<input name="cim" type="text" class="form-control " ng-model="hirdetes.cim" ng-maxlength="50">
+                                    <span style="color:red" ng-show="hirdForm.cim.$dirty && hirdForm.cim.$invalid">
+                                        <span ng-show="hirdForm.cim.$error.maxlength">
+                                        	A Cím maximum 50 karakter lehet!
+                                        </span>
+                                    </span>
+								</div>
+
 								<div class="col-sm-6">
 									<br />
 									<label>Település</label>

@@ -6,11 +6,13 @@ class HirdetesEntity
 
     public $id;
     public $azonosito;
+    public $cim;
     public $telepules;
     public $kep;
     public $targy;
     public $szoveg;
     public $ar;
+    public $postcode;
     public $telefon;
     public $feladas;
     public $lejarat;
@@ -43,11 +45,13 @@ class HirdetesEntity
         return array(
             'id'           => $this->id,
             'azonosito'    => $this->azonosito,
+            'cim'          => $this->cim,
             'telepules'    => $this->telepules,
             'kep'          => $this->kep,
             'targy'        => $this->targy,
             'szoveg'       => $this->szoveg,
             'ar'           => $this->ar,
+            'postcode'     => $this->postcode,
             'telefon'      => $this->telefon,
             'feladas'      => $this->feladas,
             'lejarat'      => $this->lejarat,
@@ -82,11 +86,13 @@ class HirdetesEntity
     {
         $this->id            = $array['id'];
         $this->azonosito     = $array['azonosito'];
+        $this->cim           = $array['cim'];
         $this->telepules     = $array['telepules'];
         $this->kep           = $array['kep'];
         $this->targy         = $array['targy'];
         $this->szoveg        = $array['szoveg'];
         $this->ar            = $array['ar'];
+        $this->postcode      = $array['postcode'];
         $this->telefon       = $array['telefon'];
         $this->feladas       = $array['feladas'];
         $this->lejarat       = $array['lejarat'];

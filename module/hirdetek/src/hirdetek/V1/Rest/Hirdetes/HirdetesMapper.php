@@ -335,6 +335,27 @@ class HirdetesMapper
             ),
         )));
 
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'postcode',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                array('name' => 'StringToUpper'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 10,
+                    ),
+                ),
+            )
+        )));
+
         /*
         $inputFilter->add($factory->createInput(array(
             'name'     => 'foregio',
@@ -372,6 +393,26 @@ class HirdetesMapper
             ),
         )));
         */
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'cim',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 50,
+                    ),
+                ),
+            ),
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'telepules',
@@ -700,6 +741,10 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
         else $values['rovat'] = $data->forovat;
 
+        $values['cim'] = $data->cim;
+
+        $values['postcode'] = str_replace(' ', '', $data->postcode);
+
         //if(isset($data->alregio)) $values['regio'] = $data->alregio;
         //else $values['regio'] = $data->foregio;
 
@@ -960,6 +1005,26 @@ $user_message
             ),
         )));
 
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'postcode',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                array('name' => 'StringToUpper'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 10,
+                    ),
+                ),
+            )
+        )));
         /*
         $inputFilter->add($factory->createInput(array(
             'name'     => 'foregio',
@@ -997,6 +1062,26 @@ $user_message
             ),
         )));
         */
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'cim',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 0,
+                        'max'      => 50,
+                    ),
+                ),
+            ),
+        )));
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'telepules',
@@ -1063,13 +1148,17 @@ $user_message
             if($data->alrovat > 0) $data->rovat = $data->alrovat;
             else $data->rovat = $data->forovat;
 
+            $values['postcode'] = str_replace(' ', '', $data->postcode);
+
             //if($data->alregio > 0) $data->regio = $data->alregio;
             //else $data->regio = $data->foregio;
 
             $data->regio = 0;
 
             $sql = 'UPDATE hirdetes
-                    SET telepules = ?,
+                    SET postcode = ?,
+                        cim = ?,
+                        telepules = ?,
                         targy = ?,
                         szoveg = ?,
                         ar = ?,
@@ -1083,6 +1172,8 @@ $user_message
             $this->adapter->query(
                 $sql,
                 array(
+                    $data->postcode,
+                    $data->cim,
                     $data->telepules,
                     $data->targy,
                     $data->szoveg,

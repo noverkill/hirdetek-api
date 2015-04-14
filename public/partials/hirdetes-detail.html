@@ -14,6 +14,7 @@
                         <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
                         <li ng-if="hirdetes.g_regio_id > 0"><a href="#" ng-click="setRegio({id: hirdetes.p_regio_id, nev: hirdetes.p_regio_nev}, {id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch();" class="link-info">{{hirdetes.g_regio_nev}}</a></li>
                         <li ng-if="hirdetes.telepules">{{hirdetes.telepules}}</li>
+                        <li>{{hirdetes.postcode | uppercase}}</li>
                     </ol>
 
                 </div>

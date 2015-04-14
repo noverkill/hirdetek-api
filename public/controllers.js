@@ -79,6 +79,34 @@ hirdetekApp.directive('uniqueEmail', ["UserService", function (UserService) {
     }
   };
 }]);
+
+// postcode csv: http://www.freemaptools.com/download-uk-postcode-lat-lng.htm
+// mysqlimport --ignore-lines=1 --fields-terminated-by=, --columns='id,postcodes,latitude,longitude' --local -u root -p aprohirdeto postcodes.csv
+hirdetekApp.directive('validPostcode', ["UserService", function (UserService) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      scope.postcodeChecking = false;
+      ctrl.$parsers.push(function (viewValue) {
+        if (viewValue) {
+          scope.postcodeChecking = true;
+          ctrl.$setValidity('validPostcode', true);
+          UserService.get({'postcode':viewValue}, function (users) {
+            console.log(users);
+            if (users.total_items < 1) {
+              ctrl.$setValidity('validPostcode', false);
+            } else {
+              ctrl.$setValidity('validPostcode', true);
+            }
+          }).$promise.then(function(){
+            scope.postcodeChecking = false;
+          });
+          return viewValue;
+        }
+      });
+    }
+  };
+}]);
 /*
 hirdetekApp.directive('uniqueEmail', ["Users", function (Users) {
   return {
