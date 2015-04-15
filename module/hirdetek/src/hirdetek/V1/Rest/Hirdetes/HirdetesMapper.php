@@ -50,6 +50,9 @@ class HirdetesMapper
 
         if ($params->get('rovat')) {
             $where->nest->equalTo('pr.id', $params['rovat'])->OR->equalTo('r.id', $params['rovat']);
+        } else {
+            //do not show ismerkedes ad on the front page
+            $where->nest->notEqualTo('pr.id', 50)->AND->notEqualTo('r.id', 50);
         }
 
         if ($params->get('regio')) {
