@@ -33,6 +33,7 @@ class HirdetesMapper
                     ->join( array ('i' => 'images'), new Expression('i.ad_id = h.id AND i.sorrend=1'), array('image_id' => 'id', 'image_created' => 'created', 'image_name' => 'name'), 'left')
                     ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'), 'left')
                     ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'), 'left')
+                    ->join( array ('p' => 'postcodes'), 'p.postcode = h.postcode', array('latitude', 'longitude'), 'left')
                     ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'), 'left')
                     ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'), 'left');
 
@@ -71,6 +72,93 @@ class HirdetesMapper
 
             if ($maxar >=0 && $maxar < 999999999) {
                 $select->where("h.ar IS NOT NULL")->where("h.ar <= " . $maxar);
+            }
+        }
+
+        if($postcode = $params->get('postcode')) {
+
+            $distance = (int) $params->get('distance');
+
+            if($distance > -1 && $distance < 51) {
+
+                $inputFilter = new InputFilter();
+
+                $factory = new InputFactory();
+
+                $inputFilter->add($factory->createInput(array(
+                    'name'     => 'postcode',
+                    'required' => true,
+                    'filters'  => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                        array('name' => 'StringToUpper'),
+                        //array('name' => 'Alnum'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name'    => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 10,
+                            ),
+                        ),
+                    )
+                )));
+
+                $inputFilter->setData(array('postcode' => $postcode));
+
+                if ($inputFilter->isValid()) {
+
+                    $postcode = strtoupper(str_replace(' ', '', $postcode));
+
+                    $sql = new Sql($this->adapter);
+
+                    $pselect = $sql->select('postcodes')
+                              ->columns(array('latitude', 'longitude'))
+                              ->where(array('postcode' => $postcode))
+                              ->limit(1);
+
+                    $sqlString = $sql->getSqlStringForSqlObject($pselect);
+
+                    $statement = $sql->prepareStatementForSqlObject($pselect);
+
+                    $resultset = $statement->execute()->current();
+
+                    if(is_array($resultset) && isset($resultset['latitude'])) {
+
+                        $latitude = $resultset['latitude'];
+                        $longitude = $resultset['longitude'];
+
+                        //print "latitude: $latitude";
+                        //print "longitude: $longitude";
+
+                        //http://stackoverflow.com/questions/4687312/querying-within-longitude-and-latitude-in-mysql
+                        //more advanced / efficient: http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-two-lat-long-points
+                        //What is the distance between a degree of latitude and longitude: http://geography.about.com/library/faq/blqzdistancedegree.htm
+                        if($distance > 0) {
+                            //$pfilter = "( 3959 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) <= $distance";
+                            $pfilter = "MBRCONTAINS(
+                                            LineString(
+                                                POINT(
+                                                    $longitude + $distance / ( 53 / COS(RADIANS($latitude))),
+                                                    $latitude+ $distance / 69
+                                                ),
+                                                POINT(
+                                                    $longitude - $distance / (53 / COS(RADIANS($latitude))),
+                                                    $latitude - $distance / 69
+                                                )
+                                            ),
+                                            POINT(longitude,latitude)
+                                        )";
+
+                            //print $pfilter;
+                            $select->where($pfilter);
+                        } else {
+                            $select->where("latitude = $latitude")->where("longitude = $longitude");
+                        }
+                    }
+                }
             }
         }
 

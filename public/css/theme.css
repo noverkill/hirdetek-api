@@ -210,12 +210,13 @@ a.navbar-brand .handwriting {
 }
 a.navbar-brand small {
   color: #EA4135;
-  font-size: 13px;
+  font-size: 18px;
   height: 20px;
   line-height: 20px;
   font-weight: 100;
   text-transform: none;
-  font-family: "Pacifico", Monaco, Consolas, monospace;
+  /*font-family: "Pacifico", Monaco, Consolas, monospace;*/
+  font-family: Monaco, Consolas, monospace;
 }
 a.navbar-brand:hover {
   text-decoration: none;

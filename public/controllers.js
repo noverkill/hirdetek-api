@@ -616,7 +616,9 @@ $rootScope.resetRegio = function() {
   $rootScope.filter = {
     text: '',
     minar: null,
-    maxar: null
+    maxar: null,
+    postcode: null,
+    distance: 0
   };
 
   $rootScope.listing = {
@@ -770,6 +772,8 @@ hirdetekApp.controller('HirdetesListCtrl', [ '$scope', '$rootScope', '$state', '
       search: $rootScope.filter.text,
       minar:  $rootScope.filter.minar,
       maxar:  $rootScope.filter.maxar,
+      postcode: $rootScope.filter.postcode,
+      distance: $rootScope.filter.distance,
       ord:    $rootScope.listing.ord,
       ordir:  $rootScope.listing.ordir
       }, function(response) {

@@ -195,15 +195,14 @@
                     <div class="col-sm-11">
 
                         <div class="panel panel-default">
-                            <div class="panel-heading">Ár szűrő</div>
                             <div class="panel-body">
                                 <form class="form-inline mini" style="margin-bottom: 0px;" name="filterForm">
                                     <fieldset>
 
                                         <div class="row filter-row">
-                                            <!--div class="col-sm-12">
-                                                <label>Ár</label>
-                                            </div-->
+                                            <div class="col-sm-12">
+                                                <label>Mennyiért?</label>
+                                            </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control price-input" placeholder="min" ng-model="filter.minar" />
@@ -218,8 +217,40 @@
                                             </div>
                                         </div>
 
-                                        <div class="row filter-row">
 
+                                        <div class="row filter-row">
+                                            <div class="col-sm-12">
+                                                <label>Hol?</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control price-input" placeholder="Postcode / Irányítószám" ng-model="filter.postcode" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row filter-row">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select class="form-control price-input" placeholder="Távolsag" ng-model="filter.distance" class="form-control">
+                                                        <option value="0" selected="">+0</option>
+                                                        <option value="1">+1</option>
+                                                        <option value="2">+2</option>
+                                                        <option value="3">+3</option>
+                                                        <option value="4">+4</option>
+                                                        <option value="5">+5</option>
+                                                        <option value="10">+10</option>
+                                                        <option value="15">+15</option>
+                                                        <option value="20">+20</option>
+                                                        <option value="25">+25</option>
+                                                        <option value="75">+50</option>
+                                                    </select>
+                                                    <span class="input-group-addon">mérföld</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row filter-row">
                                             <div class="col-sm-2 pull-right" style="margin-top: 10px;">
                                                 <button class="btn btn-primary pull-right" data-ng-click="doSearch(1)">Frissítés</button>
                                             </div>
