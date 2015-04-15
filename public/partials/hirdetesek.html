@@ -206,13 +206,13 @@
                                             <div class="col-sm-6">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control price-input" placeholder="min" ng-model="filter.minar" />
-                                                    <span class="input-group-addon">Ft</span>
+                                                    <span class="input-group-addon">&pound;</span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control price-input" placeholder="max" ng-model="filter.maxar" />
-                                                    <span class="input-group-addon">Ft</span>
+                                                    <span class="input-group-addon">&pound;</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -311,7 +311,7 @@
                 </div>
 
                 <div class="col-sm-8">
-                    <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>{{hirdetes.ar | currency:""}} Ft</strong></span></a></h3>
+                    <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>&pound; {{hirdetes.ar | currency:""}}</strong></span></a></h3>
                     <p class="muted"><strong>{{hirdetes.postcode | uppercase}}, </strong><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
                     <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg | limitTo: 500}}{{hirdetes.szoveg.length > 500 ? '...' : ''}}</p>

@@ -164,12 +164,15 @@
 								<div class="col-sm-6">
 									<br />
 									<label>Ár </label>
-									<input name="ar" type="number" class="form-control " ng-model="hirdetes.ar" min="1" max="3000000000">
-									<span style="color:red" ng-show="hirdForm.ar.$dirty && hirdForm.ar.$invalid">
-                                        <span ng-show="hirdForm.ar.$error.number">Az ár mezőben számot adjon meg!</span>
-                                        <span ng-show="hirdForm.ar.$error.max">Az ár max. 3.000.000.000 lehet!</span>
-                                        <span ng-show="!hirdForm.ar.$error.number && !hirdForm.ar.$error.max && hirdForm.ar.$error">Hagyja üresen ha ingyenes!</span>
-                                    </span>
+									<div class="input-group">
+										<span class="input-group-addon">&pound;</span>
+										<input name="ar" type="number" class="form-control " ng-model="hirdetes.ar" min="1" max="3000000000">
+										<span style="color:red" ng-show="hirdForm.ar.$dirty && hirdForm.ar.$invalid">
+	                                        <span ng-show="hirdForm.ar.$error.number">Az ár mezőben számot adjon meg!</span>
+	                                        <span ng-show="hirdForm.ar.$error.max">Az ár max. 3.000.000.000 lehet!</span>
+	                                        <span ng-show="!hirdForm.ar.$error.number && !hirdForm.ar.$error.max && hirdForm.ar.$error">Hagyja üresen ha ingyenes!</span>
+	                                    </span>
+									</div>
 								</div>
 
 								<div class="col-sm-6">
