@@ -829,7 +829,7 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
         if(isset($data->alrovat)) $values['rovat'] = $data->alrovat;
         else $values['rovat'] = $data->forovat;
 
-        $values['cim'] = $data->cim;
+        if(isset($data->cim)) $values['cim'] = $data->cim;
 
         $values['postcode'] = str_replace(' ', '', $data->postcode);
 

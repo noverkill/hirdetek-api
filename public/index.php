@@ -5,7 +5,7 @@
  */
 
 error_reporting(E_ALL);
-ini_set('display_errors', true);
+ini_set('display_errors', false);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative
