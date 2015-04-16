@@ -695,3 +695,7 @@ label.required:after {
   padding: 10px 0;
   font-size: 11px;
 }
+
+.btn-link {
+  color: #000000;
+}
