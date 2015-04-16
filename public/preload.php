@@ -69,7 +69,7 @@
          LEFT JOIN rovat pr ON pr.id = r.parent
          LEFT JOIN regio g ON g.id = h.regio
          LEFT JOIN regio pg ON pg.id = g.parent
-		 WHERE h.aktiv = 1
+		 WHERE h.aktiv = 1 AND r.id != 50 AND pr.id != 50
          ORDER BY h.lastmodified DESC"
     )) {
         $total_items = $result->num_rows;
