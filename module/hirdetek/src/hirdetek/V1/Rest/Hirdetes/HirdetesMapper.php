@@ -425,7 +425,7 @@ class HirdetesMapper
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'postcode',
-            'required' => true,
+            'required' => false,
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
@@ -831,7 +831,7 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
 
         if(isset($data->cim)) $values['cim'] = $data->cim;
 
-        $values['postcode'] = str_replace(' ', '', $data->postcode);
+        if(isset($data->postcode)) $values['postcode'] = str_replace(' ', '', $data->postcode);
 
         //if(isset($data->alregio)) $values['regio'] = $data->alregio;
         //else $values['regio'] = $data->foregio;
@@ -1095,7 +1095,7 @@ $user_message
 
         $inputFilter->add($factory->createInput(array(
             'name'     => 'postcode',
-            'required' => true,
+            'required' => false,
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
@@ -1236,7 +1236,8 @@ $user_message
             if($data->alrovat > 0) $data->rovat = $data->alrovat;
             else $data->rovat = $data->forovat;
 
-            $values['postcode'] = str_replace(' ', '', $data->postcode);
+            if(isset($data->postcode)) $data->postcode = str_replace(' ', '', $data->postcode);
+            else $data->postcode = '';
 
             //if($data->alregio > 0) $data->regio = $data->alregio;
             //else $data->regio = $data->foregio;

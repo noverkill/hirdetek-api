@@ -133,10 +133,10 @@
 
                                 <div class="col-sm-6">
                                 	<br />
-                                    <label for="postcode" class="required">Postcode / Irányítószám</label>
-                                    <input name="postcode" type="postcode" class="form-control " id="postcode" ng-model="hirdetes.postcode" placeholder="Postcode / Irányítószám" required valid-postcode>
+                                    <label for="postcode">Postcode / Irányítószám</label>
+                                    <input name="postcode" type="postcode" class="form-control " id="postcode" ng-model="hirdetes.postcode" placeholder="Postcode / Irányítószám" valid-postcode>
                                 	<span style="color:red" ng-show="hirdForm.postcode.$dirty && hirdForm.postcode.$invalid">
-                                        <span ng-show="hirdForm.postcode.$error.required">Kérjük adja meg az postcode-ot!</span>
+                                        <!--span ng-show="hirdForm.postcode.$error.required">Kérjük adja meg az postcode-ot!</span-->
                                         <span ng-show="! hirdForm.postcode.$error.required && hirdForm.postcode.$error.validPostcode">Hibás postcode!</span>
                                     </span>
                                 </div>
