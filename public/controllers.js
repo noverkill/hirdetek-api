@@ -622,6 +622,13 @@ $rootScope.resetRegio = function() {
     distance: 0
   };
 
+ $rootScope.resetFilter = function() {
+    $rootScope.filter.minar = null;
+    $rootScope.filter.maxar = null;
+    $rootScope.filter.postcode = null;
+    $rootScope.filter.distance = 0;
+ };
+
   $rootScope.listing = {
     server: {
       hirdetesek: [],
