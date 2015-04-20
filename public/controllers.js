@@ -586,11 +586,18 @@ $rootScope.resetRegio = function() {
    $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
  };
 
-  $rootScope.filter = {
-    text: '',
-    minar: null,
-    maxar: null
-  };
+ $rootScope.resetFilter = function() {
+    $rootScope.filter = {
+      text: '',
+      minar: null,
+      maxar: null
+    };
+ };
+
+ $rootScope.resetPriceFilter = function() {
+    $rootScope.filter.minar = null;
+    $rootScope.filter.maxar = null;
+ };
 
   $rootScope.listing = {
     server: {
@@ -707,6 +714,8 @@ $rootScope.resetRegio = function() {
 
   $rootScope.resetRegio();
   $rootScope.resetRovat();
+
+  $rootScope.resetFilter();
 
   //$rootScope.shareReset();
 
