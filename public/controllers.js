@@ -366,6 +366,13 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
     controller: 'ContactController',
     data: {requireLogin: false}
 
+  }).state('szabalyzat', {
+
+    url: '/szabalyzat',
+    templateUrl: 'partials/szabalyzat.html',
+    //controller: 'TermsController',
+    data: {requireLogin: false}
+
   });
 
   //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
