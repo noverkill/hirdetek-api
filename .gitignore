@@ -9,6 +9,7 @@ nbproject
 composer.lock
 vendor/
 old-config.php
+selenium/node_modules/
 public/vendor/
 public/config.js
 config/development.config.php

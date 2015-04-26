@@ -911,73 +911,77 @@ $user_message
             // utf-8 multipart email sending w/ or w/out attachment:
             // http://akrabat.com/sending-attachments-in-multipart-emails-with-zendmail/
 
-            $mmessage = new \Zend\Mail\Message();
-            $mmessage->setFrom($noreply);
-            $mmessage->addTo($email);
-            $mmessage->setSubject($subject);
+            if($smtp_send) {
+                $mmessage = new \Zend\Mail\Message();
+                $mmessage->setFrom($noreply);
+                $mmessage->addTo($email);
+                $mmessage->setSubject($subject);
 
-            //$mmessage->setEncoding("UTF-8");
-            //$mmessage->setBody($message);
+                //$mmessage->setEncoding("UTF-8");
+                //$mmessage->setBody($message);
 
-            $body = new \Zend\Mime\Message();
+                $body = new \Zend\Mime\Message();
 
-            //$htmlPart = new \Zend\Mime\Part($message);
-            //$htmlPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
-            //$htmlPart->type = "text/html; charset=UTF-8";
+                //$htmlPart = new \Zend\Mime\Part($message);
+                //$htmlPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+                //$htmlPart->type = "text/html; charset=UTF-8";
 
-            $textPart = new \Zend\Mime\Part($message);
-            $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
-            $textPart->type = "text/plain; charset=UTF-8";
+                $textPart = new \Zend\Mime\Part($message);
+                $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+                $textPart->type = "text/plain; charset=UTF-8";
 
-            $body->setParts(array($textPart/*, $htmlPart*/));
+                $body->setParts(array($textPart));
+                //$body->setParts(array($textPart, $htmlPart));
 
-            $mmessage->setBody($body);
+                $mmessage->setBody($body);
 
-            //$messageType = 'multipart/alternative';
-            //$mmessage->getHeaders()->get('content-type')->setType($messageType);
+                //$messageType = 'multipart/alternative';
+                //$mmessage->getHeaders()->get('content-type')->setType($messageType);
 
-            $mmessage->setEncoding('UTF-8');
+                $mmessage->setEncoding('UTF-8');
 
-            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-            $smtpOptions->setHost($smtp_host)
-                        ->setConnectionClass('login')
-                        ->setName($smtp_host)
-                        ->setConnectionConfig(array(
-                                           'username' => $smtp_user,
-                                           'password' => $smtp_password,
-                                           'ssl' => $smtp_ssl,
-                                           'port' => $smtp_port
-                                         )
-                              );
+                $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+                $smtpOptions->setHost($smtp_host)
+                            ->setConnectionClass('login')
+                            ->setName($smtp_host)
+                            ->setConnectionConfig(array(
+                                               'username' => $smtp_user,
+                                               'password' => $smtp_password,
+                                               'ssl' => $smtp_ssl,
+                                               'port' => $smtp_port
+                                             )
+                                  );
 
-            $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
-            $transport->send($mmessage);
+                $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+                $transport->send($mmessage);
 
-            //constrol email
-            $mmessage = new \Zend\Mail\Message();
-            $mmessage->setFrom($noreply);
-            $mmessage->addTo('sziszi22@yahoo.com');
-    		$mmessage->setSubject($subject);
-            $body = new \Zend\Mime\Message();
-            $textPart = new \Zend\Mime\Part($message . "  " . $email);
-            $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
-            $textPart->type = "text/plain; charset=UTF-8";
-            $body->setParts(array($textPart/*, $htmlPart*/));
-            $mmessage->setBody($body);
-            $mmessage->setEncoding('UTF-8');
-            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-            $smtpOptions->setHost($smtp_host)
-                        ->setConnectionClass('login')
-                        ->setName($smtp_host)
-                        ->setConnectionConfig(array(
-                                           'username' => $smtp_user,
-                                           'password' => $smtp_password,
-                                           'ssl' => $smtp_ssl,
-                                           'port' => $smtp_port
-                                         )
-                              );
-    		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
-    		$transport->send($mmessage);
+                //constrol email
+                $mmessage = new \Zend\Mail\Message();
+                $mmessage->setFrom($noreply);
+                $mmessage->addTo('sziszi22@yahoo.com');
+        		$mmessage->setSubject($subject);
+                $body = new \Zend\Mime\Message();
+                $textPart = new \Zend\Mime\Part($message . "  " . $email);
+                $textPart->encoding = \Zend\Mime\Mime::ENCODING_QUOTEDPRINTABLE;
+                $textPart->type = "text/plain; charset=UTF-8";
+                $body->setParts(array($textPart));
+                //$body->setParts(array($textPart, $htmlPart));
+                $mmessage->setBody($body);
+                $mmessage->setEncoding('UTF-8');
+                $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+                $smtpOptions->setHost($smtp_host)
+                            ->setConnectionClass('login')
+                            ->setName($smtp_host)
+                            ->setConnectionConfig(array(
+                                               'username' => $smtp_user,
+                                               'password' => $smtp_password,
+                                               'ssl' => $smtp_ssl,
+                                               'port' => $smtp_port
+                                             )
+                                  );
+        		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+        		$transport->send($mmessage);
+            }
         }
 
         return array("success" => true, "id" => $data->id, "kod" => $aktivkod);
