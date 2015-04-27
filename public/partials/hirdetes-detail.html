@@ -7,8 +7,8 @@
                 <div class="col-sm-12">
 
                     <ol class="breadcrumb">
-                        <li ng-show="HirdetesekLoaded"><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Vissza</a></li>
-                        <li><a href="#" class="link-info" ng-click="resetRovat();resetRegio();doSearch();">Összes hirdetés</a></li>
+                        <li ng-show="HirdetesekLoaded"><a href="#" class="link-info" ui-sref='hirdetesek()'><i class="fa fa-chevron-left"></i> Back</a></li>
+                        <li><a href="#" class="link-info" ng-click="resetRovat();resetRegio();doSearch();">Home</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" class="link-info" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch();">{{hirdetes.p_rovat_nev}}</a></li>
                         <li ng-if="hirdetes.p_rovat_id > 0 && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev},{id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
                         <li ng-if="! hirdetes.p_rovat_id && hirdetes.r_rovat_id > 0"><a href="#" ng-click="setRovat({id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch();" class="link-info">{{hirdetes.r_rovat_nev}}</a></li>
@@ -42,10 +42,10 @@
                         {{hirdetes.szoveg}}
                     </p>
 
-                    <p>Azonosito: {{hirdetes.id}} | Feladva {{hirdetes.days_active ? hirdetes.days_active : 0}} napja ({{hirdetes.feladas}})</p>
+                    <p>Ad id: {{hirdetes.id}} | Posted on {{hirdetes.feladas}} <span ng-show="hirdetes.days_active">({{hirdetes.days_active}} days ago)</span></p>
 
                     <h3 ng-show="hirdetes.telefon!=''">
-                        Telefonszám: {{telNum}}<span ng-show="hideTelNum">xxx xxx <a href="" ng-click="showTelNum()" class="link-info"> Megjelenít</a></span>
+                        Phone: {{telNum}}<span ng-show="hideTelNum">xxx xxx <a href="" ng-click="showTelNum()" class="link-info"> Reveal</a></span>
                     </h3>
 
                     <!--p>
@@ -65,12 +65,12 @@
                     <div>
 
                         <div class="alert alert-info" role="alert" ng-show="success">
-                            Az üzenetét rövidesen továbbítjuk a hírdetőnek
+                            Your message has been sent
                         </div>
 
                         <div class="panel panel-default" ng-show="! success">
 
-                            <div class="panel-heading">Üzenet küldése a hirdetőnek</div>
+                            <div class="panel-heading">Reply to this ad</div>
 
                             <div class="panel-body">
 
@@ -79,24 +79,24 @@
                                      <form name="messageForm" role="form" ng-submit="sendMessage(messageForm)" enctype="multipart/form-data" cg-busy="hirdetesBusy" class="form-vertical" novalidate>
 
                                         <div class="col-sm-10 form-group" ng-show="! user.isLogged()">
-                                            <input name="email"  id="messageEmail" type="email" class="form-control " ng-model="message.email" placeholder="Az Ön email címe" required valid-email>
+                                            <input name="email"  id="messageEmail" type="email" class="form-control " ng-model="message.email" placeholder="Your email" required valid-email>
                                             <span style="color:red" ng-show="submitted && messageForm.email.$invalid">
-                                                <span ng-show="messageForm.email.$error.required">Kérjük adja meg az email címét!</span>
-                                                <span ng-show="! messageForm.email.$error.required && messageForm.email.$error.validEmail">Hibás email cím!</span>
+                                                <span ng-show="messageForm.email.$error.required">Please enter your email address</span>
+                                                <span ng-show="! messageForm.email.$error.required && messageForm.email.$error.validEmail">Invalid email address</span>
                                             </span>
                                         </div>
 
                                         <div class="col-sm-12 form-group">
-                                            <textarea name="szoveg" id="messageText" class="form-control" rows="10" ng-model="message.text" placeholder="Üzenet szövege" required ng-minlength="20" ng-maxlength="5000"></textarea>
+                                            <textarea name="szoveg" id="messageText" class="form-control" rows="10" ng-model="message.text" placeholder="Message" required ng-minlength="20" ng-maxlength="5000"></textarea>
                                             <span style="color:red" ng-show="submitted && messageForm.szoveg.$invalid">
-                                                <span ng-show="messageForm.szoveg.$error.required">Kérjük adja meg az üzenete szövegét!</span>
-                                                <span ng-show="messageForm.szoveg.$error.minlength">Kérjük, legalább 20 karaktert adjon meg!</span>
-                                                <span ng-show="messageForm.szoveg.$error.maxlength">Az üzenet maximum 5000 karakter lehet!</span>
+                                                <span ng-show="messageForm.szoveg.$error.required">Please enter your message</span>
+                                                <span ng-show="messageForm.szoveg.$error.minlength">Please enter at least 20 characters</span>
+                                                <span ng-show="messageForm.szoveg.$error.maxlength">Max. 5000 character</span>
                                             </span>
                                         </div>
 
                                         <div class="col-sm-12 form-group">
-                                            <button type="submit" class="btn btn-primary"><i class="icon-ok"></i>  Küldés</button>
+                                            <button type="submit" class="btn btn-primary"><i class="icon-ok"></i>  Send</button>
 
                                             <!--span style="color:red;" ng-show="messageForm.$invalid">
                                                 Kérjük töltse ki az ürlapot.

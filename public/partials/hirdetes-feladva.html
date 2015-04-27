@@ -11,14 +11,14 @@
 					<div class="col-lg-12">
 
 						<div class="panel panel-default">
-							<div class="panel-heading">Felhasználói fiók</div>
+							<div class="panel-heading">Profile</div>
 							<div class="panel-body">
 								<ul class="nav">
 									<li>
-										<a class="active" href="#" ui-sref="profile({id: 100})">Profilom</a>
+										<a class="active" href="#" ui-sref="profile({id: 100})">Profile</a>
 									</li>
 									<li>
-										<a class="active" href="#" ui-sref="hirdeteseim">Hirdetéseim</a>
+										<a class="active" href="#" ui-sref="hirdeteseim">My Ads</a>
 									</li>
 								</ul>
 							</div>
@@ -51,11 +51,11 @@
 		<div class="col-sm-9">
 
             <div class="alert alert-info" role="alert">
-                <p ng-show="! user.isLogged()">Hirdetését rögzítettök!</p>
-				<p ng-show="! user.isLogged()">A hirdetés aktiválásához szükséges tudnivalókat elküldtük a megadott email címre.</p>
-                <p ng-show="user.isLogged()">A hirdetését sikeresen feladta!</p>
-                <p>Töltsön fel fényképeket hirdetéséhez a lentebb található boxban</p>
-                <p ng-show="user.isLogged()">A hirdetést megtalálja ha a Hirdetéseim menüpontra kattint.</p>
+                <p ng-show="! user.isLogged()">Thank you for placing your Ad</p>
+				<p ng-show="! user.isLogged()">An email has been sent to you with the ad activation link.</p>
+                <p ng-show="user.isLogged()">Thank you for placing your Ad</p>
+                <p ng-show="user.isLogged()">To edit / remove your Ad click on the <a class="active" href="#" ui-sref="hirdeteseim">My Ads</a> link</p>
+                <p>You can upload pictures for your ad in the box below</p>
 				<!--a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>Ugrás a hirdetéshez</a-->
             </div>
 
@@ -64,11 +64,11 @@
 		<div class="col-sm-9">
 
 			<div class="panel panel-default">
-				<div class="panel-heading">Fényképek (max 6 fotó)</div>
+				<div class="panel-heading">Pictures (max 6)</div>
 				<div class="panel-body">
 					<div id="myDropzone" class="dropzone"></div>
 					<br />
-					<p><small>* a feltöltött képek átméretezésre kerülhetnek!</small></p>
+					<p><small>* the pictures might be resized</small></p>
 				</div>
 			</div>
 

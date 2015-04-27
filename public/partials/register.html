@@ -6,7 +6,7 @@
     <div class="row">
 
         <div class="col-sm-12">
-            <h1>Regisztráció</h1>
+            <h1>Registration</h1>
 
             <hr />
 
@@ -15,12 +15,12 @@
                 <div class="col-sm-12 col-md-6">
 
                     <div class="alert alert-info" role="alert" ng-show="registered">
-                        <p>A regisztrációját rögzítettük!</p>
-                        <p>A regisztráció aktiváláshoz szükséges tudnivalókat elküldtük Önnek a megadott email címre.</p>
+                        <p>Your registration was successful</p>
+                        <p>An email has been sent to you with the activation link.</p>
                     </div>
 
                     <div class="alert alert-danger" role="alert" ng-show="error">
-                        Sikertelen regisztracio! Kerjuk probalja meg ujra!
+                        There was a problem with your registration, please try again.
                     </div>
 
                     <form name="regForm" role="form" ng-show="! registered" class="form-vertical" ng-submit="addUser(regForm.$valid)" novalidate>
@@ -55,48 +55,48 @@
 
 
                                         <div class="form-group">
-                                            <label for="nev">Név</label>
-                                            <input type="text" name="nev" id="regNev" ng-model="user.nev" class="form-control " placeholder="Név" required ng-maxlength="70">
+                                            <label for="nev">Name</label>
+                                            <input type="text" name="nev" id="regNev" ng-model="user.nev" class="form-control " placeholder="Name" required ng-maxlength="70">
                                             <span style="color:red" ng-show="regForm.nev.$dirty && regForm.nev.$invalid">
-                                                <span ng-show="regForm.nev.$error.required">Kérjük adja meg a nevét!</span>
-                                                <span ng-show="regForm.nev.$error.maxlength">A név maximum 70 karakter lehet!</span>
+                                                <span ng-show="regForm.nev.$error.required">Please enter your name</span>
+                                                <span ng-show="regForm.nev.$error.maxlength">Max 70 characters</span>
                                             </span>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" name="email" id="regEmail" ng-model="user.email" class="form-control " placeholder="Email cím" required unique-email valid-email>
+                                            <input type="email" name="email" id="regEmail" ng-model="user.email" class="form-control " placeholder="Email" required unique-email valid-email>
                                             <span style="color:red" ng-show="regForm.email.$dirty && regForm.email.$invalid">
-                                                <span ng-show="regForm.email.$error.required">Kérjük adja meg az email címét!</span>
-                                                <span ng-show="! regForm.email.$error.required && regForm.email.$error.validEmail">Hibás email cím!</span>
-                                                <span ng-show="! regForm.email.$error.required && ! regForm.email.$error.validEmail && regForm.email.$error.uniqueEmail">Ezzel az email címmel már regisztráltak!</span>
+                                                <span ng-show="regForm.email.$error.required">Please enter your email</span>
+                                                <span ng-show="! regForm.email.$error.required && regForm.email.$error.validEmail">Invalid email</span>
+                                                <span ng-show="! regForm.email.$error.required && ! regForm.email.$error.validEmail && regForm.email.$error.uniqueEmail">Someone already registered with this email </span>
                                             </span>
-                                            <div style="color:green" ng-show="emailChecking">Email cím foglaltság ellenőrzése...</div>
-                                            <div style="color:green" ng-show="! emailChecking && regForm.email.$valid">Email cím szabad!</div>
+                                            <div style="color:green" ng-show="emailChecking">Checking availability...</div>
+                                            <div style="color:green" ng-show="! emailChecking && regForm.email.$valid">Email ok</div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="password">Jelszó</label>
-                                            <input type="password" name="password" id="regPwd" ng-model="user.jelszo" class="form-control" placeholder="Jelszó, minimum 6 karakter" required ng-minlength="6" ng-maxlength="20">
+                                            <label for="password">Password</label>
+                                            <input type="password" name="password" id="regPwd" ng-model="user.jelszo" class="form-control" placeholder="Password, min 6 character" required ng-minlength="6" ng-maxlength="20">
                                             <span style="color:red" ng-show="regForm.password.$dirty && regForm.password.$invalid">
-                                                <span ng-show="regForm.password.$error.required">Kérjük adja meg a jelszavát!</span>
-                                                <span ng-show="regForm.password.$error.minlength">A jelszo minimum 6 karakter!</span>
-                                                <span ng-show="regForm.password.$error.maxlength">A jelszo maximum 20 karakter lehet!</span>
+                                                <span ng-show="regForm.password.$error.required">Please enter your password</span>
+                                                <span ng-show="regForm.password.$error.minlength">Min 6 character</span>
+                                                <span ng-show="regForm.password.$error.maxlength">Max 20 character</span>
                                             </span>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="confirm_password">Jelszó mégegyszer</label>
-                                            <input type="password" name="confirm_password" id="regConfPwd" ng-model="user.jelszo_megegyszer" class="form-control" placeholder="Jelszó, minimum 6 karakter" required ng-minlength="6" ng-maxlength="20" valid-password-c required>
+                                            <label for="confirm_password">Confirm password</label>
+                                            <input type="password" name="confirm_password" id="regConfPwd" ng-model="user.jelszo_megegyszer" class="form-control" placeholder="Confirm password" required ng-minlength="6" ng-maxlength="20" valid-password-c required>
                                             <span style="color:red" ng-show="regForm.confirm_password.$dirty && regForm.confirm_password.$invalid">
-                                                <span ng-show="regForm.confirm_password.$error.required">Kérjük adja meg a jelszavát mégegyszer!</span>
-                                                <span ng-show="! regForm.confirm_password.$error.required && regForm.confirm_password.$error.noMatch">A két jelszó nem egyezik!</span>
+                                                <span ng-show="regForm.confirm_password.$error.required">Please confirm your password</span>
+                                                <span ng-show="! regForm.confirm_password.$error.required && regForm.confirm_password.$error.noMatch">Passwords do not match</span>
                                             </span>
                                         </div>
 
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" checked="true"> Hírlevél
+                                                <input type="checkbox" checked="true"> Newsletter
                                             </label>
                                         </div>
 
@@ -105,7 +105,7 @@
 
                                         <!--a href="#" class="btn btn-primary">Elküldés</a-->
 
-                                        <button type="submit" class="btn btn-primary" ng-disabled="regForm.$invalid || emailChecking">Elküldés</button>
+                                        <button type="submit" class="btn btn-primary" ng-disabled="regForm.$invalid || emailChecking">Sign up</button>
 
                                     </div>
                                 </div>
@@ -118,22 +118,23 @@
 
                             <div class="row">
                                 <div class="col-sm-3" style="text-align: center;">
+                                    <!--img src="css/images/icons/Pie-Chart.png" width="40"/-->
                                     <img src="css/images/icons/Crest.png" width="50"/>
                                 </div>
                                 <div class="col-sm-8">
-                                    <h3>Miért regisztráljon?</h3>
-                                    <p>Miután regisztrált sokkal kényelmesebben és gyorsabban adhatja fel hirdetését és extra szolgátatásokat os használhat.<p>
-                                    </div>
+                                    <h3>Maximum exposure for your Ad</h3>
+                                    <p>We make sure your listings receive maximum exposure and is presented in an engaging way</p>
+                                </div>
                             </div>
                             <br />
 
                             <div class="row">
                                 <div class="col-sm-3" style="text-align: center;">
-                                    <img src="css/images/icons/Pie-Chart.png" width="40"/>
+                                    <img src="css/images/icons/Telephone.png" width="40"/>
                                 </div>
                                 <div class="col-sm-8">
-                                    <h3>Miért hirdessen nálunk?</h3>
-                                    <p>Oldalunkat naponta több ezren látogatják és mi teszünk róla, hogy hirdetését a lehető legtöbben lássák.</p>
+                                    <h3>Mobile web</h3>
+                                    <p>Your listings will always be accessible to everyone, even when they are on the move, via our responsive mobile website</p>
                                 </div>
                             </div>
                             <br />
@@ -143,18 +144,8 @@
                                     <img src="css/images/icons/Search.png" width="40"/>
                                 </div>
                                 <div class="col-sm-8">
-                                    <h3>Fejlett kereső algoritmus</h3>
-                                    <p>Garantáljuk, hogy keresőnk segítségével a potenciális érdeklődők mindig rátaláljanak az Ön hirdetésére.</p>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-sm-3" style="text-align: center;">
-                                    <img src="css/images/icons/Telephone.png" width="40"/>
-                                </div>
-                                <div class="col-sm-8">
-                                    <h3>Mobil támogatás</h3>
-                                    <p>Az oldal tartalma elérhető bármilyen internetre csatlakozó eszközről, legyen az mobil telefon, tablet vagy bármi más.</p>
+                                    <h3>Focused searches</h3>
+                                    <p>Our technology and algorithm matches potential buyers directly to your listings</p>
                                 </div>
                             </div>
 

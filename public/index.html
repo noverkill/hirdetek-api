@@ -6,11 +6,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
+        <meta name="description" content="Free classifieds. Ads for apartments, rooms, jobs, cars, motorbikes, personal for sale."/>
         <meta name="author" content="">
         <link rel="shortcut icon" href="css/images/icons/favicon.png">
 
-        <title>uk aprohirdeto oldal</title>
+        <title>Free classifieds</title>
 
         <!-- Bootstrap core CSS -->
         <link id="switch_style" rel="stylesheet" type="text/css" href="css/bootstrap.css" media="screen" />
@@ -40,8 +40,8 @@
 
                     <a href="index.html" class="navbar-brand ">
                         <span class="logo" ng-click="goHome()">
-                            <strong>Aprohirdeto</strong><span class="handwriting">.uk</span><br />
-                            <small >uk aprohirdeto oldal</small>
+                            <strong>Free-Clasiffieds</strong><span class="handwriting">.uk</span><br />
+                            <small >free classified ads</small>
                         </span>
                     </a>
 
@@ -51,20 +51,20 @@
 
                     <ul class="nav navbar-nav navbar-right visible-xs">
 
-                        <li class="active" ng-click="goHome()"><a href="#">Főoldal</a></li>
+                        <li class="active" ng-click="goHome()"><a href="#">Home</a></li>
 
                         <span ng-show="! user.isLogged()">
-                            <li><a href="#" ui-sref="login">Bejelentkezés</a></li>
-                            <li><a href="#" ui-sref="register">Regisztráció</a></li>
+                            <li><a href="#" ui-sref="login">Login</a></li>
+                            <li><a href="#" ui-sref="register">Register</a></li>
                         </span>
 
                         <span ng-show="user.isLogged()">
-                            <li><a href="#" ui-sref="profile">Profilom</a></li>
-                            <li><a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a></li>
-                            <li><a href="#" ui-sref="logout">Kilépés</a></li>
+                            <li><a href="#" ui-sref="profile">Profile</a></li>
+                            <li><a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">My Ads</a></li>
+                            <li><a href="#" ui-sref="logout">Logout</a></li>
                         </span>
 
-                        <li><a href="#" ui-sref="hirdetes-feladas">Új hirdetés</a></li>
+                        <li><a href="#" ui-sref="hirdetes-feladas">Post an Ad</a></li>
                     </ul>
 
                     <div class="nav navbar-nav navbar-right hidden-xs">
@@ -73,20 +73,20 @@
 
                             <div class="pull-right">
 
-                                <a href="#" ng-click="goHome()">Főoldal</a> |
+                                <a href="#" ng-click="goHome()">Home</a> |
 
                                 <span ng-show="! user.isLogged()">
-                                    <a href="#" ui-sref="login">Bejelentkezés</a> |
-                                    <a href="#" ui-sref="register">Regisztráció</a> |
+                                    <a href="#" ui-sref="login">Login</a> |
+                                    <a href="#" ui-sref="register">Register</a> |
                                 </span>
 
                                 <span ng-show="user.isLogged()">
-                                    <a href="#" ui-sref="profile({id: 100})">Profilom</a> |
-                                    <a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a> |
-                                    <a href="#" ui-sref="logout">Kilépés</a> |
+                                    <a href="#" ui-sref="profile({id: 100})">Profile</a> |
+                                    <a href="#" ui-sref="hirdeteseim({id: user.getUser().id})">My Ads</a> |
+                                    <a href="#" ui-sref="logout">Logout</a> |
                                 </span>
 
-                                <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Új hirdetés</a>
+                                <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Post an Ad</a>
 
                             </div>
                         </div>
@@ -107,15 +107,15 @@
                 <div class="row">
 
                     <div class="col-sm-4 col-xs-12">
-                        <p><strong>&copy; Aprohirdeto.uk 2014</strong></p>
-                        <p>Minden jog fenntartva</p>
+                        <p><strong>&copy; Free-Clasiffieds.uk 2014</strong></p>
+                        <p>All right reserved</p>
                     </div>
 
                     <div class="col-sm-8 col-xs-12">
                         <p class="footer-links">
-                            <a href="index.html" class="active" ui-sref="hirdetesek">Főoldal</a>
-                            <a href="szabalyzat.html" ui-sref="szabalyzat">Szabályzat</a>
-                            <a href="contact.html" ui-sref="kapcsolat">Kapcsolat</a>
+                            <a href="index.html" class="active" ui-sref="hirdetesek">Home</a>
+                            <a href="szabalyzat.html" ui-sref="szabalyzat">Terms</a>
+                            <a href="contact.html" ui-sref="kapcsolat">Contact</a>
                         </p>
                     </div>
                 </div>

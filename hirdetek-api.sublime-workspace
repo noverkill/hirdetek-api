@@ -203,14 +203,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/szilard/selenium/test.js",
-			"settings":
-			{
-				"buffer_size": 438,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -236,9 +228,40 @@
 	},
 	"file_history":
 	[
-		"/C/wamp/www/hirdetek-api/selenium/hirdetes-feladas.js",
-		"/C/wamp/www/hirdetek-api/public/index.html",
+		"/C/Users/szilard/Desktop/block_module_info.php",
+		"/C/Users/szilard/Desktop/q2.php",
+		"/C/Users/szilard/AppData/Local/Temp/scp20062/etc/apache2/sites-available/aprohirdeto.uk.conf",
+		"/C/wamp/www/hirdetek-api/public/partials/account-ads.html",
 		"/C/wamp/www/hirdetek-api/public/partials/hirdetes-feladas.html",
+		"/C/wamp/www/hirdetek-api/public/partials/hirdetes-szerkesztes.html",
+		"/C/wamp/www/hirdetek-api/public/partials/profile.html",
+		"/C/hirdetek-api/public/partials/hirdetes-feladas.html",
+		"/C/wamp/www/hirdetek-api/public/partials/hirdetes-detail.html",
+		"/C/wamp/www/hirdetek-api/public/partials/hirdetesek.html",
+		"/C/wamp/www/hirdetek-api/public/partials/hirdetes-feladva.html",
+		"/C/wamp/www/hirdetek-api/public/partials/kapcsolat.html",
+		"/C/wamp/www/hirdetek-api/public/partials/login.html",
+		"/C/wamp/www/hirdetek-api/public/partials/logout.html",
+		"/C/wamp/www/hirdetek-api/public/partials/password.html",
+		"/C/wamp/www/hirdetek-api/public/partials/register.html",
+		"/C/wamp/www/hirdetek-api/public/partials/szabalyzat.html",
+		"/C/Users/szilard/Desktop/register.html",
+		"/C/wamp/www/hirdetek-api/config/autoload/local.php",
+		"/C/wamp/www/hirdetek-api/config/autoload/zfconfig.global.php",
+		"/C/wamp/www/hirdetek-api/config/autoload/user.global.php",
+		"/C/wamp/www/hirdetek-api/public/preload.php",
+		"/C/wamp/www/hirdetek-api/public/felhasznalo-aktivalas.php",
+		"/C/wamp/www/hirdetek-api/public/hirdetes-aktivalas.php",
+		"/C/wamp/www/hirdetek-api/public/index.html",
+		"/C/wamp/www/hirdetek-api/public/index.php",
+		"/C/wamp/www/hirdetek-api/old-config.php",
+		"/C/wamp/www/hirdetek-api/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
+		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/10_UserCreateController.js",
+		"/C/wamp/www/hirdetek-api/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesResource.php",
+		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/09_UserEditController.js",
+		"/C/Users/szilard/selenium/test.js",
+		"/C/wamp/www/hirdetek-api/fuck.php",
+		"/C/wamp/www/hirdetek-api/selenium/hirdetes-feladas.js",
 		"/C/wamp/www/hirdetek-api/selenium/test.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/1_directives.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/1_tutilities.js",
@@ -248,8 +271,6 @@
 		"/C/wamp/www/hirdetek-api/public/js/app/5_runtime.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/12_ContactController.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/11_PasswordController.js",
-		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/10_UserCreateController.js",
-		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/09_UserEditController.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/08_LogoutController.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/06_HirdetesCreateController.js",
 		"/C/wamp/www/hirdetek-api/public/js/app/6_controllers/05_HirdetesFeladvaController.js",
@@ -261,15 +282,11 @@
 		"/C/Users/szilard/AppData/Local/Temp/scp04114/var/www/html/hirdetek.net/karbantartas.php",
 		"/C/Users/szilard/AppData/Local/Temp/scp03798/var/www/html/szilard.co.uk/process_form.php",
 		"/C/Users/szilard/selenium/test3.js",
-		"/C/Users/szilard/selenium/test.js",
 		"/C/wamp/www/hirdetek-api/public/fuck.php",
-		"/C/wamp/www/hirdetek-api/fuck.php",
 		"/C/wamp/www/hirdetek-api/README.md",
 		"/C/wamp/www/hirdetek-api/old-error.log.txt",
-		"/C/wamp/www/hirdetek-api/public/partials/szabalyzat.html",
 		"/C/wamp/www/hirdetek-api/composer.json",
 		"/C/wamp/www/hirdetek-api/cli/oauth_user_import.php",
-		"/C/wamp/www/hirdetek-api/public/partials/hirdetes-szerkesztes.html",
 		"/C/wamp/www/hirdetek-api/public/partials/_user_form.html",
 		"/C/wamp/www/hirdetek-api/public/partials/_form.html",
 		"/C/xampp/htdocs/moodle/local/readme.txt",
@@ -303,7 +320,6 @@
 		"/C/Users/szilard/AppData/Local/Temp/scp10741/var/www/html/aprohirdeto.uk/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
 		"/C/Users/szilard/AppData/Local/Temp/scp22171/var/www/html/hirdeto.net/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
 		"/C/wamp/www/hirdetek-api/public/css/theme.css",
-		"/C/wamp/www/hirdetek-api/public/partials/hirdetesek.html",
 		"/C/Users/szilard/AppData/Local/Temp/scp38238/var/www/html/hirdeto.net/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
 		"/C/Users/szilard/AppData/Local/Temp/scp34712/var/www/html/aprohirdeto.uk/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
 		"/C/Users/szilard/AppData/Local/Temp/scp22827/var/www/html/aprohirdeto.uk/public/partials/hirdetes-szerkesztes.html",
@@ -339,31 +355,7 @@
 		"/C/Users/szilard/AppData/Local/Temp/scp59972/var/www/html/aprohirdeto.uk/module/Users/src/Users/V1/Rest/Users/UsersResource.php",
 		"/C/Users/szilard/AppData/Local/Temp/scp58597/var/www/html/aprohirdeto.uk/public/partials/hirdetes-feladas.html",
 		"/C/Users/szilard/AppData/Local/Temp/scp59381/var/www/html/aprohirdeto.uk/module/Users/src/Users/V1/Rest/Users/UsersMapper.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp09431/var/www/html/aprohirdeto.uk/public/partials/hirdetes-feladas.html",
-		"/C/Users/szilard/AppData/Local/Temp/scp55463/var/www/html/aprohirdeto.uk/public/controllers.js",
-		"/C/Users/szilard/AppData/Local/Temp/scp08418/var/www/html/aprohirdeto.uk/public/controllers.js",
-		"/C/Users/szilard/Desktop/postcodes.csv",
-		"/C/Users/szilard/AppData/Local/Temp/scp58951/var/www/html/aprohirdeto.uk/public/partials/hirdetes-feladva.html",
-		"/C/Users/szilard/AppData/Local/Temp/scp56461/var/www/html/hirdeto.net/module/Application/Module.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp18093/var/www/html/hirdeto.net/public/robot.txt",
-		"/C/Users/szilard/AppData/Local/Temp/scp56163/var/www/html/hirdeto.net/module/Application/config/module.config.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp57130/var/www/html/hirdeto.net/module/hirdetek/config/module.config.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp13968/var/www/html/aprohirdeto.uk/config/autoload/local.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp13002/var/www/html/aprohirdeto.uk/config/autoload/user.global.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp14227/var/www/html/aprohirdeto.uk/public/config.js",
-		"/C/Users/szilard/AppData/Local/Temp/scp15264/var/www/html/aprohirdeto.uk/public/index.html",
-		"/C/Users/szilard/AppData/Local/Temp/scp17007/var/www/html/aprohirdeto.uk/public/partials/hirdetesek.html",
-		"/C/Users/szilard/AppData/Local/Temp/scp19429/var/www/html/aprohirdeto.uk/public/partials/hirdetes-feladas.html",
-		"/C/Users/szilard/AppData/Local/Temp/scp21902/var/www/html/aprohirdeto.uk/module/hirdetek/src/hirdetek/V1/Rest/Hirdetes/HirdetesMapper.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp10793/var/www/html/hirdeto.net/config/development.config.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp10088/var/www/html/hirdeto.net/config/application.config.old",
-		"/C/Users/szilard/AppData/Local/Temp/scp50518/var/www/html/aprohirdeto.uk/config/application.config.old",
-		"/C/Users/szilard/AppData/Local/Temp/scp51957/var/www/html/aprohirdeto.uk/config/development.config.php",
-		"/C/Users/szilard/development.config.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp11166/var/www/html/hirdeto.net/config/autoload/global.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp11406/var/www/html/hirdeto.net/config/autoload/global-development.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp11993/var/www/html/hirdeto.net/config/autoload/local.php",
-		"/C/Users/szilard/AppData/Local/Temp/scp11924/var/www/html/hirdeto.net/config/autoload/user.global.php"
+		"/C/Users/szilard/AppData/Local/Temp/scp09431/var/www/html/aprohirdeto.uk/public/partials/hirdetes-feladas.html"
 	],
 	"find":
 	{
@@ -371,9 +363,11 @@
 	},
 	"find_in_files":
 	{
-		"height": 90.0,
+		"height": 0.0,
 		"where_history":
 		[
+			"C:\\wamp\\www\\hirdetek-api\\public\\partials",
+			"C:\\hirdetek-api\\public\\partials",
 			"C:\\wamp\\www\\hirdetek-api\\public\\js\\app\\",
 			"C:\\wamp\\www\\hirdetek-api\\public\\js\\app\\6_controllers",
 			"C:\\hirdetek-api\\",
@@ -409,6 +403,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Település",
+			"placeholder",
+			"hét",
+			"hónap",
+			"év",
 			"(By.id",
 			"\\",
 			"s\\",
@@ -531,12 +530,7 @@
 			"HirdetesDetailController",
 			"hirdForm",
 			".col",
-			"UserEditController",
-			"profile",
-			"success",
-			"email",
-			"login",
-			"UserCreateController"
+			"UserEditController"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -583,35 +577,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/szilard/selenium/test.js",
-					"settings":
-					{
-						"buffer_size": 438,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								423,
-								361
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

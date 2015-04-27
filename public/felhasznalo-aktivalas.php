@@ -23,7 +23,7 @@ if($success) {
 
 	if (mysql_num_rows( $db->rs) < 1) {
 		$success = false;
-		array_push($errors, "Nincs ilyen felhasznalo!");
+		array_push($errors, "User does not exist");
 	} else {
 		$rs = mysql_fetch_assoc( $db->rs);
 		$g_nev = $rs['nev'];
@@ -43,8 +43,8 @@ if ($success) {
 
 	?>
 
-		<h3>Sikeresen aktiválta a felhasznaloi fiokjat!</h3>
-		<p><a href="<?php echo $url; ?>/#/login">Kattintson ide a bejelentkezeshez</a></p>
+		<h3>Your account has been activated</h3>
+		<p><a href="<?php echo $url; ?>/#/login">Click here to log in</a></p>
 
 	<?php
 
@@ -52,10 +52,12 @@ if ($success) {
 
 	?>
 
-		<h3>Sikertelen felhasznaloi fiok aktiválás!</h3>
-		<p>Hibás aktiváló adatok!</p>
-		<p>Az aktivalasahoz szukseg van a felhasznaloi fiok sorszamara es az aktivalo kodra</p>
-
+		<h3>Account activation has been unsuccessful</h3>
+		<p>Incorrect data provided</p>
+		<p>
+			To activate your account you need to provide your registration's id number and activation code
+			You can find these details in the email we sent when you registered on our site
+		</p>
 	<?php
 
 }

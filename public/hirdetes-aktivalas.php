@@ -23,7 +23,7 @@ if ($success) {
 
 	if (mysql_num_rows( $db->rs) < 1) {
 		$success = false;
-		array_push($errors, "Nincs ilyen hirdetés!");
+		array_push($errors, "Ad does not exist");
 	} else {
 		$rs = mysql_fetch_assoc( $db->rs);
 		$g_email = $rs['email'];
@@ -57,8 +57,8 @@ if ($success) {
 	}
 ?>
 
-	<h3>Sikeres hirdetes aktiválás!</h3>
-	<p><a href="<?php echo $url; ?>/#/hirdetes/<?php echo $g_id; ?>/detail">Kattintson ide a hirdetes megtekintesehez</a></p>
+	<h3>Your ad has been activated</h3>
+	<p><a href="<?php echo $url; ?>/#/hirdetes/<?php echo $g_id; ?>/detail">Click here to view</a></p>
 
 <?php
 
@@ -66,9 +66,12 @@ if ($success) {
 
 ?>
 
-	<h3>Sikertelen hirdetes aktiválás!</h3>
-	<p>Hibás aktiváló adatok!</p>
-	<p>A hirdetes aktivalasahoz szukseg van a hirdetes sorszamara es az aktivalo kodra</p>
+	<h3>Ad activation has been unsuccessful</h3>
+	<p>Incorrect data provided</p>
+	<p>
+		To activate your ad you need to provide your ad's id number and activation code
+		You can find these details in the email we sent when you posted your ad
+	</p>
 
 <?php
 

@@ -10,14 +10,14 @@
                     <div class="col-lg-12">
 
                         <div class="panel panel-default">
-                            <div class="panel-heading">Felhasználói fiók</div>
+                            <div class="panel-heading">Profile</div>
                             <div class="panel-body">
                                 <ul class="nav">
                                     <li>
-                                        <a class="active" href="#" ui-sref="profile({id: 100})">Profilom</a>
+                                        <a class="active" href="#" ui-sref="profile({id: 100})">Profile</a>
                                     </li>
                                     <li>
-                                        <a class="active" href="#" ui-sref="hirdeteseim({id: user.getUser().id})">Hirdetéseim</a>
+                                        <a class="active" href="#" ui-sref="hirdeteseim({id: user.getUser().id})">My Ads</a>
                                     </li>
                                 </ul>
                             </div>
@@ -49,7 +49,7 @@
 
         <div class="col-sm-9">
             <div class="panel panel-default">
-                <div class="panel-heading" id="myads">Hirdetéseim</div>
+                <div class="panel-heading" id="myads">My Ads</div>
                 <div class="panel-body" cg-busy="hirdetesBusy">
                     <form class="form-vertical">
                         <fieldset>
@@ -62,7 +62,7 @@
                                             <tr>
                                                 <th></th>
                                                 <th></th>
-                                                <th style="text-align:right">Feladás&nbsp;dátuma</th>
+                                                <th style="text-align:right">Posted&nbsp;on</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -79,9 +79,9 @@
                                                 <td align="left">
                                                     <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}}</a><!--a href="#" class="no-views">(98 megtekintes)</a--><br />
 
-                                                    <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})' title="Szerkesztés">Szerkesztés</a>
-                                                    <a class="edit-ad" ng-attr-id="{{ 'extend-ad-' + hirdetes.id }}" ng-click='extendHirdetes(hirdetes)' data-toggle="tooltip" title="Hosszabbítás 30 nappal">Hosszabbítás 30 nappal</a>
-                                                    <a class="remove-ad"  ng-click='deleteHirdetes(hirdetes.id)'>Törlés</a>
+                                                    <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})' title="Szerkesztés">Edit</a>
+                                                    <a class="edit-ad" ng-attr-id="{{ 'extend-ad-' + hirdetes.id }}" ng-click='extendHirdetes(hirdetes)' data-toggle="tooltip" title="Hosszabbítás 30 nappal">Extend by 30 day</a>
+                                                    <a class="remove-ad"  ng-click='deleteHirdetes(hirdetes.id)'>Delete</a>
                                                     <p >{{hirdetes.szoveg}}</p>
                                                 </td>
 

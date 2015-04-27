@@ -18,9 +18,9 @@
 
                                     <div class="input-group">
 
-                                        <span class="input-group-addon input-group-addon-text hidden-xs">Keresett kifejezés</span>
+                                        <span class="input-group-addon input-group-addon-text hidden-xs"></span>
 
-                                        <input type="text" class="form-control col-sm-3" placeholder="pl. BMW, 2 szobás lakás, ülőgarnítúra " ng-model='filter.text'>
+                                        <input type="text" class="form-control col-sm-3" placeholder="I am looking for..." ng-model='filter.text'>
 
                                         <div class="input-group-addon hidden-xs">
                                             <div class="btn-group" >
@@ -29,7 +29,7 @@
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu" cg-busy="rovatBusy">
                                                     <li>
-                                                        <a href="#" ng-click="resetRovat();doSearch()">Minden rovatban</a>
+                                                        <a href="#" ng-click="resetRovat();doSearch()">All categories</a>
                                                     </li>
                                                     <li ng-repeat="forov in forovatok">
                                                         <a href="#" ng-click="setRovat(forov);doSearch()">{{forov.nev}}</a>
@@ -51,7 +51,7 @@
 
                                 <div class="col-sm-11 pull-right">
 
-                                    <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>Keresés</button>
+                                    <button class="btn btn-primary search-btn" ng-click="doSearch()"><i class="icon-search"></i>Search</button>
 
                                 </div>
 
@@ -78,13 +78,13 @@
         <div class="col-sm-12">
 
             <ol class="breadcrumb">
-                <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();" class="link-info">Összes hirdetés</a></li>
+                <li><a href="#" ng-click="resetRovat();resetRegio();doSearch();" class="link-info">Home</a></li>
                 <li ng-if="forovat.id > 0"><a href="#" ng-click="setRovat(forovat);doSearch();" class="link-info">{{forovat.nev}}</a></li>
                 <li ng-if="forovat.id > 0 && rovat.id > 0" class="active link-info">{{rovat.nev}}</li>
                 <li ng-if="foregio.id > 0"><a href="#" ng-click="setRegio(foregio);doSearch();" class="link-info">{{foregio.nev}}</a></li>
                 <li ng-if="foregio.id > 0 && regio.id > 0" class="link-info">{{regio.nev}}</li>
                 <li ng-if="search.text"><strong>"{{search.text}}"</strong></li>
-                <li class="active">Hirdetések száma: {{listing.totalItems}} / Oldalak száma: {{listing.totalPages}} / Aktuális oldal:  {{listing.currentPage}}</li>
+                <li class="active">{{listing.totalItems}} ads / {{listing.totalPages}} pages / current page: {{listing.currentPage}}</li>
             </ol>
 
         </div>
@@ -100,7 +100,7 @@
                 <div class="row " ng-show="forovat.id>0">
                     <div class="col-sm-11">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Alrovatok</div>
+                            <div class="panel-heading">Subcategories</div>
                             <div class="panel-body">
                                 <ul class="nav nav-category">
                                     <li>
@@ -201,7 +201,7 @@
 
                                         <div class="row filter-row">
                                             <div class="col-sm-12">
-                                                <label>Mennyiért?</label>
+                                                <label>Price</label>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="input-group">
@@ -220,11 +220,11 @@
 
                                         <div class="row filter-row">
                                             <div class="col-sm-12">
-                                                <label>Hol?</label>
+                                                <label>Location</label>
                                             </div>
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control price-input" placeholder="Postcode / Irányítószám" ng-model="filter.postcode" />
+                                                    <input type="text" class="form-control price-input" placeholder="Postcode" ng-model="filter.postcode" />
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +232,7 @@
                                         <div class="row filter-row">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="form-control price-input" placeholder="Távolsag" ng-model="filter.distance" class="form-control">
+                                                    <select class="form-control price-input" placeholder="distance" ng-model="filter.distance" class="form-control">
                                                         <option value="0" selected="">+0</option>
                                                         <option value="1">+1</option>
                                                         <option value="2">+2</option>
@@ -245,17 +245,17 @@
                                                         <option value="25">+25</option>
                                                         <option value="75">+50</option>
                                                     </select>
-                                                    <span class="input-group-addon">mérföld</span>
+                                                    <span class="input-group-addon">miles</span>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="row filter-row">
                                             <div class="col-sm-2 pull-left" style="margin-top: 10px">
-                                                <button class="btn btn-link pull-left" type="reset" style="color:#000000"data-ng-click="resetFilter();doSearch(1)">Törlés</button>
+                                                <button class="btn btn-link pull-left" type="reset" style="color:#000000"data-ng-click="resetFilter();doSearch(1)">Reset</button>
                                             </div>
                                             <div class="col-sm-2 pull-right" style="margin-top: 10px;">
-                                                <button class="btn btn-primary pull-right" data-ng-click="doSearch(1)">Frissítés</button>
+                                                <button class="btn btn-primary pull-right" data-ng-click="doSearch(1)">Search</button>
                                             </div>
                                         </div>
 
@@ -291,16 +291,16 @@
 
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
-                    <strong>Ma, {{date | date:'longDate'}} van</strong>
+                    <strong>Today is {{date | date:'longDate'}}</strong>
                 </div>
                 <div class="pull-right">
-                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Rendezes feladas datuma szerint csokkeno"> Dátum<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='feladas'"></i></a>
-                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Ar szerint novekvo"> Ár <i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='ar'"></i></a>
+                    <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Order by date of posting"> Date<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='feladas'"></i></a>
+                    <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Order by price"> Price <i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='ar'"></i></a>
                 </div>
             </div>
 
             <div class="row" style="margin-top:10px" ng-show="hirdetesek.length==0">
-                <h3>Hirdetések nem találhatók</h3>
+                <h3>No ad found</h3>
             </div>
 
             <div class="row listing-row" ng-repeat="hirdetes in hirdetesek">
@@ -315,8 +315,8 @@
 
                 <div class="col-sm-8">
                     <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>&pound; {{hirdetes.ar | currency:""}}</strong></span></a></h3>
-                    <p class="muted"><strong>{{hirdetes.postcode | uppercase}}, </strong><strong ng-if="hirdetes.telepules">{{hirdetes.telepules}}, </strong><a href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">{{hirdetes.g_regio_nev}}</a></p>
-                    <p class="muted">Feladva {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
+                    <p class="muted" ng-if="hirdetes.postcode || hirdetes.telepules || hirdetes.g_regio_nev"><strong  ng-if="hirdetes.postcode">{{hirdetes.postcode | uppercase}}</strong><strong ng-if="hirdetes.telepules">, {{hirdetes.telepules}}</strong><a ng-if="hirdetes.g_regio_nev" href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">, {{hirdetes.g_regio_nev}}</a></p>
+                    <p class="muted">Posted on {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg | limitTo: 500}}{{hirdetes.szoveg.length > 500 ? '...' : ''}}</p>
                     <p>
                         <span class="classified_links pull-right">
@@ -325,7 +325,7 @@
                             <a class="link-info underline" ng-show="! user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#">Kedvencekhez</a>
                             <a class="link-info underline" ng-show="user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalSave" href="#">Kedvencekhez</a>&nbsp;-->
 
-                            <a class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Részletek</a>&nbsp;
+                            <a class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Details</a>&nbsp;
                             <!--a class="link-info underline" href="#">Kapcsolat</a-->
                         </span>
                     </p>
@@ -337,8 +337,8 @@
                 <p>current page: {{listing.currentPage}}</p>
                 <p>Pager pages: {{listing.pagerPages}}</p-->
                 <ul class="pagination pull-right">
-                    <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(1)">Első</a></li>
-                    <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(listing.currentPage - 1)">Előző</a></li>
+                    <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(1)">First</a></li>
+                    <li ng-show="listing.currentPage > 1"><a href="#" ng-click="gotoPage(listing.currentPage - 1)">Prev</a></li>
                     <li ng-repeat="page in listing.pagerPages" ng-if="(page + 1 > 0) && (page < listing.totalPages)" ng-class="(page + 1 == listing.currentPage) ? 'active' : ''">
                         <a href="#" ng-click="gotoPage(page + 1)">
                             {{page + 1}}
@@ -353,8 +353,8 @@
                     <li class="hidden-sm hidden-xs"><a href="#">8</a></li>
                     <li class="hidden-sm hidden-xs"><a href="#">9</a></li>
                     <li class="hidden-sm hidden-xs"><a href="#">10</a></li-->
-                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.currentPage + 1)">Következő</a></li>
-                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.totalPages)">Utolsó</a></li>
+                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.currentPage + 1)">Next</a></li>
+                    <li ng-show="listing.currentPage < listing.totalPages"><a href="#" ng-click="gotoPage(listing.totalPages)">Last</a></li>
                 </ul>
             </div>
 
