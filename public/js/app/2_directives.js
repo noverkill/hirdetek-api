@@ -131,5 +131,5 @@ hirdetekApp.directive("preloadResource", function() {
   });
 
 hirdetekApp.value('cgBusyDefaults',{
-    message:'Betöltés...'
+    message:'Loading...'
 });

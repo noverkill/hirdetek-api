@@ -3,7 +3,7 @@
 include( "../old-config.php");
 include( "../old-db.php");
 
-$g_kod = isset( $_GET['kod']) ? trim( strip_tags( $_GET['kod'])) : '';
+$g_kod = isset( $_GET['code']) ? trim( strip_tags( $_GET['code'])) : '';
 $g_email = isset( $_GET['email']) ? trim( strip_tags( $_GET['email'])) : '';
 
 $success = true;

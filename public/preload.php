@@ -2,9 +2,12 @@
 
     $config = include('../config/autoload/user.global.php');
 
-	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'aprohirdeto');
+	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'freeadpost');
 
     $mysqli->set_charset("utf8");
+
+    //error_reporting(E_ALL);
+    //ini_set('display_errors', 1);
 
 /*
  * import users from users2 table into oauth_users table and creates bcrypt-ed passwords for the oauth

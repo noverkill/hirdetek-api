@@ -3,8 +3,8 @@
 include( "../old-config.php");
 include( "../old-db.php");
 
-$g_id  = isset( $_GET['sorszam']) ? (int) $_GET['sorszam'] : 0;
-$g_kod = isset( $_GET['kod']) ? trim( strip_tags( $_GET['kod'])) : '';
+$g_id  = isset( $_GET['ad']) ? (int) $_GET['ad'] : 0;
+$g_kod = isset( $_GET['code']) ? trim( strip_tags( $_GET['code'])) : '';
 
 $success = true;
 $errors = array();
@@ -38,7 +38,7 @@ if ($success) {
 	$db->query();
 	//print $db->sql;
 
-	//header ("Location: hirdetesek.php?sorszam=$g_id");
+	//header ("Location: hirdetesek.php?ad=$g_id");
 
 	//check if user also needs to be activated
 	$db->sql = "SELECT nev, weblap FROM users WHERE email='$g_email' AND aktivkod='$g_kod' AND aktiv=0 LIMIT 1";

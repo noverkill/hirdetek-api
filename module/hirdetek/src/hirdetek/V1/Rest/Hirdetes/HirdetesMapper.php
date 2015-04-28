@@ -332,10 +332,10 @@ class HirdetesMapper
 
                 $image_id = $resultset->getGeneratedValue();
 
-                return array('success' => true, 'id' => $id, 'image_id' => $image_id, 'message' => 'Kép feltöltve!');
+                return array('success' => true, 'id' => $id, 'image_id' => $image_id, 'message' => 'Picture uploaded successfuly');
             }
 
-            return array("success" => false, 'id' => $id, 'message' => "A kép feltöltése sikertelen volt!");
+            return array("success" => false, 'id' => $id, 'message' => "There was a problem uploading the picture");
         }
 
         // buzi angular submit buzi object from select hogy baszna szajba a retkes kurva anyjat
@@ -710,23 +710,21 @@ class HirdetesMapper
                     if(isset($data->atvetel)) {
                         $user_message = '
 
-A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+To edit your Ad please login to your account using your email email address
 
-és a következő jelszó segítségével: ' . $user_jelszo . '
+and the following password: ' . $user_jelszo . '
 
-A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+To list and edit your Ads please click on the "My Ads" link in the top left corner
 
-A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
-
+You can change your password after you logged in on you profile page.
                         ';
                     } else {
 
                         $user_message = '
 
-Mivel Ön regisztrált felhasználónk, a hirdetése szerkesztéséhez jelentkezzen be az oldalra, és kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+As you are a registered user, to edit your Ad, please log in to your account and click on the "My Ads" link in the top left corner.
 
-(Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
-
+(In case you forgot your password you can request an email reminder from the login page)
                         ';
                     }
 
@@ -737,26 +735,26 @@ Mivel Ön regisztrált felhasználónk, a hirdetése szerkesztéséhez jelentkez
                     if(isset($data->atvetel)) {
                         $user_message = '
 
-A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+To edit your Ad please login to your account using your email email address
 
-és a következő jelszó segítségével: ' . $user_jelszo . '
+and the following password: ' . $user_jelszo . '
 
-A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+To list and edit your Ads please click on the "My Ads" link in the top left corner
 
-A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+You can change your password after you logged in on you profile page.
 
                         ';
                     } else {
 
                         $user_message = "
 
-A hirdetése szerkesztéséhez kérjük aktiválja a felhasználói fiókját az alábbi link segítségével
+To edit your Ad please first activate your user account using the link below:
 
-".$url."/felhasznalo-aktivalas.php?email=" . $email . "&kod=" . $user_aktivkod . "
+".$url."/activate-user.php?email=" . $email . "&code=" . $user_aktivkod . "
 
-majd jelentkezzen be az oldalra, és kattintson a \"Hirdeteseim\" menüpontra a bal felső csikban.
+then please log in to your account and click on the \"My Ads\" link in the top left corner.
 
-(Amennyiben nem tudja vagy elfelejtette a jelszavát, kérjen jelszó emlékeztetőt a Bejelentkezés oldalon az Elfelejtett jelszó linkre kattintva)
+(In case you forgot your password you can request an email reminder from the login page)
 
                         ";
                     }
@@ -800,26 +798,24 @@ majd jelentkezzen be az oldalra, és kattintson a \"Hirdeteseim\" menüpontra a 
 
                     $user_message = '
 
-A hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+To edit your Ad please login to your account using your email email address
 
-és a következő jelszó segítségével: ' . $jelszo . '
+and the following password: ' . $user_jelszo . '
 
-A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
+To list and edit your Ads please click on the "My Ads" link in the top left corner
 
-A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+You can change your password after you logged in on you profile page.
 
                         ';
                 } else {
 
                     $user_message = '
 
-A hirdetés aktiválása után a hirdetése szerkesztéséhez jelentkezzen be az oldalra az email cime
+After you have activated your Ad, you can edit it by logging in and then clicking on the \"My Ads\" link in the top left corner.
 
-és a következő jelszó segítségével: ' . $jelszo . '
+To log in use your registered email address and the following password: ' . $jelszo . '
 
-A hirdetései listázásához és szerkesztéséhez kattintson a "Hirdeteseim" menüpontra a bal felső csikban.
-
-A jelszavát a bejelentkezés után megváltoztathatja az Ön által választottra.
+You can change your password after you logged in on you profile page.
 
                     ';
                 }
@@ -878,31 +874,34 @@ A jelszavát a bejelentkezés után megváltoztathatja az Ön által választott
             include_once('old-config.php');
 
             if(isset($data->atvetel)) {
-                $subject = "Hirdetés feladás - " . $data->id . " sz. hirdetés";
+                $subject = "Ad submission - ad id #" . $data->id;
             } else {
-                $subject = "Hirdetés aktiváció - " . $data->id . " sz. hirdetés";
+                $subject = "Ad activation - ad id #" . $data->id;
             }
 
             $message = "
 
-Tisztelt címzett!
+Welcome!
 
-Ön hirdetést adott fel a $url oldalon.
+Thank you for posting an Ad to the $url site
 
             ";
 
             if(!isset($data->atvetel)) {
                 $message .= "
-Hirdetése aktiváláshoz menjen böngészõjével a következõ címre:
 
-$url/hirdetes-aktivalas.php?sorszam=" . $data->id . "&kod=$aktivkod
+To activate your Ad please click on the link below:
+
+$url/activate-ad.php?ad=" . $data->id . "&code=$aktivkod
                 ";
             }
 
             $message .= "
 $user_message
 
-Üdvözlettel: a $site csapata
+Best regards,
+
+The $site team
 
             ";
 

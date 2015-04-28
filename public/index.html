@@ -6,11 +6,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Free classifieds. Ads for apartments, rooms, jobs, cars, motorbikes, personal for sale."/>
+        <meta name="description" content="Free ads, free classifieds, free classified ads, apartments, rooms, jobs, cars, motorbikes, personal for sale."/>
         <meta name="author" content="">
         <link rel="shortcut icon" href="css/images/icons/favicon.png">
 
-        <title>Free classifieds</title>
+        <title>Free Ads</title>
 
         <!-- Bootstrap core CSS -->
         <link id="switch_style" rel="stylesheet" type="text/css" href="css/bootstrap.css" media="screen" />
@@ -23,6 +23,16 @@
         <link rel="stylesheet" type="text/css" href="js/fancybox/helpers/jquery.fancybox-buttons.css?v=2.1.5" media="screen" />
         <link rel="stylesheet" type="text/css" href="css/angular-busy.css" media="screen" />
 
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-62376230-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+
     </head>
 
     <body ng-cloak autoscroll="true">
@@ -32,18 +42,20 @@
             <div class="container">
 
                 <div class="navbar-header">
+
+                    <a href="index.html" class="navbar-brand ">
+                        <span class="logo" ng-click="goHome()">
+                            <strong>Free Ads</strong>
+                            <small class="hidden-xs">free-ads-post.uk </small><br />
+                            <small>freeadpost.uk</small>
+                        </span>
+                    </a>
+
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-
-                    <a href="index.html" class="navbar-brand ">
-                        <span class="logo" ng-click="goHome()">
-                            <strong>Free-Clasiffieds</strong><span class="handwriting">.uk</span><br />
-                            <small >free classified ads</small>
-                        </span>
-                    </a>
 
                 </div>
 
@@ -64,7 +76,7 @@
                             <li><a href="#" ui-sref="logout">Logout</a></li>
                         </span>
 
-                        <li><a href="#" ui-sref="hirdetes-feladas">Post an Ad</a></li>
+                        <li><a href="#" ui-sref="hirdetes-feladas">Post free Ad</a></li>
                     </ul>
 
                     <div class="nav navbar-nav navbar-right hidden-xs">
@@ -86,7 +98,7 @@
                                     <a href="#" ui-sref="logout">Logout</a> |
                                 </span>
 
-                                <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Post an Ad</a>
+                                <a href="#" ui-sref="hirdetes-feladas" class="btn btn-warning post-ad-btn">Post free Ad</a>
 
                             </div>
                         </div>
@@ -107,7 +119,7 @@
                 <div class="row">
 
                     <div class="col-sm-4 col-xs-12">
-                        <p><strong>&copy; Free-Clasiffieds.uk 2014</strong></p>
+                        <p><strong>&copy; free-ads-post.uk 2014</strong></p>
                         <p>All right reserved</p>
                     </div>
 

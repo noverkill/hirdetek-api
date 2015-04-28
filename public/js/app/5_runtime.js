@@ -156,7 +156,7 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
      }
    }
 
-   $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'Mindegy'});
+   $rootScope.rovatok.splice(0, 0, {'id': 0, 'nev': 'All categories'});
 
     $rootScope.rovatokLoaded = 1;
   }
@@ -195,8 +195,8 @@ hirdetekApp.run(['$http', '$state', '$injector', '$rootScope', '$cookieStore', '
 /**************************************/
 
 $rootScope.resetRegio = function() {
-   $rootScope.regio = {id: 0, nev: 'Régió', order: 1}
-   $rootScope.foregio = {id: 0, nev: 'Régió', order: 1};
+   $rootScope.regio = {id: 0, nev: 'Regions', order: 1}
+   $rootScope.foregio = {id: 0, nev: 'Regions', order: 1};
   if($('#regionsModal').is(":visible")) {
     $('#regionsModal').modal('hide');
   }
@@ -204,20 +204,20 @@ $rootScope.resetRegio = function() {
 
  $rootScope.setRegio  = function (foregio, regio) {
   $rootScope.foregio = foregio;
-  $rootScope.regio = regio || {id: 0, nev: 'Régió', order: 1};
+  $rootScope.regio = regio || {id: 0, nev: 'Regions', order: 1};
   if($('#regionsModal').is(":visible")) {
     $('#regionsModal').modal('hide');
   }
  };
 
  $rootScope.resetRovat = function() {
-   $rootScope.rovat = {id: 0, nev: 'Mindem rovatban'}
-   $rootScope.forovat = {id: 0, nev: 'Minden rovatban'};
+   $rootScope.rovat = {id: 0, nev: 'All categories'}
+   $rootScope.forovat = {id: 0, nev: 'All categories'};
  };
 
  $rootScope.setRovat  = function (forovat, rovat) {
    $rootScope.forovat = forovat;
-   $rootScope.rovat = rovat || {id: 0, nev: 'Minden rovat'};
+   $rootScope.rovat = rovat || {id: 0, nev: 'All categories'};
  };
 
   $rootScope.filter = {

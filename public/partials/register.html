@@ -72,7 +72,7 @@
                                                 <span ng-show="! regForm.email.$error.required && ! regForm.email.$error.validEmail && regForm.email.$error.uniqueEmail">Someone already registered with this email </span>
                                             </span>
                                             <div style="color:green" ng-show="emailChecking">Checking availability...</div>
-                                            <div style="color:green" ng-show="! emailChecking && regForm.email.$valid">Email ok</div>
+                                            <div style="color:green" ng-show="! emailChecking && regForm.email.$valid">Email available</div>
                                         </div>
 
                                         <div class="form-group">

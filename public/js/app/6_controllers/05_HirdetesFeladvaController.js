@@ -11,7 +11,7 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
     maxFiles: 6,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
-    dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
+    dictMaxFilesExceeded: 'Max 6 picture can be uploaded',
     headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
     init: function() {
       this.on("addedfile", function(file) {

@@ -28,7 +28,7 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
         //console.log($scope.hirdetes);
         //if(response.success) {
           $("#extend-ad-" + hirdetes.id).notify(
-            "Meghosszabítva 30 nappal (" + $scope.hirdetes.lejarat + ")",
+            "Extended by 30 days (" + $scope.hirdetes.lejarat + ")",
             "success",
             {clickToHide: false, autoHide: true, autoHideDelay: 1}
           );
@@ -42,7 +42,7 @@ hirdetekApp.controller('HirdeteseimCtrl', function ($scope, $rootScope, $state, 
         //console.log(response);
         $('#ad-' + id).remove();
           $.notify(
-            "Hirdetés sikeresen törölve!",
+            "Ad has been deleted",
             "info",
             {position: 'top center', clickToHide: false, autoHide: true, autoHideDelay: 1}
           );

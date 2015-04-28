@@ -95,21 +95,25 @@ class UsersMapper
 
                 include('old-config.php');
 
-                $subject = "Jelszó emlékeztető";
+                $subject = "Password reminder";
 
                 if(! $result[0]['aktiv']) {
 
                 $message = "
 
-Tisztelt regisztrált felhasználónk!
+Dear registered user,
 
-A bejelentkezés elött kérjük aktiválja a felhasználói fiókját az alábbi link segítségével:
+Please activate your user account using the link below:
 
-".$url."/felhasznalo-aktivalas.php?email=" . $email . "&kod=" . $result[0]['aktivkod'] . "
+".$url."/activate-user.php?email=" . $email . "&code=" . $result[0]['aktivkod'] . "
 
-Az aktiválás után a bejelentkezéshez használja az email címét valamint a következő jelszót: " . $result[0]['jelszo'] . "
+After you have activated your account you can log in using your registered email address and the following password: " . $result[0]['jelszo'] . "
 
-Üdvözlettel: a $site csapata
+Once you logged in you can change your password on you profile page.
+
+Best regards,
+
+The team of the $site site
 
 $url
 
@@ -119,11 +123,17 @@ $url
 
                 $message = "
 
-Tisztelt regisztrált felhasználónk!
+Dear registered user,
 
-A bejelentkezéshez használja az email címét valamint a következő jelszót: " . $result[0]['jelszo'] . "
+You can log in using your registered email address and the following password: " . $result[0]['jelszo'] . "
 
-Üdvözlettel: a $site csapata
+Once you logged in you can change your password on you profile page.
+
+Thank you for using our services.
+
+Best regards,
+
+The team of the $site site
 
 $url
 
@@ -265,7 +275,7 @@ $url
 
                 $resultset = $this->adapter->query($sql, array($data->nev, $data->email, $data->targy, $data->targy, $data->szoveg, $data->userid, $ipaddr));
 
-                $subject = "Kapcsolat felvetel";
+                $subject = "Contact request";
 
                 $message = "
 
@@ -302,21 +312,29 @@ ip cim: $ipaddr
 
         // aktivacios email kuldese
 
-        $subject = "$site - regisztráció";
+        $subject = "$site - registration";
 
         $message = "
 
-Tisztelt felhasználónk!
+Welcome!
 
-Ön regisztrálta magát a ".$url." oldalon.
+Thank you for regitering on the " . $url . " site
 
-A regisztráció aktiválását az alábbi link segítségével teheti meg:
-".$url."/felhasznalo-aktivalas.php?email=" . $data->email . "&kod=$aktivkod
+To activate your user account please use the link below:
 
-Az aktiválása után a bejelentkezéshez használja az email címét
-valamint a következő jelszót: " . $data->jelszo . "
+". $url ."/activate-user.php?email=" . $data->email . "&code=" . $aktivkod . "
 
-Üdvözlettel: a $site csapata";
+After you have activated your account you can log in using your registered email address and the following password: " . $result[0]['jelszo'] . "
+
+Once you logged in you can change your password on you profile page.
+
+Best regards,
+
+The team of the $site site
+
+$url
+
+";
 
 /*
 Akció!

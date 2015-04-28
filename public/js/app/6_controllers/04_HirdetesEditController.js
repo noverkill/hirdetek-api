@@ -22,7 +22,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
           //$state.go('hirdeteseim', {id: $rootScope.user.getUser().id});
           //$scope.hirdetes = {};
           $.notify(
-              "Sikeres hirdetés módosítás!",
+              "Ad has been successfully modified",
               "success",
               {clickToHide: false, autoHide: true, autoHideDelay: 1}
             );
@@ -56,9 +56,9 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
     maxFiles: 6,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
-    dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
+    dictMaxFilesExceeded: 'Max 6 picture can be uploaded',
     headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
-    dictRemoveFileConfirmation: "Biztosan törli?",
+    dictRemoveFileConfirmation: "Are you sure you want to delete?",
     init: function() {
 
       this.element.querySelector(".dz-message").remove();
@@ -103,7 +103,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
             return _this.removeFile(file);
           }
 
-          if(confirm("Biztosan törli?")) {
+          if(confirm("Are you sure you want to delete?")) {
 
             var image_id = _file.image_id || angular.fromJson(_file.xhr.response).image_id;
 
@@ -158,7 +158,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
         for(var i = 0; i < data.length; i++) {
           //console.log(data[i]);
           if(data[i] == "") {
-            alert("Amennyiben új képet töltött fel akkor kérjük az átrendezés elött várja meg amíg a kép teljesen feltöltődik (zöld pipa) vagy amennyiben nem töltődött fel (piros X) akkor kérjük távolítsa el!");
+            alert("If you have just uploaded a new picture then please before re-ordering them wait until the upload fully finishes (green checkmark) If the upload failed (red cross) then please remove the failed picture before re-order.");
             return false;
           }
         }

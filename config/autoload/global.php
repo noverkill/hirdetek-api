@@ -4,8 +4,10 @@ return array(
         'routes' => array(
             'oauth' => array(
                 'options' => array(
-                    'route' => '/oauth',
+                    'spec' => '%oauth%',
+                    'regex' => '(?P<oauth>(/oauth))',
                 ),
+                'type' => 'regex',
             ),
         ),
     ),

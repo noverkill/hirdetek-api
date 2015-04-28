@@ -10,11 +10,13 @@ hirdetekApp.controller('UserEditController', function($rootScope, $scope, $state
         $rootScope.user.setUser(response.id, response);
         $scope.user = response;
         $.notify(
-            "Sikeres adatmódosítás!",
+            "Your profile has been successfully modified",
             "success",
             {clickToHide: false, autoHide: true, autoHideDelay: 1}
           );
       }
     }).$promise;
   };
+
+  $scope.user = $rootScope.user.getUser().details;
 });
