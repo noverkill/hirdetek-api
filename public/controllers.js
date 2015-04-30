@@ -692,6 +692,9 @@ $rootScope.resetRegio = function() {
   $rootScope.createPath = function (dt, name) {
     if(dt == null || name == null) return;
 
+    // handle cross browser issue
+    dt = dt.replace(/-/g,"/");
+
     //console.log('createPath');
     //console.log(dt);
     //console.log(name);
