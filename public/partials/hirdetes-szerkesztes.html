@@ -186,6 +186,67 @@
                                     </span>
 								</div>
 
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="panel panel-default" ng-show="hirdetes.szponzoralt">
+
+					<div class="panel-heading">Extra settings</div>
+
+					<div class="panel-body">
+
+						<div class="form-group">
+
+							<div class="row">
+
+								<div class="col-sm-12">
+									<label>Link to your website </label>
+									<input name="weblap" type="text" class="form-control" ng-model="hirdetes.weblap" ng-maxlength="50">
+                                    <span style="color:red" ng-show="hirdForm.weblap.$dirty && hirdForm.weblap.$invalid">
+                                        <span ng-show="hirdForm.weblap.$error.maxlength">
+                                            Max 50 character
+                                    	</span>
+                                    </span>
+								</div>
+
+							</div>
+
+						</div>
+
+							<div class="checkbox">
+								<label>
+									<input name="szponzoralt" type="checkbox" ng-true-value="1" ng-model="hirdetes.szponzoralt"> Sponsored Ad
+								</label>
+							</div>
+
+						<div class="checkbox">
+							<label>
+								<input name="link_picture" type="checkbox" ng-true-value="1" ng-model="hirdetes.link_picture"> Link main picture
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<input name="link_title" type="checkbox" ng-true-value="1" ng-model="hirdetes.link_title"> Link Ad title and details link
+							</label>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+
+					<div class="panel-heading">Submit changes</div>
+
+					<div class="panel-body">
+
+						<div class="form-group">
+
+							<div class="row">
 								<div class="col-sm-12">
 									<br />
 
@@ -210,8 +271,8 @@
 				<div class="panel-body">
 					<div id="myDropzone" class="dropzone"></div>
 					<br />
-					<p><small>* you can re-order pictures using drag-and-drop with your mouse</small></p>
-					<p><small>* the main picture is the first one, this is displayed on list pages and on the ad's detail page in bigger size</small></p>
+					<p><small>* you can re-order your pictures by drag-and-drop them with your mouse</small></p>
+					<p><small>* the main picture is the first one, this is displayed on list pages and on the ad's detail page in a bigger size</small></p>
 					<p><small>* the pictures might be resized</small></p>
 				</div>
 			</div>

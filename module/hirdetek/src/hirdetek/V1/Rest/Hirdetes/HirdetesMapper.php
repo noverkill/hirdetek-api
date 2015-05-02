@@ -30,12 +30,87 @@ class HirdetesMapper
     {
         $select = (new Select())
                     ->from(array('h' => 'hirdetes'))
-                    ->join( array ('i' => 'images'), new Expression('i.ad_id = h.id AND i.sorrend=1'), array('image_id' => 'id', 'image_created' => 'created', 'image_name' => 'name'), 'left')
+                    ->join( array ('i' => 'images'), new Expression('i.ad_id = h.id AND (i.sorrend=1 OR i.sorrend=111)'), array('image_id' => 'id', 'image_created' => 'created', 'image_name' => 'name', 'image_sorrend' => 'sorrend'), 'left')
                     ->join( array ('r' => 'rovat'), 'r.id = h.rovat', array('r_rovat_id' => 'id', 'r_rovat_nev' => 'nev', 'r_rovat_slug' => 'slug'), 'left')
                     ->join( array ('pr' => 'rovat'), 'pr.id = r.parent', array('p_rovat_id' => 'id', 'p_rovat_nev' => 'nev', 'p_rovat_slug' => 'slug'), 'left')
-                    ->join( array ('p' => 'postcodes'), 'p.postcode = h.postcode', array('latitude', 'longitude'), 'left')
                     ->join( array ('g' => 'regio'), 'g.id = h.regio', array('g_regio_id' => 'id', 'g_regio_nev' => 'nev', 'g_regio_slug' => 'slug'), 'left')
                     ->join( array ('pg' => 'regio'), 'pg.id = g.parent', array('p_regio_id' => 'id', 'p_regio_nev' => 'nev', 'p_regio_slug' => 'slug'), 'left');
+
+        $geospatial = 0;
+
+        $distance = (int) $params->get('distance');
+
+        $postcode = $params->get('postcode');
+
+        //print "distance: $distance\n";
+        //print "postcode: $postcode\n";
+
+        if($postcode && strlen($postcode) > 2 && $distance > 0 && $distance < 51) {
+
+            $inputFilter = new InputFilter();
+
+            $factory = new InputFactory();
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'postcode',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                    array('name' => 'StringToUpper'),
+                    //array('name' => 'Alnum'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 10,
+                        ),
+                    ),
+                )
+            )));
+
+            $inputFilter->setData(array('postcode' => $postcode));
+
+            if ($inputFilter->isValid()) {
+
+                $postcode = strtoupper(str_replace(' ', '', $postcode));
+
+                $sql = new Sql($this->adapter);
+
+                $pselect = $sql->select('postcodes')
+                          ->columns(array('postcode', 'latitude', 'longitude'))
+                          ->where("postcode LIKE '$postcode%'")
+                          ->order('postcode')
+                          ->limit(1);
+
+                $sqlString = $sql->getSqlStringForSqlObject($pselect);
+
+                $statement = $sql->prepareStatementForSqlObject($pselect);
+
+                $resultset = $statement->execute()->current();
+
+                //print_r($resultset);
+
+                if(is_array($resultset) && isset($resultset['latitude'])) {
+
+                    $select->join( array (
+                        'p' => 'postcodes'),
+                        new Expression("p.postcode LIKE CONCAT(h.postcode, '%')"),
+                        array('latitude', 'longitude'),
+                        'left'
+                    );
+
+                    $latitude = $resultset['latitude'];
+                    $longitude = $resultset['longitude'];
+                    $geospatial = 1;
+                }
+            }
+        }
+
+        //print "geospatial: $geospatial\n";
 
         $where = (new Where());
 
@@ -75,91 +150,39 @@ class HirdetesMapper
             }
         }
 
-        if($postcode = $params->get('postcode')) {
+        if($geospatial) {
+            //print "latitude: $latitude";
+            //print "longitude: $longitude";
 
-            $distance = (int) $params->get('distance');
+            //http://stackoverflow.com/questions/4687312/querying-within-longitude-and-latitude-in-mysql
+            //more advanced / efficient: http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-two-lat-long-points
+            //What is the distance between a degree of latitude and longitude: http://geography.about.com/library/faq/blqzdistancedegree.htm
+            if($distance > 0) {
+                //$pfilter = "( 3959 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) <= $distance";
+                $pfilter = "MBRCONTAINS(
+                                LineString(
+                                    POINT(
+                                        $longitude + $distance / ( 53 / COS(RADIANS($latitude))),
+                                        $latitude+ $distance / 69
+                                    ),
+                                    POINT(
+                                        $longitude - $distance / (53 / COS(RADIANS($latitude))),
+                                        $latitude - $distance / 69
+                                    )
+                                ),
+                                POINT(longitude,latitude)
+                            )";
 
-            if($distance > -1 && $distance < 51) {
+                //print $pfilter;
+                $select->where($pfilter);
 
-                $inputFilter = new InputFilter();
-
-                $factory = new InputFactory();
-
-                $inputFilter->add($factory->createInput(array(
-                    'name'     => 'postcode',
-                    'required' => true,
-                    'filters'  => array(
-                        array('name' => 'StripTags'),
-                        array('name' => 'StringTrim'),
-                        array('name' => 'StringToUpper'),
-                        //array('name' => 'Alnum'),
-                    ),
-                    'validators' => array(
-                        array(
-                            'name'    => 'StringLength',
-                            'options' => array(
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 10,
-                            ),
-                        ),
-                    )
-                )));
-
-                $inputFilter->setData(array('postcode' => $postcode));
-
-                if ($inputFilter->isValid()) {
-
-                    $postcode = strtoupper(str_replace(' ', '', $postcode));
-
-                    $sql = new Sql($this->adapter);
-
-                    $pselect = $sql->select('postcodes')
-                              ->columns(array('latitude', 'longitude'))
-                              ->where(array('postcode' => $postcode))
-                              ->limit(1);
-
-                    $sqlString = $sql->getSqlStringForSqlObject($pselect);
-
-                    $statement = $sql->prepareStatementForSqlObject($pselect);
-
-                    $resultset = $statement->execute()->current();
-
-                    if(is_array($resultset) && isset($resultset['latitude'])) {
-
-                        $latitude = $resultset['latitude'];
-                        $longitude = $resultset['longitude'];
-
-                        //print "latitude: $latitude";
-                        //print "longitude: $longitude";
-
-                        //http://stackoverflow.com/questions/4687312/querying-within-longitude-and-latitude-in-mysql
-                        //more advanced / efficient: http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-two-lat-long-points
-                        //What is the distance between a degree of latitude and longitude: http://geography.about.com/library/faq/blqzdistancedegree.htm
-                        if($distance > 0) {
-                            //$pfilter = "( 3959 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) <= $distance";
-                            $pfilter = "MBRCONTAINS(
-                                            LineString(
-                                                POINT(
-                                                    $longitude + $distance / ( 53 / COS(RADIANS($latitude))),
-                                                    $latitude+ $distance / 69
-                                                ),
-                                                POINT(
-                                                    $longitude - $distance / (53 / COS(RADIANS($latitude))),
-                                                    $latitude - $distance / 69
-                                                )
-                                            ),
-                                            POINT(longitude,latitude)
-                                        )";
-
-                            //print $pfilter;
-                            $select->where($pfilter);
-                        } else {
-                            $select->where("latitude = $latitude")->where("longitude = $longitude");
-                        }
-                    }
-                }
+                $select->where("h.postcode != ''");
             }
+        }
+
+        if($postcode && (strlen($postcode) < 3 || $distance == 0)) {
+
+            $select->where("h.postcode like '$postcode%'");
         }
 
         $ords = array( 'h.lastmodified', 'h.ar');
@@ -171,7 +194,9 @@ class HirdetesMapper
         $ord = in_array($params->get('ord'), $ords) ? $params->get('ord') : 'h.lastmodified';
         $ordir = in_array($params->get('ordir'), $ordirs) ? $params->get('ordir') : 'DESC';
 
-        $select->order("$ord $ordir");
+        $select->group("h.id");
+
+        $select->order("h.szponzoralt DESC, $ord $ordir");
 
         //print $select->getSqlString();
         //exit;
@@ -185,7 +210,7 @@ class HirdetesMapper
 
     public function fetchOne($id)
     {
-        $sql = "SELECT h.*, i.id as image_id, i.created as image_created, i.name as image_name,
+        $sql = "SELECT h.*, i.id as image_id, i.created as image_created, i.name as image_name, i.sorrend as image_sorrend,
                 DATEDIFF(CURDATE(),h.feladas) as days_active,
                 r.id as r_rovat_id, r.nev as r_rovat_nev, r.slug as r_rovat_slug,
                 pr.id as p_rovat_id, pr.nev as p_rovat_nev, pr.slug as p_rovat_slug,
@@ -200,7 +225,7 @@ class HirdetesMapper
                 LEFT JOIN rovat pr ON pr.id = r.parent
                 LEFT JOIN regio g ON g.id = h.regio
                 LEFT JOIN regio pg ON pg.id = g.parent
-                LEFT JOIN images i ON i.ad_id = h.id AND i.sorrend = 1
+                LEFT JOIN images i ON i.ad_id = h.id AND (i.sorrend = 1 OR i.sorrend = 111)
                 WHERE h.id = ? AND h.aktiv = 1";
 
         $resultset = $this->adapter->query($sql, array($id));
@@ -214,7 +239,7 @@ class HirdetesMapper
         $sql = 'SELECT *
                 FROM images
                 WHERE ad_id = ?
-                AND sorrend > 1
+                AND sorrend > 1 AND sorrend < 111
                 ORDER BY sorrend';
 
         $resultset = $this->adapter->query($sql, array($id));
@@ -1232,6 +1257,51 @@ The $site team
             ),
         )));
 
+        //extras
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'weblap',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+                //array('name' => 'Alnum'),
+            ),
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 1,
+                        'max'      => 50,
+                    ),
+                ),
+            )
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'szponzoralt',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Boolean'),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'link_picture',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Boolean'),
+            ),
+        )));
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'link_title',
+            'required' => false,
+            'filters'  => array(
+                array('name' => 'Boolean'),
+            ),
+        )));
+
         $inputFilter->setData((array)$data);
 
         if ($inputFilter->isValid()) {
@@ -1257,7 +1327,11 @@ The $site team
                         telefon = ?,
                         rovat = ?,
                         regio = ?,
-                        lejarat = ?
+                        lejarat = ?,
+                        szponzoralt = ?,
+                        weblap = ?,
+                        link_picture = ?,
+                        link_title = ?
                     WHERE id = ?
                     AND email = ?';
 
@@ -1274,6 +1348,10 @@ The $site team
                     $data->rovat,
                     $data->regio,
                     $data->lejarat,
+                    $data->szponzoralt,
+                    $data->weblap,
+                    $data->link_picture,
+                    $data->link_title,
                     $data->id,
                     $email
                 )

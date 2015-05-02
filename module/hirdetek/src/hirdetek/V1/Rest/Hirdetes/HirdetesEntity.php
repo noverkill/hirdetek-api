@@ -16,6 +16,7 @@ class HirdetesEntity
     public $telefon;
     public $feladas;
     public $lejarat;
+    public $weblap;
     public $days_active;
     public $forovat;
     public $alrovat;
@@ -37,6 +38,10 @@ class HirdetesEntity
     public $image_created;
     public $image_nev;
     public $images;
+    public $szponzoralt;
+    public $sponsoredon;
+    public $link_picture;
+    public $link_title;
     public $success;
     public $errors;
 
@@ -55,6 +60,7 @@ class HirdetesEntity
             'telefon'      => $this->telefon,
             'feladas'      => $this->feladas,
             'lejarat'      => $this->lejarat,
+            'weblap'       => $this->weblap,
             'days_active'  => $this->days_active,
             'forovat'      => $this->forovat,
             'alrovat'      => $this->alrovat,
@@ -76,6 +82,10 @@ class HirdetesEntity
             'image_created'=> $this->image_created,
             'image_name'   => $this->image_name,
             'images'       => $this->images,
+            'szponzoralt'  => $this->szponzoralt,
+            'sponsoredon'  => $this->sponsoredon,
+            'link_picture' => $this->link_picture,
+            'link_title'   => $this->link_title,
             'success'      => $this->success,
             'errors'       => $this->errors
 
@@ -96,6 +106,7 @@ class HirdetesEntity
         $this->telefon       = $array['telefon'];
         $this->feladas       = $array['feladas'];
         $this->lejarat       = $array['lejarat'];
+        $this->weblap        = $array['weblap'];
         $this->days_active   = $array['days_active'];
         $this->forovat       = $array['forovat'];
         $this->alrovat       = $array['alrovat'];
@@ -117,6 +128,10 @@ class HirdetesEntity
         $this->image_created = $array['image_created'];
         $this->image_name    = $array['image_name'];
         $this->images        = $array['images'];
+        $this->szponzoralt   = $array['szponzoralt'];
+        $this->sponsoredon   = $array['sponsoredon'];
+        $this->link_picture  = $array['link_picture'];
+        $this->link_title    = $array['link_title'];
         $this->success       = true;
         $this->errors        = null;
     }

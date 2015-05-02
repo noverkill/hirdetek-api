@@ -97,36 +97,6 @@
 
             <div class="sidebar ">
 
-                <div class="row " ng-show="forovat.id>0">
-                    <div class="col-sm-11">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Subcategories</div>
-                            <div class="panel-body">
-                                <ul class="nav nav-category">
-                                    <li>
-                                        <!--a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a-->
-                                        <ul>
-                                            <li>
-                                                <a class="active" href="#" ng-if="rovat.id==0" ng-click="setRovat(forovat);doSearch()"><strong>{{forovat.nev}}</strong></a>
-                                                <a class="active" href="#" ng-if="rovat.id>0" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
-                                                <ul>
-                                                    <li ng-show="rovat.id>0">
-                                                        <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a>
-                                                    </li>
-                                                    <li ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id && alrov.id != rovat.id">
-                                                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!--div class="row ">
 
                     <div class="col-sm-11 hidden-xs">
@@ -229,12 +199,11 @@
                                             </div>
                                         </div>
 
-                                        <div class="row filter-row">
+                                        <div class="row filter-row" ng-show="filter.postcode.length > 2">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
                                                     <select class="form-control price-input" placeholder="distance" ng-model="filter.distance" class="form-control">
                                                         <option value="0" selected="">+0</option>
-                                                        <option value="1">+1</option>
                                                         <option value="2">+2</option>
                                                         <option value="3">+3</option>
                                                         <option value="4">+4</option>
@@ -243,7 +212,6 @@
                                                         <option value="15">+15</option>
                                                         <option value="20">+20</option>
                                                         <option value="25">+25</option>
-                                                        <option value="75">+50</option>
                                                     </select>
                                                     <span class="input-group-addon">miles</span>
                                                 </div>
@@ -252,7 +220,7 @@
 
                                         <div class="row filter-row">
                                             <div class="col-sm-2 pull-left" style="margin-top: 10px">
-                                                <button class="btn btn-link pull-left" type="reset" style="color:#000000"data-ng-click="resetFilter();doSearch(1)">Reset</button>
+                                                <button class="btn btn-link pull-left" type="reset" style="color:#000000"data-ng-click="resetFilter();doSearch(1)">Clear</button>
                                             </div>
                                             <div class="col-sm-2 pull-right" style="margin-top: 10px;">
                                                 <button class="btn btn-primary pull-right" data-ng-click="doSearch(1)">Search</button>
@@ -264,6 +232,36 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+
+                <div class="row " ng-show="forovat.id>0">
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Subcategories</div>
+                            <div class="panel-body">
+                                <ul class="nav nav-category">
+                                    <li>
+                                        <!--a class="active" href="#" ng-click="resetRovat();doSearch()">Minden rovat</a-->
+                                        <ul>
+                                            <li>
+                                                <a class="active" href="#" ng-if="rovat.id==0" ng-click="setRovat(forovat);doSearch()"><strong>{{forovat.nev}}</strong></a>
+                                                <a class="active" href="#" ng-if="rovat.id>0" ng-click="setRovat(forovat);doSearch()">{{forovat.nev}}</a>
+                                                <ul>
+                                                    <li ng-show="rovat.id>0">
+                                                        <a class="active" href="#" ng-click="setRovat(forovat,rovat);doSearch()"><strong>{{rovat.nev}}</strong></a>
+                                                    </li>
+                                                    <li ng-repeat="alrov in alrovatok" ng-if="alrov.parent == forovat.id && alrov.id != rovat.id">
+                                                        <a href="#" ng-click="setRovat(forovat,alrov);doSearch()">{{alrov.nev}}</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -291,9 +289,10 @@
 
             <div class="row listing-row" style="margin-top: -10px;">
                 <div class="pull-left">
-                    <strong>Today is {{date | date:'longDate'}}</strong>
+                    Today is {{date | date:'fullDate'}}
                 </div>
                 <div class="pull-right">
+                    <strong>Order by: </strong>
                     <a href="#" ng-click="setOrd('feladas');doSearch()" data-toggle="tooltip" data-placement="top" title="Order by date of posting"> Date<i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='feladas'"></i></a>
                     <a href="#" ng-click="setOrd('ar');doSearch()" data-toggle="tooltip" data-placement="top" title="Order by price"> Price <i class="fa" ng-class="(listing.ordir=='DESC') ? 'fa-chevron-down':'fa-chevron-up'" ng-show="listing.ord=='ar'"></i></a>
                 </div>
@@ -307,26 +306,43 @@
 
                 <div class="col-sm-4">
                     <!--a class="thumbnail " href="#" ui-sref='detailHirdetes({id: hirdetes.id})'-->
-                    <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
+                    <a href="#" ng-show="hirdetes.szponzoralt == 0 || hirdetes.link_picture == 0 || (hirdetes.weblap == '')" ui-sref='detailHirdetes({id: hirdetes.id})'>
                         <!--img alt="176 * 120" src="css/images/listings/3.jpg"-->
-                        <img alt="free ads" ng-src="{{hirdetes.image_created == null && './css/images/freeads.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:100%" />
+                        <img alt="free ads" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name, hirdetes.image_sorrend)}}" style="width:100%" />
+                    </a>
+                    <a ng-show="hirdetes.szponzoralt == 1 && hirdetes.link_picture == 1 && (hirdetes.weblap != '')" href="{{hirdetes.weblap}}" target="_blank">
+                        <img alt="free ads" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name, hirdetes.image_sorrend)}}" style="width:100%" />
                     </a>
                 </div>
 
                 <div class="col-sm-8">
-                    <h3><a class="" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>{{hirdetes.targy}} <span ng-if="hirdetes.ar > 0"> - <strong>&pound; {{hirdetes.ar | currency:""}}</strong></span></a></h3>
+                    <h3>
+                        <a ng-show="hirdetes.szponzoralt == 0 || hirdetes.link_title == 0 || (hirdetes.weblap == '')" href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
+                            {{hirdetes.targy}}
+                            <span ng-if="hirdetes.ar > 0"> - <strong>&pound; {{hirdetes.ar | currency:""}}</strong></span>
+                        </a>
+                        <a ng-show="hirdetes.szponzoralt == 1 && hirdetes.link_title == 1 && (hirdetes.weblap != '')" href="{{hirdetes.weblap}}" target="_blank">
+                            {{hirdetes.targy}}
+                            <span ng-if="hirdetes.ar > 0"> - <strong>&pound; {{hirdetes.ar | currency:""}}</strong></span>
+                        </a>
+                    </h3>
                     <p class="muted" ng-if="hirdetes.postcode || hirdetes.telepules || hirdetes.g_regio_nev"><strong  ng-if="hirdetes.postcode">{{hirdetes.postcode | uppercase}}</strong><strong ng-if="hirdetes.telepules">, {{hirdetes.telepules}}</strong><a ng-if="hirdetes.g_regio_nev" href="#" class="underline" ng-click="setRegio({id: hirdetes.g_regio_id, nev: hirdetes.g_regio_nev});doSearch()">, {{hirdetes.g_regio_nev}}</a></p>
                     <p class="muted">Posted on {{hirdetes.feladas}} <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev});doSearch()">{{hirdetes.p_rovat_nev}}</a> <a href="#" class="underline" ng-click="setRovat({id: hirdetes.p_rovat_id, nev: hirdetes.p_rovat_nev}, {id: hirdetes.r_rovat_id, nev: hirdetes.r_rovat_nev});doSearch()">{{hirdetes.r_rovat_nev}}</a></p>
                     <p>{{hirdetes.szoveg | limitTo: 500}}{{hirdetes.szoveg.length > 500 ? '...' : ''}}</p>
                     <p>
+                        <span class="classified_links pull-left">
+
+                        </span>
                         <span class="classified_links pull-right">
                             <!--a class="link-info underline" ng-click="shareHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalShare" href="#">Megosztás</a>&nbsp;
 
                             <a class="link-info underline" ng-show="! user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalLogin" href="#">Kedvencekhez</a>
                             <a class="link-info underline" ng-show="user.logged" ng-click="saveHirdetesClick(hirdetes.id)" data-toggle="modal" data-target="#modalSave" href="#">Kedvencekhez</a>&nbsp;-->
 
-                            <a class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Details</a>&nbsp;
+                            <a ng-show="hirdetes.szponzoralt == 0 || hirdetes.link_title == 0 || (hirdetes.weblap == '')" class="link-info underline" href="#" ui-sref="detailHirdetes({id: hirdetes.id})">Details</a>
                             <!--a class="link-info underline" href="#">Kapcsolat</a-->
+
+                            <a ng-show="hirdetes.szponzoralt == 1 && hirdetes.link_title == 1 && (hirdetes.weblap != '')" href="{{hirdetes.weblap}}" target="_blank" class="link-info underline" >Details</a>&nbsp;
                         </span>
                     </p>
                 </div>

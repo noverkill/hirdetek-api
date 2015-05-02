@@ -131,8 +131,8 @@
 
                         <div class="col-sm-12">
 
-                            <a class="fancybox" rel="group" href="{{createPath(hirdetes.image_created, hirdetes.image_name)}}">
-                                <img id="img_01" alt="" class="raised" width="100%" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name)}}" />
+                            <a class="fancybox" rel="group" href="{{createPath(hirdetes.image_created, hirdetes.image_name, hirdetes.image_sorrend)}}">
+                                <img id="img_01" alt="" class="raised" width="100%" ng-src="{{createPath(hirdetes.image_created, hirdetes.image_name, hirdetes.image_sorrend)}}" />
                             </a>
 
                             <br />
@@ -141,8 +141,8 @@
                             <div class="row" id="gallery" cg-busy="imagesBusy">
 
                                 <div class="col-xs-4" style="margin-bottom: 10px;" ng-repeat="image in hirdetes.images" ng-show="hirdetes.images.length>0">
-                                    <a href="{{createPath(image.created, image.name)}}" class="fancybox thumbnail" rel="group" >
-                                        <img alt="" ng-src="{{createPath(image.created, image.name)}}" style="width: 100%" />
+                                    <a href="{{createPath(image.created, image.name, image.sorrend)}}" class="fancybox thumbnail" rel="group" >
+                                        <img alt="" ng-src="{{createPath(image.created, image.name, image.sorrend)}}" style="width: 100%" />
                                     </a>
                                 </div>
 

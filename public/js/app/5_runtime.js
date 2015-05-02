@@ -325,15 +325,16 @@ $rootScope.resetRegio = function() {
 
   };
 
-  $rootScope.createPath = function (dt, name) {
-    if(dt == null || name == null) return;
+  $rootScope.createPath = function (dt, name, sorrend) {
+
+    if(dt == null || name == null) return './css/images/freeads.png'
+
+    if(sorrend==111) {
+      return name;
+    }
 
     // handle cross browser issue
     dt = dt.replace(/-/g,"/");
-
-    //console.log('createPath');
-    //console.log(dt);
-    //console.log(name);
 
     var date = new Date(dt);
     var year = date.getFullYear();
@@ -342,7 +343,7 @@ $rootScope.resetRegio = function() {
     var day = date.getDate();
     if(day < 10) day = '0' + day;
     var path = uploadDir + '/' + year + '/' +  month + '/' + day + '/' + (kepDir != '' ? (kepDir + '/') : '') + name;
-    //console.log(path);
+
     return path;
   }
 

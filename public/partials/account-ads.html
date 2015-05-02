@@ -72,7 +72,7 @@
 
                                                 <td align="center">
                                                     <a href="#" ui-sref='detailHirdetes({id: hirdetes.id})'>
-                                                        <img alt="free ads" ng-src="{{hirdetes.image_created == null && '/css/images/freeads.png' || createPath(hirdetes.image_created, hirdetes.image_name)}}" style="width:75px" />
+                                                        <img alt="free ads" ng-src="{{hirdetes.image_created == null && '/css/images/freeads.png' || createPath(hirdetes.image_created, hirdetes.image_name, hirdetes.image_sorrend)}}" style="width:75px" />
                                                     </a>
                                                 </td>
 
@@ -82,7 +82,7 @@
                                                     <a class="edit-ad" href="#" ui-sref='editHirdetes({id: hirdetes.id})' title="Szerkesztés">Edit</a>
                                                     <a class="edit-ad" ng-attr-id="{{ 'extend-ad-' + hirdetes.id }}" ng-click='extendHirdetes(hirdetes)' data-toggle="tooltip" title="Hosszabbítás 30 nappal">Extend by 30 day</a>
                                                     <a class="remove-ad"  ng-click='deleteHirdetes(hirdetes.id)'>Delete</a>
-                                                    <p >{{hirdetes.szoveg}}</p>
+                                                    <p >{{hirdetes.szoveg | limitTo: 200}}...</p>
                                                 </td>
 
                                                 <td align="right">{{hirdetes.feladas}}<br /><!--(<a href="#"><i class="fa fa-arrow-up"></i> Kiemeles</a>)--></td>
