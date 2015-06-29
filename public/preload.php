@@ -76,6 +76,10 @@
         $page_count = (int) ceil($total_items / $page_size);
         $i = 0;
         while(($row = $result->fetch_array(MYSQL_ASSOC)) && ($i < $page_size)) {
+            $row['cim'] = str_replace("'", '\"', $row['cim']);
+            $row['targy'] = str_replace("'", '\"', $row['targy']);
+            $row['szoveg'] = str_replace("'", '\"', $row['szoveg']);
+            $row['nev'] = str_replace("'", '\"', $row['nev']);
             $hirdetesek[] = $row;
             $i++;
         }
