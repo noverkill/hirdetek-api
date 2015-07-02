@@ -138,27 +138,51 @@ hirdetekApp.config(function($httpProvider, $stateProvider) {
 
   });
 
-  //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
-  $httpProvider.responseInterceptors.push(
-    function($q, $injector /*, $timeout*/) {
+// this is changed from angular 1.2 to 1.3 see below   
+//http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
+  //$httpProvider.responseInterceptors.push(
+    //function($q, $injector /*, $timeout*/) {
 
-      /*
-      $timeout(function () {
-        console.log('timeout');
+      //// $timeout(function () {
+      ////   console.log('timeout');
+      ////   $injector.get('$rootScope').user.logout();
+      //// });
+
+      //return function (promise) {
+        //return promise.then(
+          //function (response) {
+            //return response;
+          //},
+          //function (response) {
+            //$injector.get('$rootScope').user.logout();
+            //$injector.get('$state').go('login');
+            //return $q.reject(response);
+         // }
+        //);
+     // }
+   // });
+
+// to upgrade to angular 1.3 or 1.4 (to use the form filed ng-touched class) see page below
+//docs.angularjs.org/api/ng/service/$http
+$httpProvider.interceptors.push(function($q, $injector) {
+  return {
+   'request': function(config) {
+       return config;
+    },
+    'response': function(response) {
+       return response;
+    },
+    'requestError': function(rejection) {
+    	$injector.get('$rootScope').user.logout();
+        $injector.get('$state').go('login');
+    	return $q.reject;
+     },
+     'responseError': function(rejection) {
         $injector.get('$rootScope').user.logout();
-      });
-      */
-
-      return function (promise) {
-          return promise.then(function (response) {
-              return response;
-          },
-          function (response) {
-              $injector.get('$rootScope').user.logout();
-              $injector.get('$state').go('login');
-              return $q.reject(response);
-          });
+        $injector.get('$state').go('login');
+        return $q.reject(rejection);
       }
-    });
+    }
+});
 
 });
