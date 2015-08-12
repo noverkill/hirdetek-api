@@ -4,8 +4,18 @@ return array(
         'routes' => array(
             'oauth' => array(
                 'options' => array(
-                    'route' => '/oauth',
+                    'spec' => '%oauth%',
+                    'regex' => '(?P<oauth>(/oauth))',
                 ),
+                'type' => 'regex',
+            ),
+        ),
+    ),
+    'zf-mvc-auth' => array(
+        'authentication' => array(
+            'map' => array(
+                'hirdetek\\V1' => 'oauth-aprohirdeto',
+                'Users\\V1' => 'oauth-aprohirdeto',
             ),
         ),
     ),
