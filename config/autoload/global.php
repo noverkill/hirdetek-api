@@ -11,4 +11,12 @@ return array(
             ),
         ),
     ),
+    'zf-mvc-auth' => array(
+        'authentication' => array(
+            'map' => array(
+                'hirdetek\\V1' => 'oauth',
+                'Users\\V1' => 'oauth',
+            ),
+        ),
+    ),
 );
