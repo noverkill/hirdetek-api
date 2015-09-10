@@ -107,7 +107,9 @@ class HirdetesResource extends AbstractResourceListener
      */
     public function fetchAll($params = array())
     {
-        return $this->mapper->fetchAll($params);
+       	$user = $this->getIdentity()->getAuthenticationIdentity();
+
+        return $this->mapper->fetchAll($params, $user);
         //return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 

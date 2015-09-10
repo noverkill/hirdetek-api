@@ -371,17 +371,17 @@ return array(
             'hirdetek\\V1\\Rest\\Hirdetes\\Controller' => array(
                 'entity' => array(
                     'GET' => false,
-                    'POST' => true,
-                    'PATCH' => true,
-                    'PUT' => true,
-                    'DELETE' => true,
+		    'POST' => false,  //true
+                    'PATCH' => false, //true,
+                    'PUT' => false, //true,
+                    'DELETE' => false, //true,
                 ),
                 'collection' => array(
                     'GET' => false,
                     'POST' => false,
-                    'PATCH' => true,
-                    'PUT' => true,
-                    'DELETE' => true,
+                    'PATCH' => false, //true,
+                    'PUT' => false, //true,
+                    'DELETE' => false, //true,
                 ),
             ),
             'hirdetek\\V1\\Rest\\Rovatok\\Controller' => array(
@@ -456,7 +456,7 @@ return array(
         ),
     ),
     'input_filter_specs' => array(
-        'hirdetek\\V1\\Rest\\Hirdetes\\Validator' => array(
+        'hirdetek\\V1\\Rest\\Hirdetes\\Validator' => array(/*
             0 => array(
                 'name' => 'file',
                 'required' => false,
@@ -468,6 +468,6 @@ return array(
                 'error_message' => 'Nem sikerült feltölteni a képet',
                 'type' => 'Zend\\InputFilter\\FileInput',
             ),
-        ),
+        */),
     ),
 );

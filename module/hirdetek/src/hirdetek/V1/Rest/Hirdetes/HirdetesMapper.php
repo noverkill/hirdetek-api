@@ -26,7 +26,7 @@ class HirdetesMapper
         $this->adapter = $adapter;
     }
 
-    public function fetchAll($params)
+    public function fetchAll($params, $user)
     {
         $select = (new Select())
                     ->from(array('h' => 'hirdetes'))
@@ -38,10 +38,11 @@ class HirdetesMapper
 
         $where = (new Where());
 
-		$where->nest->equalTo('h.aktiv', 1);
+	$where->nest->equalTo('h.aktiv', 1);
 
-        if ($params->get('userid')) {
-            $where->nest->equalTo('h.user_id', $params['userid']);
+        if ($params->get('userid') && $user) {
+            //$where->nest->equalTo('h.user_id', $params['userid']);
+            $where->nest->equalTo('h.email', $user['user_id']);
         }
 
         if ($params->get('search')) {
@@ -52,7 +53,7 @@ class HirdetesMapper
             $where->nest->equalTo('pr.id', $params['rovat'])->OR->equalTo('r.id', $params['rovat']);
         } else {
             //do not show ismerkedes ad on the front page
-            $where->nest->notEqualTo('pr.id', 50)->AND->notEqualTo('r.id', 50);
+            //gives back empty result on this server???? $where->nest->notEqualTo('pr.id', 50)->AND->notEqualTo('r.id', 50);
         }
 
         if ($params->get('regio')) {

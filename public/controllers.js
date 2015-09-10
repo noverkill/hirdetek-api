@@ -1098,7 +1098,7 @@ hirdetekApp.controller('HirdetesEditController', function($scope, $rootScope, $h
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
     dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
-    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
+    //headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
     dictRemoveFileConfirmation: "Biztosan törli?",
     init: function() {
 
@@ -1226,7 +1226,7 @@ hirdetekApp.controller('HirdetesFeladvaController', function($scope, $rootScope,
     acceptedFiles: 'image/jpeg, image/gif, image/png',
     dictRemoveFile: '',
     dictMaxFilesExceeded: 'max 6 kép tölthető fel!',
-    headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
+    //headers: {'Authorization': 'Bearer ' + $rootScope.user.getTk()},
     init: function() {
       this.on("addedfile", function(file) {
         // Create the remove button
