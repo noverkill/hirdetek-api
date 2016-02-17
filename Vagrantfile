@@ -1,31 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 Vagrant.configure("2") do |config|
-    config.vm.box = "precise64"
 
-    config.vm.network :forwarded_port, guest: 80, host: 8080
-    config.vm.network :forwarded_port, guest: 8080, host: 9090
-    config.vm.network :private_network, ip: "192.168.56.101"
+    config.vm.box = "scotch/box"
+    config.vm.network "private_network", ip: "192.168.33.10"
+    config.vm.hostname = "scotchbox"
+    config.vm.synced_folder ".", "/var/www", :mount_options => ["dmode=777", "fmode=666"]
 
-    config.ssh.forward_agent = true
+    # Optional NFS. Make sure to remove other synced_folder line too
+    #config.vm.synced_folder ".", "/var/www", :nfs => { :mount_options => ["dmode=777","fmode=666"] }
 
-    config.vm.provider :virtualbox do |v, override|
-	    override.vm.box_url = "http://files.vagrantup.com/precise64.box"
-	
-        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-        v.customize ["modifyvm", :id, "--memory", 1024]
-    end
+        config.vm.network :forwarded_port, guest:4444, host:4444
+        config.vm.network :forwarded_port, guest:80, host:1234
+        config.vm.network "forwarded_port", guest: 1080, host: 1080
 
-    config.vm.provider :vmware_workstation do |v, override|
-        override.vm.box_url = "http://files.vagrantup.com/precise64_vmware.box"
+        config.vm.provider "virtualbox" do |v|
+          v.memory = 10240
+          v.cpus = 4
+        end
 
-        v.vmx["memsize"] = "1024"
-    end
-    
-    config.vm.synced_folder ".", "/vagrant", nfs: true
-    config.vm.provision :shell, :inline => "if [[ ! -f /apt-get-run ]]; then sudo apt-get update && sudo touch /apt-get-run; fi"
-
-    config.vm.provision :puppet do |puppet|
-        puppet.manifests_path = ".puppet/manifests"
-        puppet.module_path = ".puppet/modules"
-        puppet.options = ['--verbose']
-    end
 end
