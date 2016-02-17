@@ -40,7 +40,13 @@
 
                     <a href="index.html" class="navbar-brand ">
                         <span class="logo" ng-click="goHome()">
-                            <strong>Hirdeto</strong><span class="handwriting">.net</span><br />
+                            <strong>Hirdeto</strong>
+                            <span class="handwriting">
+                                .net
+                                <?php echo getenv('DEV') ? 'dev' : ''; ?>
+                                <?php echo getenv('MAILTEST') ? 'mailtest' : ''; ?>
+                            </span>
+                            <br />
                             <small >aprohirdeto oldal </small>
                         </span>
                     </a>

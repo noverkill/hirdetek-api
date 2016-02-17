@@ -2,7 +2,11 @@
 
     $config = include('../config/autoload/user.global.php');
 
-	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], 'hirdetek');
+    //get dbname from dsn dbname
+    preg_match('/^\w+:dbname=(\w+);?+/', $config['db']['dsn'], $matches); 
+    $dbname = $matches[1];
+
+	$mysqli = new mysqli('localhost', $config['db']['username'], $config['db']['password'], $dbname);
 
     $mysqli->set_charset("utf8");
 
@@ -19,11 +23,13 @@
 /*
  * import kepek from the old hirdetes table into the images table
  */
+/*
     $result = $mysqli->query("SELECT MAX(ad_id) FROM images");
     $row = $result->fetch_array();
 	$result->close();
 
 	$mysqli->query("INSERT INTO images SELECT '0',id,user_id,feladas,kep,1 FROM hirdetes WHERE kep!='' AND id>" . $row[0] );
+*/
 /*----------------------*/
 
     $regiok = array();
@@ -38,6 +44,9 @@
 
     $regiok = array("_embedded" => array("regio" => $regiok), "page_count" => 1, "page_size" => 1000, "total_items" => $total_items);
 
+//var_dump($regiok);
+//exit('regiok');
+
     $rovatok = array();
 
     $total_items = 0;
@@ -49,6 +58,10 @@
     }
 
     $rovatok = array("_embedded" => array("rovatok" => $rovatok), "page_count" => 1, "page_size" => 1000, "total_items" => $total_items);
+
+
+//var_dump($rovatok);
+//exit('rovatok');
 
     $hirdetesek = array();
 
@@ -88,6 +101,10 @@
     }
 
     $hirdetesek = array("_embedded" => array("hirdetes" => $hirdetesek), "page_count" => $page_count, "page_size" => $page_size, "total_items" => $total_items);
+
+
+//var_dump($hirdetesek);
+//exit('hirdetesek');
 
     $mysqli->close();
 

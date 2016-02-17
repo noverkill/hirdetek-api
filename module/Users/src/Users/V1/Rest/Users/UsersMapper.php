@@ -104,16 +104,25 @@ $url
                 $mmessage->setEncoding('UTF-8');
 
                 $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-                $smtpOptions->setHost($smtp_host)
-                            ->setConnectionClass('login')
-                            ->setName($smtp_host)
-                            ->setConnectionConfig(array(
-                                               'username' => $smtp_user,
-                                               'password' => $smtp_password,
-                                               'ssl' => $smtp_ssl,
-                                               'port' => $smtp_port
-                                             )
-                                  );
+
+                if(getenv('MAILTEST')) {
+                    $smtpOptions   = new \Zend\Mail\Transport\SmtpOptions(array(
+                        'name' => $smtp_host,
+                        'host' => $smtp_host,
+                        'port' => $smtp_port,
+                    ));
+                } else {
+                    $smtpOptions->setHost($smtp_host)
+                                ->setConnectionClass('login')
+                                ->setName($smtp_host)
+                                ->setConnectionConfig(array(
+                                                   'username' => $smtp_user,
+                                                   'password' => $smtp_password,
+                                                   'ssl' => $smtp_ssl,
+                                                   'port' => $smtp_port
+                                                 )
+                                      );
+                }
 
                 $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
                 $transport->send($mmessage);
@@ -301,16 +310,25 @@ $url/kiemeles.php
         $mmessage->setEncoding('UTF-8');
 
         $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-        $smtpOptions->setHost($smtp_host)
-                    ->setConnectionClass('login')
-                    ->setName($smtp_host)
-                    ->setConnectionConfig(array(
-                                       'username' => $smtp_user,
-                                       'password' => $smtp_password,
-                                       'ssl' => $smtp_ssl,
-                                       'port' => $smtp_port
-                                     )
-                          );
+
+        if(getenv('MAILTEST')) {
+            $smtpOptions   = new \Zend\Mail\Transport\SmtpOptions(array(
+                'name' => $smtp_host,
+                'host' => $smtp_host,
+                'port' => $smtp_port,
+            ));
+        } else {
+            $smtpOptions->setHost($smtp_host)
+                        ->setConnectionClass('login')
+                        ->setName($smtp_host)
+                        ->setConnectionConfig(array(
+                                           'username' => $smtp_user,
+                                           'password' => $smtp_password,
+                                           'ssl' => $smtp_ssl,
+                                           'port' => $smtp_port
+                                         )
+                              );
+        }
 
         $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
         $transport->send($mmessage);
