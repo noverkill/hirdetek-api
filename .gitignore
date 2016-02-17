@@ -18,3 +18,6 @@ config/autoload/user.global.php
 !public/vendor/README.md
 data/cache/*
 !data/cache/.gitkeep
+
+tests/_output/*
+tests/_output/*
