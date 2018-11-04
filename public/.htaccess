@@ -1,5 +1,5 @@
-SetEnv DEV 1
-SetEnv MAILTEST 1
+SetEnv DEV 0
+SetEnv MAILTEST 0
 
 RewriteEngine On
 # The following rule tells Apache that if the requested filename

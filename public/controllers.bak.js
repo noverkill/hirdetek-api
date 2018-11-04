@@ -40,10 +40,9 @@ hirdetekApp.directive('validEmail', function() {
   return {
     require: 'ngModel',
     link: function(scope, elm, attrs, ctrl) {
-      //viewValue = angular.lowercase(viewValue);
+      viewValue = angular.lowercase(viewValue);
       ctrl.$parsers.unshift(function(viewValue) {
-        viewValue = angular.lowercase(viewValue);
-	if (EMAIL_REGEXP.test(viewValue)) {
+        if (EMAIL_REGEXP.test(viewValue)) {
           // it is valid
           ctrl.$setValidity('validEmail', true);
           return viewValue;

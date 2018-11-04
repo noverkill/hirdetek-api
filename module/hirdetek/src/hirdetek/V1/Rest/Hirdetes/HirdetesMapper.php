@@ -514,6 +514,27 @@ class HirdetesMapper
 
         //print_r($data);
 
+	// check if email is banned
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('ban')
+                     	->columns(array('id', 'email'))
+                        ->where(array('email' => $data->email))
+                        ->limit(1);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+
+        $resultset = $statement->execute()->current();
+
+        if(is_array($resultset)) {
+            $errors[] = array(
+            	"field" => "banned",
+                "message" => "banned"
+            );
+            return array("success" => false, "errors" => $errors, "data" => $data);
+	}
+	// end check
+
         $values = array(
             'user_id' => 0,
             'nev' => $data->nev,
